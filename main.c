@@ -21,6 +21,18 @@ extern void shift_right_keep_ledon();
 extern void floweron(void);
 extern void floweroff(void);
 
+void (*fp[])() =
+{
+	led_all_on,
+	led_all_off,
+	shift_left_ledon,
+	shift_right_ledon,
+	shift_left_keep_ledon,
+	shift_right_keep_ledon,
+	floweron,
+	floweroff
+};
+
 int main(void)
 {	
 	int button0_state = 0;
@@ -33,6 +45,8 @@ int main(void)
 	DDRA = 0xff; // PORTA를 출력으로 설정
 	PORTA = 0x00; // led를 all off
 	
+	int a = 0;
+	
 	while(1)
 	{
 		// -- 1버튼 처리 (토글)
@@ -41,13 +55,16 @@ int main(void)
 		if (get_button(BUTTON0, BUTTON0PIN))
 		{
 			button0_state = !button0_state;
-			
-			if (button0_state)
+			if (a<8)
 			{
-				led_all_on();
+				if (button0_state)
+					(*fp[a])();
+				else
+					(*fp[a])();
+					a++;
 			}
 			else
-				led_all_off();
+				a = 0;
 		}
 		if (get_button(BUTTON1, BUTTON1PIN))
 		{
