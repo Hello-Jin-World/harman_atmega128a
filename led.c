@@ -38,7 +38,7 @@ void shift_left_keep_ledon(void)
 	  //(i = 0)          1
 	  //(i = 1)         1
 	  //(i = 2)        1
-		_delay_ms(300);
+		_delay_ms(50);
 	}
 }
 
@@ -47,7 +47,7 @@ void shift_right_keep_ledon(void)
 	for (int i = 0; i < 8; i++)
 	{
 		PORTA -= 0b10000000 >> i;
-		_delay_ms(300);
+		_delay_ms(50);
 	}
 }
 
@@ -59,16 +59,16 @@ void shift_left_ledon(void)
 		//(i = 0)          1
 		//(i = 1)         1
 		//(i = 2)        1
-		_delay_ms(300);
+		_delay_ms(50);
 	}
 }
 
 void shift_right_ledon(void)
 {
-	for (int i = 1; i < 8; i++)
+	for (int i = 1; i < 9; i++)
 	{
-		PORTA = 0b01000000 >> i;
-		_delay_ms(300);
+		PORTA = 0b10000000 >> i;
+		_delay_ms(50);
 	}
 }
 
@@ -92,7 +92,7 @@ void floweron(void)
 			PORTA += 0b00001000 >> i;
 		}
 		PORTA += 0b00010000 << i;
-		_delay_ms(300);
+		_delay_ms(50);
 	}
 	
 }
@@ -107,6 +107,6 @@ void floweroff(void)
 			PORTA -= 0b00000001 << i;
 		}
 		PORTA -= 0b10000000 >> i;
-		_delay_ms(300);
+		_delay_ms(50);
 	}
 }

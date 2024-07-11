@@ -14,10 +14,20 @@ extern void init_button(void);
 extern int get_button(int button_num, int button_pin);
 extern void led_all_on(void);
 extern void led_all_off(void);
+extern void shift_left_ledon();
+extern void shift_right_ledon();
+extern void shift_left_keep_ledon();
+extern void shift_right_keep_ledon();
+extern void floweron(void);
+extern void floweroff(void);
 
 int main(void)
 {	
 	int button0_state = 0;
+	int button1_state = 0;
+	int button2_state = 0;
+	int button3_state = 0;
+	
 	init_button();
 	//led_main();
 	DDRA = 0xff; // PORTA를 출력으로 설정
@@ -31,12 +41,46 @@ int main(void)
 		if (get_button(BUTTON0, BUTTON0PIN))
 		{
 			button0_state = !button0_state;
+			
 			if (button0_state)
 			{
 				led_all_on();
 			}
 			else
 				led_all_off();
+		}
+		if (get_button(BUTTON1, BUTTON1PIN))
+		{
+			button1_state = !button1_state;
+			
+			if (button1_state)
+			{
+				shift_left_ledon();
+			}
+			else
+				shift_right_ledon();
+		}
+		if (get_button(BUTTON2, BUTTON2PIN))
+		{
+			button2_state = !button2_state;
+			
+			if (button2_state)
+			{
+				shift_left_keep_ledon();
+			}
+			else
+				shift_right_keep_ledon();
+		}
+		if (get_button(BUTTON3, BUTTON3PIN))
+		{
+			button3_state = !button3_state;
+			
+			if (button3_state)
+			{
+				floweron();
+			}
+			else
+				floweroff();
 		}
 	}
 }
