@@ -75,11 +75,13 @@ void shift_right_ledon(void)
 void led_all_on(void)
 {
 	PORTA = 0xff;
+	_delay_ms(50);
 }
 
 void led_all_off(void)
 {
 	PORTA = 0x00;
+	_delay_ms(50);
 }
 
 void floweron(void)

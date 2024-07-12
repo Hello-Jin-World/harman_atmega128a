@@ -1,12 +1,12 @@
+
 #include <avr/io.h>
-extern int fnd_main(void);
+
 
 int main(void)
 {
-	init_fnd();
+    /* Replace with your application code */
     while (1) 
     {
-		fnd_main();
     }
 }
 

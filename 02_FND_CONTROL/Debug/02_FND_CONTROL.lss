@@ -287,15 +287,14 @@ void fnd_display(void)
  18a:	85 bb       	out	0x15, r24	; 21
 		break;
  18c:	56 c0       	rjmp	.+172    	; 0x23a <fnd_display+0x164>
-
-		case 2 :
-#if 0 // common anode
-		FND_DIGIT_PORT = 0x20;
+			FND_DATA_PORT = fnd_font[sec_count / 60 % 10] & fnd_font[10]; // 1단위 분
+		else
+			FND_DATA_PORT = fnd_font[sec_count / 60 % 10]; // 1단위 분
+		break;
 #else // common cathod
 		FND_DIGIT_PORT = ~0x20;
  18e:	8f ed       	ldi	r24, 0xDF	; 223
  190:	88 bb       	out	0x18, r24	; 24
-#endif
 		if (sec_count % 2 == 1)
  192:	60 91 0e 01 	lds	r22, 0x010E	; 0x80010e <sec_count>
  196:	70 91 0f 01 	lds	r23, 0x010F	; 0x80010f <sec_count+0x1>
