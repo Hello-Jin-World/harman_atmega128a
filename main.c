@@ -1,9 +1,3 @@
-/*
- * 01_LED_CONTROL.c
- *
- * Created: 2024-07-10 오후 3:17:14
- * Author : kccistc
- */ 
 #define F_CPU 16000000UL
 #include <util/delay.h>
 #include <avr/io.h>
@@ -61,10 +55,12 @@ int main(void)
 					(*fp[a])();
 				else
 					(*fp[a])();
-					a++;
+				a++;
 			}
-			else
-				a = 0;
+		}
+		if(a == 8)
+		{
+			a = 0;
 		}
 		if (get_button(BUTTON1, BUTTON1PIN))
 		{
