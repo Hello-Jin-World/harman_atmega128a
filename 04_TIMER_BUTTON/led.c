@@ -1,12 +1,8 @@
-﻿
-/*
- * led.c
- *
- * Created: 2024-07-11 오전 9:31:04
- *  Author: kccistc
- */ 
+﻿#include "led.h" //현재 directory에 들어있는 led.h를 불러온다.
+#include "button.h"
+extern void init_button(void);
+extern int get_button(int button_num, int button_pin);
 
-#include "led.h" //현재 directory에 들어있는 led.h를 불러온다.
 
 int led_main(void); // 선언
 
@@ -36,10 +32,17 @@ void (*fp[])() =
 int led_main(void) // 정의
 {
 	
+	init_button();
+	
 	DDRA = 0xff;	//PORTA에 연결된 PIN 8개를 모두 output으로 설정. 출력 : 1
 	
 	while(1)
 	{
+		if (get_button(BUTTON0, BUTTON0PIN))
+		{
+			state++;
+			state %= 6; // 버튼을 눌렀을 때 상태처리
+		}
 		fp[state]();
 	}
 }
@@ -56,7 +59,6 @@ void shift_left_keep_ledon(void)
 		{
 			i = 0;
 			PORTA = 0x00;
-			state++; // state를 천이(transition)
 		}
 		else
 		{
@@ -87,7 +89,6 @@ void shift_right_keep_ledon(void)
 		{
 			i = 0;
 			PORTA = 0x00;
-			state++; // state를 천이(transition)
 		}
 		else
 		{
@@ -115,7 +116,6 @@ void shift_left_ledon(void)
 		{
 			i = 0;
 			PORTA = 0x00;
-			state++; // state를 천이(transition)
 		}
 		else
 		{
@@ -146,7 +146,6 @@ void shift_right_ledon(void)
 		{
 			i = 0;
 			PORTA = 0x00;
-			state++; // state를 천이(transition)
 		}
 		else
 		{
@@ -200,7 +199,6 @@ void floweron(void)
 		{
 			i = 0;
 			PORTA = 0x00;
-			state++; // state를 천이(transition)
 		}
 		else
 		{
@@ -232,7 +230,6 @@ void floweroff(void)
 		{
 			i = 0;
 			PORTA = 0x00;
-			state = 0; // state를 천이(transition)
 		}
 		else
 		{
