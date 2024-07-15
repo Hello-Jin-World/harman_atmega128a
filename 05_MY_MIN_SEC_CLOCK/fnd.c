@@ -1,33 +1,135 @@
-﻿/*
- * CFile1.c
- *
- * Created: 2024-07-12 오후 1:06:55
- *  Author: kccistc
- */ 
-
-#include "fnd.h"
+﻿#include "fnd.h"
+#include "button.h"
 void init_fnd(void);
 void fnd_display(void);
 int fnd_main(void);
+extern void init_button(void);
+extern int get_button(int button_num, int button_pin);
 
-uint32_t ms_count = 0; // ms를 재는 count 변수 unsigned int = uint32_t
+void display_clock();
+void stopwatch();
+void pause_stopwatch();
+void clear_stopwatch();
+
 uint32_t sec_count = 0; // 초를 재는 count 변수 unsigned int = uint32_t
+
+extern volatile uint32_t fnd_refreshrate; // fnd 잔상효과를 유지하기 위한 변수 2ms
+extern volatile uint32_t msec_count;
+
+int state = 0;
+int temp = 0, temp1 = 0;
+
+void (*fp[])() =
+{
+	display_clock, // 0
+	stopwatch, // 1
+	pause_stopwatch, // 2
+	clear_stopwatch // 3
+};
 
 int fnd_main(void)
 {
+	DDRA = 0xff;
+	int button0_state = 0;
+	int button1_state = 0;
+	int reset_active = 0;
+	int restart_stopwatch = 0;
+	
 	init_fnd();
-
+	init_button();
+	
 	while(1)
 	{
-		fnd_display();
-		_delay_ms(1);
-		ms_count++;
-		
-		if (ms_count >= 1000)  // 1000ms -> 1s
+		if (get_button(BUTTON0, BUTTON0PIN))
 		{
-			ms_count = 0;
-			sec_count++;
+			button0_state = !button0_state;
+			
+			if (button0_state)
+			{
+				state = 1;
+				temp = sec_count;
+			}
+			else
+			{
+				sec_count = temp;
+				state = 0;
+			}
 		}
+		
+		if (get_button(BUTTON1, BUTTON1PIN))
+		{
+			button1_state = !button1_state;
+			
+			if (button1_state)
+			{
+				state = 2;
+				reset_active = 1;
+			}
+			if (button1_state == 0 || restart_stopwatch == 1)
+			{
+				state = 1;
+				reset_active = 0;
+				restart_stopwatch = 0;
+			}
+		}
+		if (get_button(BUTTON2, BUTTON2PIN)) // 삭제
+		{
+			if (reset_active)
+			{
+				clear_stopwatch();
+				restart_stopwatch = 1;
+			}
+		}
+		
+		fp[state]();
+	}
+}
+
+void display_clock(void)
+{
+	if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
+	{
+		fnd_refreshrate = 0;
+		fnd_display();
+	}
+	if (msec_count >= 1000)
+	{
+		msec_count = 0;
+		sec_count++;
+	}
+}
+
+void stopwatch(void)
+{
+	if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
+	{
+		fnd_refreshrate = 0;
+		fnd_display();
+	}
+	if (msec_count >= 12)
+	{
+		msec_count = 0;
+		sec_count++;
+	}
+}
+
+void pause_stopwatch(void)
+{
+	if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
+	{
+		fnd_refreshrate = 0;
+		fnd_display();
+	}
+	temp1 = sec_count;	
+}
+
+void clear_stopwatch(void)
+{
+	sec_count = 0;
+	if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
+	{
+		fnd_refreshrate = 0;
+		fnd_display();
 	}
 }
 

@@ -10,10 +10,10 @@ void shift_left_ledon();
 void shift_right_ledon();
 void shift_left_keep_ledon();
 void shift_right_keep_ledon();
-void floweron(void);
-void floweroff(void);
-void led_all_on(void);
-void led_all_off(void);
+void floweron();
+void floweroff();
+void led_all_on();
+void led_all_off();
 
 extern volatile uint32_t msec_count;
 
@@ -82,7 +82,7 @@ void shift_right_keep_ledon(void)
 #if 1
 	static int i = 0;
 
-	if (msec_count >= 100)
+	if (msec_count >= 100) // 100ms 마다 껐다 켰다
 	{
 		msec_count = 0;
 		if (i >= 8)
@@ -111,7 +111,7 @@ void shift_left_ledon(void)
 	
 	if (msec_count >= 100)
 	{
-		msec_count = 0;
+		msec_count = 0; // 0으로 초기화 해줘서 다시 100ms 할 수 있도록
 		if (i >= 8)
 		{
 			i = 0;

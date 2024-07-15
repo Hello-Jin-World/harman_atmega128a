@@ -466,14 +466,14 @@ END GROUP
  *(.bss*)
  .bss.button_status.1741
                 0x0080010c        0x4 button.o
- .bss.i.1789    0x00800110        0x2 led.o
- .bss.i.1783    0x00800112        0x2 led.o
- .bss.led_toggle.1773
+ .bss.i.1785    0x00800110        0x2 led.o
+ .bss.i.1779    0x00800112        0x2 led.o
+ .bss.led_toggle.1769
                 0x00800114        0x2 led.o
- .bss.i.1769    0x00800116        0x2 led.o
- .bss.i.1765    0x00800118        0x2 led.o
- .bss.i.1761    0x0080011a        0x2 led.o
- .bss.i.1757    0x0080011c        0x2 led.o
+ .bss.i.1765    0x00800116        0x2 led.o
+ .bss.i.1761    0x00800118        0x2 led.o
+ .bss.i.1757    0x0080011a        0x2 led.o
+ .bss.i.1753    0x0080011c        0x2 led.o
  .bss.state     0x0080011e        0x2 led.o
                 0x0080011e                state
  .bss.msec_count

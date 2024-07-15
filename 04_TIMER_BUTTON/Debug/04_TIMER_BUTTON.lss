@@ -278,15 +278,15 @@ void shift_left_keep_ledon(void)
  17a:	10 92 22 01 	sts	0x0122, r1	; 0x800122 <msec_count+0x2>
  17e:	10 92 23 01 	sts	0x0123, r1	; 0x800123 <msec_count+0x3>
 		if (i >= 8)
- 182:	20 91 1c 01 	lds	r18, 0x011C	; 0x80011c <i.1757>
- 186:	30 91 1d 01 	lds	r19, 0x011D	; 0x80011d <i.1757+0x1>
+ 182:	20 91 1c 01 	lds	r18, 0x011C	; 0x80011c <i.1753>
+ 186:	30 91 1d 01 	lds	r19, 0x011D	; 0x80011d <i.1753+0x1>
  18a:	28 30       	cpi	r18, 0x08	; 8
  18c:	31 05       	cpc	r19, r1
  18e:	34 f0       	brlt	.+12     	; 0x19c <shift_left_keep_ledon+0x44>
 		{
 			i = 0;
- 190:	10 92 1d 01 	sts	0x011D, r1	; 0x80011d <i.1757+0x1>
- 194:	10 92 1c 01 	sts	0x011C, r1	; 0x80011c <i.1757>
+ 190:	10 92 1d 01 	sts	0x011D, r1	; 0x80011d <i.1753+0x1>
+ 194:	10 92 1c 01 	sts	0x011C, r1	; 0x80011c <i.1753>
 			PORTA = 0x00;
  198:	1b ba       	out	0x1b, r1	; 27
  19a:	08 95       	ret
@@ -296,8 +296,8 @@ void shift_left_keep_ledon(void)
 			PORTA |= 0b00000001 << i++;
  19c:	c9 01       	movw	r24, r18
  19e:	01 96       	adiw	r24, 0x01	; 1
- 1a0:	90 93 1d 01 	sts	0x011D, r25	; 0x80011d <i.1757+0x1>
- 1a4:	80 93 1c 01 	sts	0x011C, r24	; 0x80011c <i.1757>
+ 1a0:	90 93 1d 01 	sts	0x011D, r25	; 0x80011d <i.1753+0x1>
+ 1a4:	80 93 1c 01 	sts	0x011C, r24	; 0x80011c <i.1753>
  1a8:	81 e0       	ldi	r24, 0x01	; 1
  1aa:	90 e0       	ldi	r25, 0x00	; 0
  1ac:	02 c0       	rjmp	.+4      	; 0x1b2 <shift_left_keep_ledon+0x5a>
@@ -316,7 +316,7 @@ void shift_right_keep_ledon(void)
 #if 1
 	static int i = 0;
 
-	if (msec_count >= 100)
+	if (msec_count >= 100) // 100ms 마다 껐다 켰다
  1be:	80 91 20 01 	lds	r24, 0x0120	; 0x800120 <msec_count>
  1c2:	90 91 21 01 	lds	r25, 0x0121	; 0x800121 <msec_count+0x1>
  1c6:	a0 91 22 01 	lds	r26, 0x0122	; 0x800122 <msec_count+0x2>
@@ -333,15 +333,15 @@ void shift_right_keep_ledon(void)
  1e0:	10 92 22 01 	sts	0x0122, r1	; 0x800122 <msec_count+0x2>
  1e4:	10 92 23 01 	sts	0x0123, r1	; 0x800123 <msec_count+0x3>
 		if (i >= 8)
- 1e8:	20 91 1a 01 	lds	r18, 0x011A	; 0x80011a <i.1761>
- 1ec:	30 91 1b 01 	lds	r19, 0x011B	; 0x80011b <i.1761+0x1>
+ 1e8:	20 91 1a 01 	lds	r18, 0x011A	; 0x80011a <i.1757>
+ 1ec:	30 91 1b 01 	lds	r19, 0x011B	; 0x80011b <i.1757+0x1>
  1f0:	28 30       	cpi	r18, 0x08	; 8
  1f2:	31 05       	cpc	r19, r1
  1f4:	34 f0       	brlt	.+12     	; 0x202 <shift_right_keep_ledon+0x44>
 		{
 			i = 0;
- 1f6:	10 92 1b 01 	sts	0x011B, r1	; 0x80011b <i.1761+0x1>
- 1fa:	10 92 1a 01 	sts	0x011A, r1	; 0x80011a <i.1761>
+ 1f6:	10 92 1b 01 	sts	0x011B, r1	; 0x80011b <i.1757+0x1>
+ 1fa:	10 92 1a 01 	sts	0x011A, r1	; 0x80011a <i.1757>
 			PORTA = 0x00;
  1fe:	1b ba       	out	0x1b, r1	; 27
  200:	08 95       	ret
@@ -351,8 +351,8 @@ void shift_right_keep_ledon(void)
 			PORTA |= 0b10000000 >> i++;
  202:	c9 01       	movw	r24, r18
  204:	01 96       	adiw	r24, 0x01	; 1
- 206:	90 93 1b 01 	sts	0x011B, r25	; 0x80011b <i.1761+0x1>
- 20a:	80 93 1a 01 	sts	0x011A, r24	; 0x80011a <i.1761>
+ 206:	90 93 1b 01 	sts	0x011B, r25	; 0x80011b <i.1757+0x1>
+ 20a:	80 93 1a 01 	sts	0x011A, r24	; 0x80011a <i.1757>
  20e:	80 e8       	ldi	r24, 0x80	; 128
  210:	90 e0       	ldi	r25, 0x00	; 0
  212:	02 c0       	rjmp	.+4      	; 0x218 <shift_right_keep_ledon+0x5a>
@@ -382,21 +382,21 @@ void shift_left_ledon(void)
  23a:	b1 05       	cpc	r27, r1
  23c:	28 f1       	brcs	.+74     	; 0x288 <shift_left_ledon+0x64>
 	{
-		msec_count = 0;
+		msec_count = 0; // 0으로 초기화 해줘서 다시 100ms 할 수 있도록
  23e:	10 92 20 01 	sts	0x0120, r1	; 0x800120 <msec_count>
  242:	10 92 21 01 	sts	0x0121, r1	; 0x800121 <msec_count+0x1>
  246:	10 92 22 01 	sts	0x0122, r1	; 0x800122 <msec_count+0x2>
  24a:	10 92 23 01 	sts	0x0123, r1	; 0x800123 <msec_count+0x3>
 		if (i >= 8)
- 24e:	80 91 18 01 	lds	r24, 0x0118	; 0x800118 <i.1765>
- 252:	90 91 19 01 	lds	r25, 0x0119	; 0x800119 <i.1765+0x1>
+ 24e:	80 91 18 01 	lds	r24, 0x0118	; 0x800118 <i.1761>
+ 252:	90 91 19 01 	lds	r25, 0x0119	; 0x800119 <i.1761+0x1>
  256:	88 30       	cpi	r24, 0x08	; 8
  258:	91 05       	cpc	r25, r1
  25a:	34 f0       	brlt	.+12     	; 0x268 <shift_left_ledon+0x44>
 		{
 			i = 0;
- 25c:	10 92 19 01 	sts	0x0119, r1	; 0x800119 <i.1765+0x1>
- 260:	10 92 18 01 	sts	0x0118, r1	; 0x800118 <i.1765>
+ 25c:	10 92 19 01 	sts	0x0119, r1	; 0x800119 <i.1761+0x1>
+ 260:	10 92 18 01 	sts	0x0118, r1	; 0x800118 <i.1761>
 			PORTA = 0x00;
  264:	1b ba       	out	0x1b, r1	; 27
  266:	08 95       	ret
@@ -407,8 +407,8 @@ void shift_left_ledon(void)
  268:	9c 01       	movw	r18, r24
  26a:	2f 5f       	subi	r18, 0xFF	; 255
  26c:	3f 4f       	sbci	r19, 0xFF	; 255
- 26e:	30 93 19 01 	sts	0x0119, r19	; 0x800119 <i.1765+0x1>
- 272:	20 93 18 01 	sts	0x0118, r18	; 0x800118 <i.1765>
+ 26e:	30 93 19 01 	sts	0x0119, r19	; 0x800119 <i.1761+0x1>
+ 272:	20 93 18 01 	sts	0x0118, r18	; 0x800118 <i.1761>
  276:	21 e0       	ldi	r18, 0x01	; 1
  278:	30 e0       	ldi	r19, 0x00	; 0
  27a:	a9 01       	movw	r20, r18
@@ -443,15 +443,15 @@ void shift_right_ledon(void)
  2ac:	10 92 22 01 	sts	0x0122, r1	; 0x800122 <msec_count+0x2>
  2b0:	10 92 23 01 	sts	0x0123, r1	; 0x800123 <msec_count+0x3>
 		if (i >= 8)
- 2b4:	80 91 16 01 	lds	r24, 0x0116	; 0x800116 <i.1769>
- 2b8:	90 91 17 01 	lds	r25, 0x0117	; 0x800117 <i.1769+0x1>
+ 2b4:	80 91 16 01 	lds	r24, 0x0116	; 0x800116 <i.1765>
+ 2b8:	90 91 17 01 	lds	r25, 0x0117	; 0x800117 <i.1765+0x1>
  2bc:	88 30       	cpi	r24, 0x08	; 8
  2be:	91 05       	cpc	r25, r1
  2c0:	34 f0       	brlt	.+12     	; 0x2ce <shift_right_ledon+0x44>
 		{
 			i = 0;
- 2c2:	10 92 17 01 	sts	0x0117, r1	; 0x800117 <i.1769+0x1>
- 2c6:	10 92 16 01 	sts	0x0116, r1	; 0x800116 <i.1769>
+ 2c2:	10 92 17 01 	sts	0x0117, r1	; 0x800117 <i.1765+0x1>
+ 2c6:	10 92 16 01 	sts	0x0116, r1	; 0x800116 <i.1765>
 			PORTA = 0x00;
  2ca:	1b ba       	out	0x1b, r1	; 27
  2cc:	08 95       	ret
@@ -462,8 +462,8 @@ void shift_right_ledon(void)
  2ce:	9c 01       	movw	r18, r24
  2d0:	2f 5f       	subi	r18, 0xFF	; 255
  2d2:	3f 4f       	sbci	r19, 0xFF	; 255
- 2d4:	30 93 17 01 	sts	0x0117, r19	; 0x800117 <i.1769+0x1>
- 2d8:	20 93 16 01 	sts	0x0116, r18	; 0x800116 <i.1769>
+ 2d4:	30 93 17 01 	sts	0x0117, r19	; 0x800117 <i.1765+0x1>
+ 2d8:	20 93 16 01 	sts	0x0116, r18	; 0x800116 <i.1765>
  2dc:	20 e8       	ldi	r18, 0x80	; 128
  2de:	30 e0       	ldi	r19, 0x00	; 0
  2e0:	a9 01       	movw	r20, r18
@@ -498,15 +498,15 @@ void shift_right_ledon(void)
  312:	10 92 22 01 	sts	0x0122, r1	; 0x800122 <msec_count+0x2>
  316:	10 92 23 01 	sts	0x0123, r1	; 0x800123 <msec_count+0x3>
 		if (i >= 4)
- 31a:	20 91 12 01 	lds	r18, 0x0112	; 0x800112 <i.1783>
- 31e:	30 91 13 01 	lds	r19, 0x0113	; 0x800113 <i.1783+0x1>
+ 31a:	20 91 12 01 	lds	r18, 0x0112	; 0x800112 <i.1779>
+ 31e:	30 91 13 01 	lds	r19, 0x0113	; 0x800113 <i.1779+0x1>
  322:	24 30       	cpi	r18, 0x04	; 4
  324:	31 05       	cpc	r19, r1
  326:	34 f0       	brlt	.+12     	; 0x334 <floweron+0x44>
 		{
 			i = 0;
- 328:	10 92 13 01 	sts	0x0113, r1	; 0x800113 <i.1783+0x1>
- 32c:	10 92 12 01 	sts	0x0112, r1	; 0x800112 <i.1783>
+ 328:	10 92 13 01 	sts	0x0113, r1	; 0x800113 <i.1779+0x1>
+ 32c:	10 92 12 01 	sts	0x0112, r1	; 0x800112 <i.1779>
 			PORTA = 0x00;
  330:	1b ba       	out	0x1b, r1	; 27
  332:	08 95       	ret
@@ -535,11 +535,11 @@ void shift_right_ledon(void)
  358:	83 2b       	or	r24, r19
  35a:	8b bb       	out	0x1b, r24	; 27
 			i++;
- 35c:	80 91 12 01 	lds	r24, 0x0112	; 0x800112 <i.1783>
- 360:	90 91 13 01 	lds	r25, 0x0113	; 0x800113 <i.1783+0x1>
+ 35c:	80 91 12 01 	lds	r24, 0x0112	; 0x800112 <i.1779>
+ 360:	90 91 13 01 	lds	r25, 0x0113	; 0x800113 <i.1779+0x1>
  364:	01 96       	adiw	r24, 0x01	; 1
- 366:	90 93 13 01 	sts	0x0113, r25	; 0x800113 <i.1783+0x1>
- 36a:	80 93 12 01 	sts	0x0112, r24	; 0x800112 <i.1783>
+ 366:	90 93 13 01 	sts	0x0113, r25	; 0x800113 <i.1779+0x1>
+ 36a:	80 93 12 01 	sts	0x0112, r24	; 0x800112 <i.1779>
  36e:	08 95       	ret
 
 00000370 <floweroff>:
@@ -565,15 +565,15 @@ void shift_right_ledon(void)
  392:	10 92 22 01 	sts	0x0122, r1	; 0x800122 <msec_count+0x2>
  396:	10 92 23 01 	sts	0x0123, r1	; 0x800123 <msec_count+0x3>
 		if (i >= 4)
- 39a:	40 91 10 01 	lds	r20, 0x0110	; 0x800110 <i.1789>
- 39e:	50 91 11 01 	lds	r21, 0x0111	; 0x800111 <i.1789+0x1>
+ 39a:	40 91 10 01 	lds	r20, 0x0110	; 0x800110 <i.1785>
+ 39e:	50 91 11 01 	lds	r21, 0x0111	; 0x800111 <i.1785+0x1>
  3a2:	44 30       	cpi	r20, 0x04	; 4
  3a4:	51 05       	cpc	r21, r1
  3a6:	34 f0       	brlt	.+12     	; 0x3b4 <floweroff+0x44>
 		{
 			i = 0;
- 3a8:	10 92 11 01 	sts	0x0111, r1	; 0x800111 <i.1789+0x1>
- 3ac:	10 92 10 01 	sts	0x0110, r1	; 0x800110 <i.1789>
+ 3a8:	10 92 11 01 	sts	0x0111, r1	; 0x800111 <i.1785+0x1>
+ 3ac:	10 92 10 01 	sts	0x0110, r1	; 0x800110 <i.1785>
 			PORTA = 0x00;
  3b0:	1b ba       	out	0x1b, r1	; 27
  3b2:	08 95       	ret
@@ -601,11 +601,11 @@ void shift_right_ledon(void)
  3d6:	82 2b       	or	r24, r18
  3d8:	8b bb       	out	0x1b, r24	; 27
 			i++;
- 3da:	80 91 10 01 	lds	r24, 0x0110	; 0x800110 <i.1789>
- 3de:	90 91 11 01 	lds	r25, 0x0111	; 0x800111 <i.1789+0x1>
+ 3da:	80 91 10 01 	lds	r24, 0x0110	; 0x800110 <i.1785>
+ 3de:	90 91 11 01 	lds	r25, 0x0111	; 0x800111 <i.1785+0x1>
  3e2:	01 96       	adiw	r24, 0x01	; 1
- 3e4:	90 93 11 01 	sts	0x0111, r25	; 0x800111 <i.1789+0x1>
- 3e8:	80 93 10 01 	sts	0x0110, r24	; 0x800110 <i.1789>
+ 3e4:	90 93 11 01 	sts	0x0111, r25	; 0x800111 <i.1785+0x1>
+ 3e8:	80 93 10 01 	sts	0x0110, r24	; 0x800110 <i.1785>
  3ec:	08 95       	ret
 
 000003ee <led_main>:
@@ -702,14 +702,14 @@ void led_all_on_off(void)
 		led_toggle = !led_toggle;
  468:	81 e0       	ldi	r24, 0x01	; 1
  46a:	90 e0       	ldi	r25, 0x00	; 0
- 46c:	20 91 14 01 	lds	r18, 0x0114	; 0x800114 <led_toggle.1773>
- 470:	30 91 15 01 	lds	r19, 0x0115	; 0x800115 <led_toggle.1773+0x1>
+ 46c:	20 91 14 01 	lds	r18, 0x0114	; 0x800114 <led_toggle.1769>
+ 470:	30 91 15 01 	lds	r19, 0x0115	; 0x800115 <led_toggle.1769+0x1>
  474:	23 2b       	or	r18, r19
  476:	11 f0       	breq	.+4      	; 0x47c <led_all_on_off+0x3e>
  478:	80 e0       	ldi	r24, 0x00	; 0
  47a:	90 e0       	ldi	r25, 0x00	; 0
- 47c:	90 93 15 01 	sts	0x0115, r25	; 0x800115 <led_toggle.1773+0x1>
- 480:	80 93 14 01 	sts	0x0114, r24	; 0x800114 <led_toggle.1773>
+ 47c:	90 93 15 01 	sts	0x0115, r25	; 0x800115 <led_toggle.1769+0x1>
+ 480:	80 93 14 01 	sts	0x0114, r24	; 0x800114 <led_toggle.1769>
 		if (led_toggle)
  484:	89 2b       	or	r24, r25
  486:	11 f0       	breq	.+4      	; 0x48c <led_all_on_off+0x4e>

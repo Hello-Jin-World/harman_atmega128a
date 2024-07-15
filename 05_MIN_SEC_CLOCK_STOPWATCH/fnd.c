@@ -1,31 +1,26 @@
-﻿/*
- * CFile1.c
- *
- * Created: 2024-07-12 오후 1:06:55
- *  Author: kccistc
- */ 
-
-#include "fnd.h"
+﻿#include "fnd.h"
 void init_fnd(void);
 void fnd_display(void);
 int fnd_main(void);
 
-uint32_t ms_count = 0; // ms를 재는 count 변수 unsigned int = uint32_t
 uint32_t sec_count = 0; // 초를 재는 count 변수 unsigned int = uint32_t
+
+extern volatile uint32_t fnd_refreshrate; // fnd 잔상효과를 유지하기 위한 변수 2ms
+extern volatile uint32_t msec_count;
 
 int fnd_main(void)
 {
 	init_fnd();
-
 	while(1)
 	{
-		fnd_display();
-		_delay_ms(1);
-		ms_count++;
-		
-		if (ms_count >= 1000)  // 1000ms -> 1s
+		if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
 		{
-			ms_count = 0;
+			fnd_refreshrate = 0;
+			fnd_display();
+		}
+		if (msec_count >= 1000)
+		{
+			msec_count = 0;
 			sec_count++;
 		}
 	}
