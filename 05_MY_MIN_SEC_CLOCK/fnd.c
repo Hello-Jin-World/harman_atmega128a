@@ -16,27 +16,29 @@ uint32_t sec_count = 0; // 초를 재는 count 변수 unsigned int = uint32_t
 extern volatile uint32_t fnd_refreshrate; // fnd 잔상효과를 유지하기 위한 변수 2ms
 extern volatile uint32_t msec_count;
 
-int state = 0;
-int temp = 0, temp1 = 0;
+int temp1 = 0;
 
 void (*fp[])() =
 {
-	display_clock, // 0
-	stopwatch, // 1
-	pause_stopwatch, // 2
-	clear_stopwatch // 3
+	display_clock, // 0 시계 모드
+	stopwatch, // 1 스톱워치 모드
+	pause_stopwatch, // 2 스톱워치 일시정지
+	clear_stopwatch // 3 스톱워치 리셋
 };
 
 int fnd_main(void)
 {
-	DDRA = 0xff;
-	int button0_state = 0;
-	int button1_state = 0;
-	int reset_active = 0;
-	int restart_stopwatch = 0;
+	int temp = 0;
+	int state = 0; // 모드 선택 변수
 	
-	init_fnd();
-	init_button();
+	DDRA = 0xff;
+	int button0_state = 0; // 버튼0번 상태 변수
+	int button1_state = 0; // 버튼1번 상태 변수
+	int reset_active = 0; // 리셋이 가능한지 알려주는 토글
+	int restart_stopwatch = 0; // 재시작이 가능한지 알려주는 토글
+	
+	init_fnd(); // fnd 초기화
+	init_button(); // button 초기화
 	
 	while(1)
 	{
@@ -44,13 +46,14 @@ int fnd_main(void)
 		{
 			button0_state = !button0_state;
 			
-			if (button0_state)
+			if (button0_state) // 버튼 0을 처음 누르면 지나간 시간을 임시 변수에 저장하고 시간 리셋 후 스톱워치로 진입
 			{
+				button1_state = 0;
 				temp = sec_count;
 				sec_count = 0;
 				state = 1;
 			}
-			else
+			else // 다시 버튼0을 누르면 임시 변수에 저장된 시간을 가져오고 시계로 진입
 			{
 				sec_count = temp;
 				state = 0;
@@ -61,24 +64,24 @@ int fnd_main(void)
 		{
 			button1_state = !button1_state;
 			
-			if (button1_state)
+			if (button1_state) // 버튼 1을 처음 누르면 일시정지 모드로 진입하고 리셋을 할 수 있도록 토글 활성화
 			{
 				state = 2;
 				reset_active = 1;
 			}
-			if (button1_state == 0 || restart_stopwatch == 1)
+			if (button1_state == 0 || restart_stopwatch == 1) // 다음 버튼 1을 누르면 스톱워치 재시작 후 리셋 토글 비활성화.
 			{
 				state = 1;
 				reset_active = 0;
 				restart_stopwatch = 0;
 			}
 		}
-		if (get_button(BUTTON2, BUTTON2PIN)) // 삭제
+		if (get_button(BUTTON2, BUTTON2PIN)) // 버튼 2를 누르면 리셋 토글이 활성화가 되었는지 확인 후 리셋
 		{
 			if (reset_active)
 			{
 				clear_stopwatch();
-				restart_stopwatch = 1;
+				restart_stopwatch = 1; // 재시작이 가능하도록 재시작 토글 활성화
 			}
 		}
 		
