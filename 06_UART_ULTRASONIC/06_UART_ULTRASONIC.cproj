@@ -128,10 +128,19 @@
     <Compile Include="button.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="def.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="fnd.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="fnd.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="uart0.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="uart0.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="led.c">
@@ -141,6 +150,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="main.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="uart1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="uart1.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>

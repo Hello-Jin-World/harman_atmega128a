@@ -3,31 +3,31 @@
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000014  00800100  0000064a  000006de  2**0
+  0 .data         00000014  00800100  00000624  000006b8  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         0000064a  00000000  00000000  00000094  2**1
+  1 .text         00000624  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000014  00800114  00800114  000006f2  2**0
+  2 .bss          00000014  00800114  00800114  000006cc  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  000006f2  2**0
+  3 .comment      00000030  00000000  00000000  000006cc  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000724  2**2
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000006fc  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 000000a8  00000000  00000000  00000764  2**0
+  5 .debug_aranges 000000a8  00000000  00000000  0000073c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00000d6f  00000000  00000000  0000080c  2**0
+  6 .debug_info   00000d60  00000000  00000000  000007e4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000a76  00000000  00000000  0000157b  2**0
+  7 .debug_abbrev 00000a76  00000000  00000000  00001544  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000006d2  00000000  00000000  00001ff1  2**0
+  8 .debug_line   000006c0  00000000  00000000  00001fba  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  0000012c  00000000  00000000  000026c4  2**2
+  9 .debug_frame  0000012c  00000000  00000000  0000267c  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    0000055f  00000000  00000000  000027f0  2**0
+ 10 .debug_str    0000055a  00000000  00000000  000027a8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    000003ee  00000000  00000000  00002d4f  2**0
+ 11 .debug_loc    000003ae  00000000  00000000  00002d02  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000078  00000000  00000000  0000313d  2**0
+ 12 .debug_ranges 00000078  00000000  00000000  000030b0  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -65,7 +65,7 @@ Disassembly of section .text:
   3a:	00 00       	nop
   3c:	44 c0       	rjmp	.+136    	; 0xc6 <__bad_interrupt>
   3e:	00 00       	nop
-  40:	98 c2       	rjmp	.+1328   	; 0x572 <__vector_16>
+  40:	85 c2       	rjmp	.+1290   	; 0x54c <__vector_16>
   42:	00 00       	nop
   44:	40 c0       	rjmp	.+128    	; 0xc6 <__bad_interrupt>
   46:	00 00       	nop
@@ -116,7 +116,7 @@ Disassembly of section .text:
   98:	11 e0       	ldi	r17, 0x01	; 1
   9a:	a0 e0       	ldi	r26, 0x00	; 0
   9c:	b1 e0       	ldi	r27, 0x01	; 1
-  9e:	ea e4       	ldi	r30, 0x4A	; 74
+  9e:	e4 e2       	ldi	r30, 0x24	; 36
   a0:	f6 e0       	ldi	r31, 0x06	; 6
   a2:	00 e0       	ldi	r16, 0x00	; 0
   a4:	0b bf       	out	0x3b, r16	; 59
@@ -140,8 +140,8 @@ Disassembly of section .text:
   bc:	a8 32       	cpi	r26, 0x28	; 40
   be:	b2 07       	cpc	r27, r18
   c0:	e1 f7       	brne	.-8      	; 0xba <.do_clear_bss_loop>
-  c2:	9b d2       	rcall	.+1334   	; 0x5fa <main>
-  c4:	c0 c2       	rjmp	.+1408   	; 0x646 <_exit>
+  c2:	88 d2       	rcall	.+1296   	; 0x5d4 <main>
+  c4:	ad c2       	rjmp	.+1370   	; 0x620 <_exit>
 
 000000c6 <__bad_interrupt>:
   c6:	9c cf       	rjmp	.-200    	; 0x0 <__vectors>
@@ -288,8 +288,8 @@ void fnd_display(void)
 	static int digit_select = 0; // 자리수 선택 변수 0~3   static : 전역변수처럼 작동
 
 	switch(digit_select)
- 18c:	80 91 18 01 	lds	r24, 0x0118	; 0x800118 <digit_select.1777>
- 190:	90 91 19 01 	lds	r25, 0x0119	; 0x800119 <digit_select.1777+0x1>
+ 18c:	80 91 18 01 	lds	r24, 0x0118	; 0x800118 <digit_select.1776>
+ 190:	90 91 19 01 	lds	r25, 0x0119	; 0x800119 <digit_select.1776+0x1>
  194:	81 30       	cpi	r24, 0x01	; 1
  196:	91 05       	cpc	r25, r1
  198:	19 f1       	breq	.+70     	; 0x1e0 <fnd_display+0x7a>
@@ -322,7 +322,7 @@ void fnd_display(void)
  1c6:	30 e0       	ldi	r19, 0x00	; 0
  1c8:	40 e0       	ldi	r20, 0x00	; 0
  1ca:	50 e0       	ldi	r21, 0x00	; 0
- 1cc:	1a d2       	rcall	.+1076   	; 0x602 <__udivmodsi4>
+ 1cc:	07 d2       	rcall	.+1038   	; 0x5dc <__udivmodsi4>
  1ce:	e1 e0       	ldi	r30, 0x01	; 1
  1d0:	f0 e0       	ldi	r31, 0x00	; 0
  1d2:	ec 0f       	add	r30, r28
@@ -351,14 +351,14 @@ void fnd_display(void)
  1f6:	30 e0       	ldi	r19, 0x00	; 0
  1f8:	40 e0       	ldi	r20, 0x00	; 0
  1fa:	50 e0       	ldi	r21, 0x00	; 0
- 1fc:	02 d2       	rcall	.+1028   	; 0x602 <__udivmodsi4>
+ 1fc:	ef d1       	rcall	.+990    	; 0x5dc <__udivmodsi4>
  1fe:	ca 01       	movw	r24, r20
  200:	b9 01       	movw	r22, r18
  202:	26 e0       	ldi	r18, 0x06	; 6
  204:	30 e0       	ldi	r19, 0x00	; 0
  206:	40 e0       	ldi	r20, 0x00	; 0
  208:	50 e0       	ldi	r21, 0x00	; 0
- 20a:	fb d1       	rcall	.+1014   	; 0x602 <__udivmodsi4>
+ 20a:	e8 d1       	rcall	.+976    	; 0x5dc <__udivmodsi4>
  20c:	e1 e0       	ldi	r30, 0x01	; 1
  20e:	f0 e0       	ldi	r31, 0x00	; 0
  210:	ec 0f       	add	r30, r28
@@ -389,14 +389,14 @@ void fnd_display(void)
  238:	30 e0       	ldi	r19, 0x00	; 0
  23a:	40 e0       	ldi	r20, 0x00	; 0
  23c:	50 e0       	ldi	r21, 0x00	; 0
- 23e:	e1 d1       	rcall	.+962    	; 0x602 <__udivmodsi4>
+ 23e:	ce d1       	rcall	.+924    	; 0x5dc <__udivmodsi4>
  240:	ca 01       	movw	r24, r20
  242:	b9 01       	movw	r22, r18
  244:	2a e0       	ldi	r18, 0x0A	; 10
  246:	30 e0       	ldi	r19, 0x00	; 0
  248:	40 e0       	ldi	r20, 0x00	; 0
  24a:	50 e0       	ldi	r21, 0x00	; 0
- 24c:	da d1       	rcall	.+948    	; 0x602 <__udivmodsi4>
+ 24c:	c7 d1       	rcall	.+910    	; 0x5dc <__udivmodsi4>
  24e:	e1 e0       	ldi	r30, 0x01	; 1
  250:	f0 e0       	ldi	r31, 0x00	; 0
  252:	ec 0f       	add	r30, r28
@@ -414,14 +414,14 @@ void fnd_display(void)
  266:	30 e0       	ldi	r19, 0x00	; 0
  268:	40 e0       	ldi	r20, 0x00	; 0
  26a:	50 e0       	ldi	r21, 0x00	; 0
- 26c:	ca d1       	rcall	.+916    	; 0x602 <__udivmodsi4>
+ 26c:	b7 d1       	rcall	.+878    	; 0x5dc <__udivmodsi4>
  26e:	ca 01       	movw	r24, r20
  270:	b9 01       	movw	r22, r18
  272:	2a e0       	ldi	r18, 0x0A	; 10
  274:	30 e0       	ldi	r19, 0x00	; 0
  276:	40 e0       	ldi	r20, 0x00	; 0
  278:	50 e0       	ldi	r21, 0x00	; 0
- 27a:	c3 d1       	rcall	.+902    	; 0x602 <__udivmodsi4>
+ 27a:	b0 d1       	rcall	.+864    	; 0x5dc <__udivmodsi4>
  27c:	e1 e0       	ldi	r30, 0x01	; 1
  27e:	f0 e0       	ldi	r31, 0x00	; 0
  280:	ec 0f       	add	r30, r28
@@ -449,14 +449,14 @@ void fnd_display(void)
  2a4:	32 e0       	ldi	r19, 0x02	; 2
  2a6:	40 e0       	ldi	r20, 0x00	; 0
  2a8:	50 e0       	ldi	r21, 0x00	; 0
- 2aa:	ab d1       	rcall	.+854    	; 0x602 <__udivmodsi4>
+ 2aa:	98 d1       	rcall	.+816    	; 0x5dc <__udivmodsi4>
  2ac:	ca 01       	movw	r24, r20
  2ae:	b9 01       	movw	r22, r18
  2b0:	26 e0       	ldi	r18, 0x06	; 6
  2b2:	30 e0       	ldi	r19, 0x00	; 0
  2b4:	40 e0       	ldi	r20, 0x00	; 0
  2b6:	50 e0       	ldi	r21, 0x00	; 0
- 2b8:	a4 d1       	rcall	.+840    	; 0x602 <__udivmodsi4>
+ 2b8:	91 d1       	rcall	.+802    	; 0x5dc <__udivmodsi4>
  2ba:	e1 e0       	ldi	r30, 0x01	; 1
  2bc:	f0 e0       	ldi	r31, 0x00	; 0
  2be:	ec 0f       	add	r30, r28
@@ -465,11 +465,11 @@ void fnd_display(void)
  2c4:	f7 1f       	adc	r31, r23
  2c6:	80 81       	ld	r24, Z
  2c8:	85 bb       	out	0x15, r24	; 21
- 2ca:	80 91 18 01 	lds	r24, 0x0118	; 0x800118 <digit_select.1777>
+ 2ca:	80 91 18 01 	lds	r24, 0x0118	; 0x800118 <digit_select.1776>
 		break;
 	}
 	digit_select++;
- 2ce:	90 91 19 01 	lds	r25, 0x0119	; 0x800119 <digit_select.1777+0x1>
+ 2ce:	90 91 19 01 	lds	r25, 0x0119	; 0x800119 <digit_select.1776+0x1>
  2d2:	01 96       	adiw	r24, 0x01	; 1
  2d4:	83 70       	andi	r24, 0x03	; 3
 	digit_select %= 4; //다음 표시할 자리수 선택
@@ -480,8 +480,8 @@ void fnd_display(void)
  2de:	8c 6f       	ori	r24, 0xFC	; 252
  2e0:	9f 6f       	ori	r25, 0xFF	; 255
  2e2:	01 96       	adiw	r24, 0x01	; 1
- 2e4:	90 93 19 01 	sts	0x0119, r25	; 0x800119 <digit_select.1777+0x1>
- 2e8:	80 93 18 01 	sts	0x0118, r24	; 0x800118 <digit_select.1777>
+ 2e4:	90 93 19 01 	sts	0x0119, r25	; 0x800119 <digit_select.1776+0x1>
+ 2e8:	80 93 18 01 	sts	0x0118, r24	; 0x800118 <digit_select.1776>
  2ec:	2b 96       	adiw	r28, 0x0b	; 11
  2ee:	0f b6       	in	r0, 0x3f	; 63
  2f0:	f8 94       	cli
@@ -514,552 +514,559 @@ void display_clock(void)
  31e:	10 92 22 01 	sts	0x0122, r1	; 0x800122 <fnd_refreshrate+0x2>
  322:	10 92 23 01 	sts	0x0123, r1	; 0x800123 <fnd_refreshrate+0x3>
 		fnd_display();
- 326:	1f df       	rcall	.-450    	; 0x166 <fnd_display>
-	}
-	if (msec_count >= 1000)
- 328:	80 91 24 01 	lds	r24, 0x0124	; 0x800124 <msec_count>
- 32c:	90 91 25 01 	lds	r25, 0x0125	; 0x800125 <msec_count+0x1>
- 330:	a0 91 26 01 	lds	r26, 0x0126	; 0x800126 <msec_count+0x2>
- 334:	b0 91 27 01 	lds	r27, 0x0127	; 0x800127 <msec_count+0x3>
- 338:	88 3e       	cpi	r24, 0xE8	; 232
- 33a:	93 40       	sbci	r25, 0x03	; 3
- 33c:	a1 05       	cpc	r26, r1
- 33e:	b1 05       	cpc	r27, r1
- 340:	d8 f0       	brcs	.+54     	; 0x378 <display_clock+0x7a>
-	{
-		msec_count = 0;
- 342:	10 92 24 01 	sts	0x0124, r1	; 0x800124 <msec_count>
- 346:	10 92 25 01 	sts	0x0125, r1	; 0x800125 <msec_count+0x1>
- 34a:	10 92 26 01 	sts	0x0126, r1	; 0x800126 <msec_count+0x2>
- 34e:	10 92 27 01 	sts	0x0127, r1	; 0x800127 <msec_count+0x3>
-		sec_count++;
- 352:	80 91 1c 01 	lds	r24, 0x011C	; 0x80011c <sec_count>
- 356:	90 91 1d 01 	lds	r25, 0x011D	; 0x80011d <sec_count+0x1>
- 35a:	a0 91 1e 01 	lds	r26, 0x011E	; 0x80011e <sec_count+0x2>
- 35e:	b0 91 1f 01 	lds	r27, 0x011F	; 0x80011f <sec_count+0x3>
- 362:	01 96       	adiw	r24, 0x01	; 1
- 364:	a1 1d       	adc	r26, r1
- 366:	b1 1d       	adc	r27, r1
- 368:	80 93 1c 01 	sts	0x011C, r24	; 0x80011c <sec_count>
- 36c:	90 93 1d 01 	sts	0x011D, r25	; 0x80011d <sec_count+0x1>
- 370:	a0 93 1e 01 	sts	0x011E, r26	; 0x80011e <sec_count+0x2>
- 374:	b0 93 1f 01 	sts	0x011F, r27	; 0x80011f <sec_count+0x3>
- 378:	08 95       	ret
+ 326:	1f cf       	rjmp	.-450    	; 0x166 <fnd_display>
+ 328:	08 95       	ret
 
-0000037a <stopwatch>:
+0000032a <stopwatch>:
 	}
 }
 
 void stopwatch(void)
 {
 	if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
- 37a:	80 91 20 01 	lds	r24, 0x0120	; 0x800120 <fnd_refreshrate>
- 37e:	90 91 21 01 	lds	r25, 0x0121	; 0x800121 <fnd_refreshrate+0x1>
- 382:	a0 91 22 01 	lds	r26, 0x0122	; 0x800122 <fnd_refreshrate+0x2>
- 386:	b0 91 23 01 	lds	r27, 0x0123	; 0x800123 <fnd_refreshrate+0x3>
- 38a:	02 97       	sbiw	r24, 0x02	; 2
- 38c:	a1 05       	cpc	r26, r1
- 38e:	b1 05       	cpc	r27, r1
- 390:	48 f0       	brcs	.+18     	; 0x3a4 <stopwatch+0x2a>
+ 32a:	80 91 20 01 	lds	r24, 0x0120	; 0x800120 <fnd_refreshrate>
+ 32e:	90 91 21 01 	lds	r25, 0x0121	; 0x800121 <fnd_refreshrate+0x1>
+ 332:	a0 91 22 01 	lds	r26, 0x0122	; 0x800122 <fnd_refreshrate+0x2>
+ 336:	b0 91 23 01 	lds	r27, 0x0123	; 0x800123 <fnd_refreshrate+0x3>
+ 33a:	02 97       	sbiw	r24, 0x02	; 2
+ 33c:	a1 05       	cpc	r26, r1
+ 33e:	b1 05       	cpc	r27, r1
+ 340:	48 f0       	brcs	.+18     	; 0x354 <stopwatch+0x2a>
 	{
 		fnd_refreshrate = 0;
- 392:	10 92 20 01 	sts	0x0120, r1	; 0x800120 <fnd_refreshrate>
- 396:	10 92 21 01 	sts	0x0121, r1	; 0x800121 <fnd_refreshrate+0x1>
- 39a:	10 92 22 01 	sts	0x0122, r1	; 0x800122 <fnd_refreshrate+0x2>
- 39e:	10 92 23 01 	sts	0x0123, r1	; 0x800123 <fnd_refreshrate+0x3>
+ 342:	10 92 20 01 	sts	0x0120, r1	; 0x800120 <fnd_refreshrate>
+ 346:	10 92 21 01 	sts	0x0121, r1	; 0x800121 <fnd_refreshrate+0x1>
+ 34a:	10 92 22 01 	sts	0x0122, r1	; 0x800122 <fnd_refreshrate+0x2>
+ 34e:	10 92 23 01 	sts	0x0123, r1	; 0x800123 <fnd_refreshrate+0x3>
 		fnd_display();
- 3a2:	e1 de       	rcall	.-574    	; 0x166 <fnd_display>
+ 352:	09 df       	rcall	.-494    	; 0x166 <fnd_display>
 	}
 	if (msec_count >= 16)
- 3a4:	80 91 24 01 	lds	r24, 0x0124	; 0x800124 <msec_count>
- 3a8:	90 91 25 01 	lds	r25, 0x0125	; 0x800125 <msec_count+0x1>
- 3ac:	a0 91 26 01 	lds	r26, 0x0126	; 0x800126 <msec_count+0x2>
- 3b0:	b0 91 27 01 	lds	r27, 0x0127	; 0x800127 <msec_count+0x3>
- 3b4:	40 97       	sbiw	r24, 0x10	; 16
- 3b6:	a1 05       	cpc	r26, r1
- 3b8:	b1 05       	cpc	r27, r1
- 3ba:	d8 f0       	brcs	.+54     	; 0x3f2 <stopwatch+0x78>
+ 354:	80 91 24 01 	lds	r24, 0x0124	; 0x800124 <msec_count>
+ 358:	90 91 25 01 	lds	r25, 0x0125	; 0x800125 <msec_count+0x1>
+ 35c:	a0 91 26 01 	lds	r26, 0x0126	; 0x800126 <msec_count+0x2>
+ 360:	b0 91 27 01 	lds	r27, 0x0127	; 0x800127 <msec_count+0x3>
+ 364:	40 97       	sbiw	r24, 0x10	; 16
+ 366:	a1 05       	cpc	r26, r1
+ 368:	b1 05       	cpc	r27, r1
+ 36a:	d8 f0       	brcs	.+54     	; 0x3a2 <stopwatch+0x78>
 	{
 		msec_count = 0;
- 3bc:	10 92 24 01 	sts	0x0124, r1	; 0x800124 <msec_count>
- 3c0:	10 92 25 01 	sts	0x0125, r1	; 0x800125 <msec_count+0x1>
- 3c4:	10 92 26 01 	sts	0x0126, r1	; 0x800126 <msec_count+0x2>
- 3c8:	10 92 27 01 	sts	0x0127, r1	; 0x800127 <msec_count+0x3>
+ 36c:	10 92 24 01 	sts	0x0124, r1	; 0x800124 <msec_count>
+ 370:	10 92 25 01 	sts	0x0125, r1	; 0x800125 <msec_count+0x1>
+ 374:	10 92 26 01 	sts	0x0126, r1	; 0x800126 <msec_count+0x2>
+ 378:	10 92 27 01 	sts	0x0127, r1	; 0x800127 <msec_count+0x3>
 		sec_count++;
- 3cc:	80 91 1c 01 	lds	r24, 0x011C	; 0x80011c <sec_count>
- 3d0:	90 91 1d 01 	lds	r25, 0x011D	; 0x80011d <sec_count+0x1>
- 3d4:	a0 91 1e 01 	lds	r26, 0x011E	; 0x80011e <sec_count+0x2>
- 3d8:	b0 91 1f 01 	lds	r27, 0x011F	; 0x80011f <sec_count+0x3>
- 3dc:	01 96       	adiw	r24, 0x01	; 1
- 3de:	a1 1d       	adc	r26, r1
- 3e0:	b1 1d       	adc	r27, r1
- 3e2:	80 93 1c 01 	sts	0x011C, r24	; 0x80011c <sec_count>
- 3e6:	90 93 1d 01 	sts	0x011D, r25	; 0x80011d <sec_count+0x1>
- 3ea:	a0 93 1e 01 	sts	0x011E, r26	; 0x80011e <sec_count+0x2>
- 3ee:	b0 93 1f 01 	sts	0x011F, r27	; 0x80011f <sec_count+0x3>
- 3f2:	08 95       	ret
+ 37c:	80 91 1c 01 	lds	r24, 0x011C	; 0x80011c <sec_count>
+ 380:	90 91 1d 01 	lds	r25, 0x011D	; 0x80011d <sec_count+0x1>
+ 384:	a0 91 1e 01 	lds	r26, 0x011E	; 0x80011e <sec_count+0x2>
+ 388:	b0 91 1f 01 	lds	r27, 0x011F	; 0x80011f <sec_count+0x3>
+ 38c:	01 96       	adiw	r24, 0x01	; 1
+ 38e:	a1 1d       	adc	r26, r1
+ 390:	b1 1d       	adc	r27, r1
+ 392:	80 93 1c 01 	sts	0x011C, r24	; 0x80011c <sec_count>
+ 396:	90 93 1d 01 	sts	0x011D, r25	; 0x80011d <sec_count+0x1>
+ 39a:	a0 93 1e 01 	sts	0x011E, r26	; 0x80011e <sec_count+0x2>
+ 39e:	b0 93 1f 01 	sts	0x011F, r27	; 0x80011f <sec_count+0x3>
+ 3a2:	08 95       	ret
 
-000003f4 <pause_stopwatch>:
+000003a4 <pause_stopwatch>:
 	}
 }
 
 void pause_stopwatch(void)
 {
 	if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
- 3f4:	80 91 20 01 	lds	r24, 0x0120	; 0x800120 <fnd_refreshrate>
- 3f8:	90 91 21 01 	lds	r25, 0x0121	; 0x800121 <fnd_refreshrate+0x1>
- 3fc:	a0 91 22 01 	lds	r26, 0x0122	; 0x800122 <fnd_refreshrate+0x2>
- 400:	b0 91 23 01 	lds	r27, 0x0123	; 0x800123 <fnd_refreshrate+0x3>
- 404:	02 97       	sbiw	r24, 0x02	; 2
- 406:	a1 05       	cpc	r26, r1
- 408:	b1 05       	cpc	r27, r1
- 40a:	48 f0       	brcs	.+18     	; 0x41e <__LOCK_REGION_LENGTH__+0x1e>
+ 3a4:	80 91 20 01 	lds	r24, 0x0120	; 0x800120 <fnd_refreshrate>
+ 3a8:	90 91 21 01 	lds	r25, 0x0121	; 0x800121 <fnd_refreshrate+0x1>
+ 3ac:	a0 91 22 01 	lds	r26, 0x0122	; 0x800122 <fnd_refreshrate+0x2>
+ 3b0:	b0 91 23 01 	lds	r27, 0x0123	; 0x800123 <fnd_refreshrate+0x3>
+ 3b4:	02 97       	sbiw	r24, 0x02	; 2
+ 3b6:	a1 05       	cpc	r26, r1
+ 3b8:	b1 05       	cpc	r27, r1
+ 3ba:	48 f0       	brcs	.+18     	; 0x3ce <pause_stopwatch+0x2a>
 	{
 		fnd_refreshrate = 0;
- 40c:	10 92 20 01 	sts	0x0120, r1	; 0x800120 <fnd_refreshrate>
- 410:	10 92 21 01 	sts	0x0121, r1	; 0x800121 <fnd_refreshrate+0x1>
- 414:	10 92 22 01 	sts	0x0122, r1	; 0x800122 <fnd_refreshrate+0x2>
- 418:	10 92 23 01 	sts	0x0123, r1	; 0x800123 <fnd_refreshrate+0x3>
+ 3bc:	10 92 20 01 	sts	0x0120, r1	; 0x800120 <fnd_refreshrate>
+ 3c0:	10 92 21 01 	sts	0x0121, r1	; 0x800121 <fnd_refreshrate+0x1>
+ 3c4:	10 92 22 01 	sts	0x0122, r1	; 0x800122 <fnd_refreshrate+0x2>
+ 3c8:	10 92 23 01 	sts	0x0123, r1	; 0x800123 <fnd_refreshrate+0x3>
 		fnd_display();
- 41c:	a4 de       	rcall	.-696    	; 0x166 <fnd_display>
+ 3cc:	cc de       	rcall	.-616    	; 0x166 <fnd_display>
 	}
 	temp1 = sec_count;	
- 41e:	80 91 1c 01 	lds	r24, 0x011C	; 0x80011c <sec_count>
- 422:	90 91 1d 01 	lds	r25, 0x011D	; 0x80011d <sec_count+0x1>
- 426:	90 93 1b 01 	sts	0x011B, r25	; 0x80011b <temp1+0x1>
- 42a:	80 93 1a 01 	sts	0x011A, r24	; 0x80011a <temp1>
- 42e:	08 95       	ret
+ 3ce:	80 91 1c 01 	lds	r24, 0x011C	; 0x80011c <sec_count>
+ 3d2:	90 91 1d 01 	lds	r25, 0x011D	; 0x80011d <sec_count+0x1>
+ 3d6:	90 93 1b 01 	sts	0x011B, r25	; 0x80011b <temp1+0x1>
+ 3da:	80 93 1a 01 	sts	0x011A, r24	; 0x80011a <temp1>
+ 3de:	08 95       	ret
 
-00000430 <clear_stopwatch>:
+000003e0 <clear_stopwatch>:
 }
 
 void clear_stopwatch(void)
 {
 	sec_count = 0;
- 430:	10 92 1c 01 	sts	0x011C, r1	; 0x80011c <sec_count>
- 434:	10 92 1d 01 	sts	0x011D, r1	; 0x80011d <sec_count+0x1>
- 438:	10 92 1e 01 	sts	0x011E, r1	; 0x80011e <sec_count+0x2>
- 43c:	10 92 1f 01 	sts	0x011F, r1	; 0x80011f <sec_count+0x3>
+ 3e0:	10 92 1c 01 	sts	0x011C, r1	; 0x80011c <sec_count>
+ 3e4:	10 92 1d 01 	sts	0x011D, r1	; 0x80011d <sec_count+0x1>
+ 3e8:	10 92 1e 01 	sts	0x011E, r1	; 0x80011e <sec_count+0x2>
+ 3ec:	10 92 1f 01 	sts	0x011F, r1	; 0x80011f <sec_count+0x3>
 	if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
- 440:	80 91 20 01 	lds	r24, 0x0120	; 0x800120 <fnd_refreshrate>
- 444:	90 91 21 01 	lds	r25, 0x0121	; 0x800121 <fnd_refreshrate+0x1>
- 448:	a0 91 22 01 	lds	r26, 0x0122	; 0x800122 <fnd_refreshrate+0x2>
- 44c:	b0 91 23 01 	lds	r27, 0x0123	; 0x800123 <fnd_refreshrate+0x3>
- 450:	02 97       	sbiw	r24, 0x02	; 2
- 452:	a1 05       	cpc	r26, r1
- 454:	b1 05       	cpc	r27, r1
- 456:	48 f0       	brcs	.+18     	; 0x46a <clear_stopwatch+0x3a>
+ 3f0:	80 91 20 01 	lds	r24, 0x0120	; 0x800120 <fnd_refreshrate>
+ 3f4:	90 91 21 01 	lds	r25, 0x0121	; 0x800121 <fnd_refreshrate+0x1>
+ 3f8:	a0 91 22 01 	lds	r26, 0x0122	; 0x800122 <fnd_refreshrate+0x2>
+ 3fc:	b0 91 23 01 	lds	r27, 0x0123	; 0x800123 <fnd_refreshrate+0x3>
+ 400:	02 97       	sbiw	r24, 0x02	; 2
+ 402:	a1 05       	cpc	r26, r1
+ 404:	b1 05       	cpc	r27, r1
+ 406:	48 f0       	brcs	.+18     	; 0x41a <__LOCK_REGION_LENGTH__+0x1a>
 	{
 		fnd_refreshrate = 0;
- 458:	10 92 20 01 	sts	0x0120, r1	; 0x800120 <fnd_refreshrate>
- 45c:	10 92 21 01 	sts	0x0121, r1	; 0x800121 <fnd_refreshrate+0x1>
- 460:	10 92 22 01 	sts	0x0122, r1	; 0x800122 <fnd_refreshrate+0x2>
- 464:	10 92 23 01 	sts	0x0123, r1	; 0x800123 <fnd_refreshrate+0x3>
+ 408:	10 92 20 01 	sts	0x0120, r1	; 0x800120 <fnd_refreshrate>
+ 40c:	10 92 21 01 	sts	0x0121, r1	; 0x800121 <fnd_refreshrate+0x1>
+ 410:	10 92 22 01 	sts	0x0122, r1	; 0x800122 <fnd_refreshrate+0x2>
+ 414:	10 92 23 01 	sts	0x0123, r1	; 0x800123 <fnd_refreshrate+0x3>
 		fnd_display();
- 468:	7e ce       	rjmp	.-772    	; 0x166 <fnd_display>
- 46a:	08 95       	ret
+ 418:	a6 ce       	rjmp	.-692    	; 0x166 <fnd_display>
+ 41a:	08 95       	ret
 
-0000046c <fnd_main>:
+0000041c <fnd_main>:
+
 int fnd_main(void)
 {
-	int temp = 0;
 	int state = 0; // 모드 선택 변수
 	
 	DDRA = 0xff;
- 46c:	8f ef       	ldi	r24, 0xFF	; 255
- 46e:	8a bb       	out	0x1a, r24	; 26
+ 41c:	8f ef       	ldi	r24, 0xFF	; 255
+ 41e:	8a bb       	out	0x1a, r24	; 26
 	int button0_state = 0; // 버튼0번 상태 변수
 	int button1_state = 0; // 버튼1번 상태 변수
 	int reset_active = 0; // 리셋이 가능한지 알려주는 토글
 	int restart_stopwatch = 0; // 재시작이 가능한지 알려주는 토글
 	
 	init_fnd(); // fnd 초기화
- 470:	73 de       	rcall	.-794    	; 0x158 <init_fnd>
+ 420:	9b de       	rcall	.-714    	; 0x158 <init_fnd>
 	init_button(); // button 초기화
- 472:	2a de       	rcall	.-940    	; 0xc8 <init_button>
- 474:	a1 2c       	mov	r10, r1
+ 422:	52 de       	rcall	.-860    	; 0xc8 <init_button>
+ 424:	a1 2c       	mov	r10, r1
 	
 	DDRA = 0xff;
 	int button0_state = 0; // 버튼0번 상태 변수
 	int button1_state = 0; // 버튼1번 상태 변수
 	int reset_active = 0; // 리셋이 가능한지 알려주는 토글
 	int restart_stopwatch = 0; // 재시작이 가능한지 알려주는 토글
- 476:	b1 2c       	mov	r11, r1
- 478:	c1 2c       	mov	r12, r1
+ 426:	b1 2c       	mov	r11, r1
+ 428:	c1 2c       	mov	r12, r1
 	int state = 0; // 모드 선택 변수
 	
 	DDRA = 0xff;
 	int button0_state = 0; // 버튼0번 상태 변수
 	int button1_state = 0; // 버튼1번 상태 변수
 	int reset_active = 0; // 리셋이 가능한지 알려주는 토글
- 47a:	d1 2c       	mov	r13, r1
- 47c:	c0 e0       	ldi	r28, 0x00	; 0
-	int temp = 0;
+ 42a:	d1 2c       	mov	r13, r1
+ 42c:	c0 e0       	ldi	r28, 0x00	; 0
+{
 	int state = 0; // 모드 선택 변수
 	
 	DDRA = 0xff;
 	int button0_state = 0; // 버튼0번 상태 변수
 	int button1_state = 0; // 버튼1번 상태 변수
- 47e:	d0 e0       	ldi	r29, 0x00	; 0
- 480:	e1 2c       	mov	r14, r1
+ 42e:	d0 e0       	ldi	r29, 0x00	; 0
+ 430:	e1 2c       	mov	r14, r1
+int fnd_main(void)
 {
-	int temp = 0;
 	int state = 0; // 모드 선택 변수
 	
 	DDRA = 0xff;
 	int button0_state = 0; // 버튼0번 상태 변수
- 482:	f1 2c       	mov	r15, r1
- 484:	00 e0       	ldi	r16, 0x00	; 0
-};
-
-int fnd_main(void)
-{
-	int temp = 0;
-	int state = 0; // 모드 선택 변수
- 486:	10 e0       	ldi	r17, 0x00	; 0
- 488:	81 2c       	mov	r8, r1
+ 432:	f1 2c       	mov	r15, r1
+ 434:	00 e0       	ldi	r16, 0x00	; 0
 	clear_stopwatch // 3 스톱워치 리셋
 };
 
 int fnd_main(void)
 {
-	int temp = 0;
- 48a:	91 2c       	mov	r9, r1
- 48c:	64 e0       	ldi	r22, 0x04	; 4
+	int state = 0; // 모드 선택 변수
+ 436:	10 e0       	ldi	r17, 0x00	; 0
+ 438:	64 e0       	ldi	r22, 0x04	; 4
 	init_fnd(); // fnd 초기화
 	init_button(); // button 초기화
 	
 	while(1)
 	{
 		if (get_button(BUTTON0, BUTTON0PIN))
- 48e:	70 e0       	ldi	r23, 0x00	; 0
- 490:	80 e0       	ldi	r24, 0x00	; 0
- 492:	90 e0       	ldi	r25, 0x00	; 0
- 494:	1d de       	rcall	.-966    	; 0xd0 <get_button>
- 496:	89 2b       	or	r24, r25
- 498:	51 f1       	breq	.+84     	; 0x4ee <fnd_main+0x82>
- 49a:	81 e0       	ldi	r24, 0x01	; 1
+ 43a:	70 e0       	ldi	r23, 0x00	; 0
+ 43c:	80 e0       	ldi	r24, 0x00	; 0
+ 43e:	90 e0       	ldi	r25, 0x00	; 0
+ 440:	47 de       	rcall	.-882    	; 0xd0 <get_button>
+ 442:	89 2b       	or	r24, r25
+ 444:	c9 f0       	breq	.+50     	; 0x478 <fnd_main+0x5c>
+ 446:	81 e0       	ldi	r24, 0x01	; 1
 		{
 			button0_state = !button0_state;
- 49c:	e1 14       	cp	r14, r1
- 49e:	f1 04       	cpc	r15, r1
- 4a0:	09 f0       	breq	.+2      	; 0x4a4 <fnd_main+0x38>
- 4a2:	80 e0       	ldi	r24, 0x00	; 0
- 4a4:	90 e0       	ldi	r25, 0x00	; 0
- 4a6:	ef 28       	or	r14, r15
+ 448:	e1 14       	cp	r14, r1
+ 44a:	f1 04       	cpc	r15, r1
+ 44c:	09 f0       	breq	.+2      	; 0x450 <fnd_main+0x34>
+ 44e:	80 e0       	ldi	r24, 0x00	; 0
+ 450:	90 e0       	ldi	r25, 0x00	; 0
+ 452:	ef 28       	or	r14, r15
 			
 			if (button0_state) // 버튼 0을 처음 누르면 지나간 시간을 임시 변수에 저장하고 시간 리셋 후 스톱워치로 진입
- 4a8:	91 f4       	brne	.+36     	; 0x4ce <fnd_main+0x62>
- 4aa:	80 90 1c 01 	lds	r8, 0x011C	; 0x80011c <sec_count>
+ 454:	71 f4       	brne	.+28     	; 0x472 <fnd_main+0x56>
+ 456:	10 92 1c 01 	sts	0x011C, r1	; 0x80011c <sec_count>
 			{
 				button1_state = 0;
-				temp = sec_count;
- 4ae:	90 90 1d 01 	lds	r9, 0x011D	; 0x80011d <sec_count+0x1>
- 4b2:	10 92 1c 01 	sts	0x011C, r1	; 0x80011c <sec_count>
 				sec_count = 0;
- 4b6:	10 92 1d 01 	sts	0x011D, r1	; 0x80011d <sec_count+0x1>
- 4ba:	10 92 1e 01 	sts	0x011E, r1	; 0x80011e <sec_count+0x2>
- 4be:	10 92 1f 01 	sts	0x011F, r1	; 0x80011f <sec_count+0x3>
- 4c2:	7c 01       	movw	r14, r24
+ 45a:	10 92 1d 01 	sts	0x011D, r1	; 0x80011d <sec_count+0x1>
+ 45e:	10 92 1e 01 	sts	0x011E, r1	; 0x80011e <sec_count+0x2>
+ 462:	10 92 1f 01 	sts	0x011F, r1	; 0x80011f <sec_count+0x3>
+ 466:	7c 01       	movw	r14, r24
 	
 	while(1)
 	{
 		if (get_button(BUTTON0, BUTTON0PIN))
 		{
 			button0_state = !button0_state;
- 4c4:	c0 e0       	ldi	r28, 0x00	; 0
+ 468:	c0 e0       	ldi	r28, 0x00	; 0
 			
 			if (button0_state) // 버튼 0을 처음 누르면 지나간 시간을 임시 변수에 저장하고 시간 리셋 후 스톱워치로 진입
 			{
 				button1_state = 0;
- 4c6:	d0 e0       	ldi	r29, 0x00	; 0
- 4c8:	01 e0       	ldi	r16, 0x01	; 1
-				temp = sec_count;
+ 46a:	d0 e0       	ldi	r29, 0x00	; 0
+ 46c:	01 e0       	ldi	r16, 0x01	; 1
 				sec_count = 0;
+				state = 1;
+ 46e:	10 e0       	ldi	r17, 0x00	; 0
+ 470:	03 c0       	rjmp	.+6      	; 0x478 <fnd_main+0x5c>
+ 472:	7c 01       	movw	r14, r24
+	
+	while(1)
+	{
+		if (get_button(BUTTON0, BUTTON0PIN))
+		{
+			button0_state = !button0_state;
+ 474:	00 e0       	ldi	r16, 0x00	; 0
+				sec_count = 0;
+				state = 1;
+			}
+			else // 다시 버튼0을 누르면 임시 변수에 저장된 시간을 가져오고 시계로 진입
+			{
+				state = 0;
+ 476:	10 e0       	ldi	r17, 0x00	; 0
+ 478:	65 e0       	ldi	r22, 0x05	; 5
+			}
+		}
+		
+		if (get_button(BUTTON1, BUTTON1PIN))
+ 47a:	70 e0       	ldi	r23, 0x00	; 0
+ 47c:	81 e0       	ldi	r24, 0x01	; 1
+ 47e:	90 e0       	ldi	r25, 0x00	; 0
+ 480:	27 de       	rcall	.-946    	; 0xd0 <get_button>
+ 482:	89 2b       	or	r24, r25
+ 484:	19 f1       	breq	.+70     	; 0x4cc <fnd_main+0xb0>
+ 486:	81 e0       	ldi	r24, 0x01	; 1
+		{
+			button1_state = !button1_state;
+ 488:	20 97       	sbiw	r28, 0x00	; 0
+ 48a:	09 f0       	breq	.+2      	; 0x48e <fnd_main+0x72>
+ 48c:	80 e0       	ldi	r24, 0x00	; 0
+ 48e:	90 e0       	ldi	r25, 0x00	; 0
+ 490:	20 97       	sbiw	r28, 0x00	; 0
+			
+			if (button1_state) // 버튼 1을 처음 누르면 일시정지 모드로 진입하고 리셋을 할 수 있도록 토글 활성화
+ 492:	29 f4       	brne	.+10     	; 0x49e <fnd_main+0x82>
+ 494:	cc 24       	eor	r12, r12
+			{
+				state = 2;
+				reset_active = 1;
+ 496:	c3 94       	inc	r12
+ 498:	d1 2c       	mov	r13, r1
+ 49a:	02 e0       	ldi	r16, 0x02	; 2
+		{
+			button1_state = !button1_state;
+			
+			if (button1_state) // 버튼 1을 처음 누르면 일시정지 모드로 진입하고 리셋을 할 수 있도록 토글 활성화
+			{
+				state = 2;
+ 49c:	10 e0       	ldi	r17, 0x00	; 0
+ 49e:	cd 2b       	or	r28, r29
+				reset_active = 1;
+			}
+			if (button1_state == 0 || restart_stopwatch == 1) // 다음 버튼 1을 누르면 스톱워치 재시작 후 리셋 토글 비활성화.
+ 4a0:	31 f4       	brne	.+12     	; 0x4ae <fnd_main+0x92>
+ 4a2:	21 e0       	ldi	r18, 0x01	; 1
+ 4a4:	a2 16       	cp	r10, r18
+ 4a6:	b1 04       	cpc	r11, r1
+ 4a8:	51 f0       	breq	.+20     	; 0x4be <fnd_main+0xa2>
+ 4aa:	ec 01       	movw	r28, r24
+			}
+		}
+		
+		if (get_button(BUTTON1, BUTTON1PIN))
+		{
+			button1_state = !button1_state;
+ 4ac:	0f c0       	rjmp	.+30     	; 0x4cc <fnd_main+0xb0>
+ 4ae:	ec 01       	movw	r28, r24
+ 4b0:	a1 2c       	mov	r10, r1
+			}
+			if (button1_state == 0 || restart_stopwatch == 1) // 다음 버튼 1을 누르면 스톱워치 재시작 후 리셋 토글 비활성화.
+			{
+				state = 1;
+				reset_active = 0;
+				restart_stopwatch = 0;
+ 4b2:	b1 2c       	mov	r11, r1
+ 4b4:	c1 2c       	mov	r12, r1
+				reset_active = 1;
+			}
+			if (button1_state == 0 || restart_stopwatch == 1) // 다음 버튼 1을 누르면 스톱워치 재시작 후 리셋 토글 비활성화.
+			{
+				state = 1;
+				reset_active = 0;
+ 4b6:	d1 2c       	mov	r13, r1
+ 4b8:	01 e0       	ldi	r16, 0x01	; 1
+				state = 2;
+				reset_active = 1;
+			}
+			if (button1_state == 0 || restart_stopwatch == 1) // 다음 버튼 1을 누르면 스톱워치 재시작 후 리셋 토글 비활성화.
+			{
+				state = 1;
+ 4ba:	10 e0       	ldi	r17, 0x00	; 0
+ 4bc:	07 c0       	rjmp	.+14     	; 0x4cc <fnd_main+0xb0>
+ 4be:	ec 01       	movw	r28, r24
+			}
+		}
+		
+		if (get_button(BUTTON1, BUTTON1PIN))
+		{
+			button1_state = !button1_state;
+ 4c0:	a1 2c       	mov	r10, r1
+			}
+			if (button1_state == 0 || restart_stopwatch == 1) // 다음 버튼 1을 누르면 스톱워치 재시작 후 리셋 토글 비활성화.
+			{
+				state = 1;
+				reset_active = 0;
+				restart_stopwatch = 0;
+ 4c2:	b1 2c       	mov	r11, r1
+ 4c4:	c1 2c       	mov	r12, r1
+				reset_active = 1;
+			}
+			if (button1_state == 0 || restart_stopwatch == 1) // 다음 버튼 1을 누르면 스톱워치 재시작 후 리셋 토글 비활성화.
+			{
+				state = 1;
+				reset_active = 0;
+ 4c6:	d1 2c       	mov	r13, r1
+ 4c8:	01 e0       	ldi	r16, 0x01	; 1
+				state = 2;
+				reset_active = 1;
+			}
+			if (button1_state == 0 || restart_stopwatch == 1) // 다음 버튼 1을 누르면 스톱워치 재시작 후 리셋 토글 비활성화.
+			{
 				state = 1;
  4ca:	10 e0       	ldi	r17, 0x00	; 0
- 4cc:	10 c0       	rjmp	.+32     	; 0x4ee <fnd_main+0x82>
- 4ce:	a4 01       	movw	r20, r8
-			}
-			else // 다시 버튼0을 누르면 임시 변수에 저장된 시간을 가져오고 시계로 진입
-			{
-				sec_count = temp;
- 4d0:	09 2c       	mov	r0, r9
- 4d2:	00 0c       	add	r0, r0
- 4d4:	66 0b       	sbc	r22, r22
- 4d6:	77 0b       	sbc	r23, r23
- 4d8:	40 93 1c 01 	sts	0x011C, r20	; 0x80011c <sec_count>
- 4dc:	50 93 1d 01 	sts	0x011D, r21	; 0x80011d <sec_count+0x1>
- 4e0:	60 93 1e 01 	sts	0x011E, r22	; 0x80011e <sec_count+0x2>
- 4e4:	70 93 1f 01 	sts	0x011F, r23	; 0x80011f <sec_count+0x3>
- 4e8:	7c 01       	movw	r14, r24
-	
-	while(1)
-	{
-		if (get_button(BUTTON0, BUTTON0PIN))
-		{
-			button0_state = !button0_state;
- 4ea:	00 e0       	ldi	r16, 0x00	; 0
-				state = 1;
-			}
-			else // 다시 버튼0을 누르면 임시 변수에 저장된 시간을 가져오고 시계로 진입
-			{
-				sec_count = temp;
-				state = 0;
- 4ec:	10 e0       	ldi	r17, 0x00	; 0
- 4ee:	65 e0       	ldi	r22, 0x05	; 5
-			}
-		}
-		
-		if (get_button(BUTTON1, BUTTON1PIN))
- 4f0:	70 e0       	ldi	r23, 0x00	; 0
- 4f2:	81 e0       	ldi	r24, 0x01	; 1
- 4f4:	90 e0       	ldi	r25, 0x00	; 0
- 4f6:	ec dd       	rcall	.-1064   	; 0xd0 <get_button>
- 4f8:	89 2b       	or	r24, r25
- 4fa:	19 f1       	breq	.+70     	; 0x542 <fnd_main+0xd6>
- 4fc:	81 e0       	ldi	r24, 0x01	; 1
-		{
-			button1_state = !button1_state;
- 4fe:	20 97       	sbiw	r28, 0x00	; 0
- 500:	09 f0       	breq	.+2      	; 0x504 <fnd_main+0x98>
- 502:	80 e0       	ldi	r24, 0x00	; 0
- 504:	90 e0       	ldi	r25, 0x00	; 0
- 506:	20 97       	sbiw	r28, 0x00	; 0
-			
-			if (button1_state) // 버튼 1을 처음 누르면 일시정지 모드로 진입하고 리셋을 할 수 있도록 토글 활성화
- 508:	29 f4       	brne	.+10     	; 0x514 <fnd_main+0xa8>
- 50a:	cc 24       	eor	r12, r12
-			{
-				state = 2;
-				reset_active = 1;
- 50c:	c3 94       	inc	r12
- 50e:	d1 2c       	mov	r13, r1
- 510:	02 e0       	ldi	r16, 0x02	; 2
-		{
-			button1_state = !button1_state;
-			
-			if (button1_state) // 버튼 1을 처음 누르면 일시정지 모드로 진입하고 리셋을 할 수 있도록 토글 활성화
-			{
-				state = 2;
- 512:	10 e0       	ldi	r17, 0x00	; 0
- 514:	cd 2b       	or	r28, r29
-				reset_active = 1;
-			}
-			if (button1_state == 0 || restart_stopwatch == 1) // 다음 버튼 1을 누르면 스톱워치 재시작 후 리셋 토글 비활성화.
- 516:	31 f4       	brne	.+12     	; 0x524 <fnd_main+0xb8>
- 518:	21 e0       	ldi	r18, 0x01	; 1
- 51a:	a2 16       	cp	r10, r18
- 51c:	b1 04       	cpc	r11, r1
- 51e:	51 f0       	breq	.+20     	; 0x534 <fnd_main+0xc8>
- 520:	ec 01       	movw	r28, r24
-			}
-		}
-		
-		if (get_button(BUTTON1, BUTTON1PIN))
-		{
-			button1_state = !button1_state;
- 522:	0f c0       	rjmp	.+30     	; 0x542 <fnd_main+0xd6>
- 524:	ec 01       	movw	r28, r24
- 526:	a1 2c       	mov	r10, r1
-			}
-			if (button1_state == 0 || restart_stopwatch == 1) // 다음 버튼 1을 누르면 스톱워치 재시작 후 리셋 토글 비활성화.
-			{
-				state = 1;
-				reset_active = 0;
-				restart_stopwatch = 0;
- 528:	b1 2c       	mov	r11, r1
- 52a:	c1 2c       	mov	r12, r1
-				reset_active = 1;
-			}
-			if (button1_state == 0 || restart_stopwatch == 1) // 다음 버튼 1을 누르면 스톱워치 재시작 후 리셋 토글 비활성화.
-			{
-				state = 1;
-				reset_active = 0;
- 52c:	d1 2c       	mov	r13, r1
- 52e:	01 e0       	ldi	r16, 0x01	; 1
-				state = 2;
-				reset_active = 1;
-			}
-			if (button1_state == 0 || restart_stopwatch == 1) // 다음 버튼 1을 누르면 스톱워치 재시작 후 리셋 토글 비활성화.
-			{
-				state = 1;
- 530:	10 e0       	ldi	r17, 0x00	; 0
- 532:	07 c0       	rjmp	.+14     	; 0x542 <fnd_main+0xd6>
- 534:	ec 01       	movw	r28, r24
-			}
-		}
-		
-		if (get_button(BUTTON1, BUTTON1PIN))
-		{
-			button1_state = !button1_state;
- 536:	a1 2c       	mov	r10, r1
-			}
-			if (button1_state == 0 || restart_stopwatch == 1) // 다음 버튼 1을 누르면 스톱워치 재시작 후 리셋 토글 비활성화.
-			{
-				state = 1;
-				reset_active = 0;
-				restart_stopwatch = 0;
- 538:	b1 2c       	mov	r11, r1
- 53a:	c1 2c       	mov	r12, r1
-				reset_active = 1;
-			}
-			if (button1_state == 0 || restart_stopwatch == 1) // 다음 버튼 1을 누르면 스톱워치 재시작 후 리셋 토글 비활성화.
-			{
-				state = 1;
-				reset_active = 0;
- 53c:	d1 2c       	mov	r13, r1
- 53e:	01 e0       	ldi	r16, 0x01	; 1
-				state = 2;
-				reset_active = 1;
-			}
-			if (button1_state == 0 || restart_stopwatch == 1) // 다음 버튼 1을 누르면 스톱워치 재시작 후 리셋 토글 비활성화.
-			{
-				state = 1;
- 540:	10 e0       	ldi	r17, 0x00	; 0
- 542:	66 e0       	ldi	r22, 0x06	; 6
+ 4cc:	66 e0       	ldi	r22, 0x06	; 6
 				reset_active = 0;
 				restart_stopwatch = 0;
 			}
 		}
 		if (get_button(BUTTON2, BUTTON2PIN)) // 버튼 2를 누르면 리셋 토글이 활성화가 되었는지 확인 후 리셋
- 544:	70 e0       	ldi	r23, 0x00	; 0
- 546:	82 e0       	ldi	r24, 0x02	; 2
- 548:	90 e0       	ldi	r25, 0x00	; 0
- 54a:	c2 dd       	rcall	.-1148   	; 0xd0 <get_button>
- 54c:	89 2b       	or	r24, r25
- 54e:	39 f0       	breq	.+14     	; 0x55e <fnd_main+0xf2>
+ 4ce:	70 e0       	ldi	r23, 0x00	; 0
+ 4d0:	82 e0       	ldi	r24, 0x02	; 2
+ 4d2:	90 e0       	ldi	r25, 0x00	; 0
+ 4d4:	fd dd       	rcall	.-1030   	; 0xd0 <get_button>
+ 4d6:	89 2b       	or	r24, r25
+ 4d8:	39 f0       	breq	.+14     	; 0x4e8 <fnd_main+0xcc>
 		{
 			if (reset_active)
- 550:	c1 14       	cp	r12, r1
- 552:	d1 04       	cpc	r13, r1
- 554:	21 f0       	breq	.+8      	; 0x55e <fnd_main+0xf2>
+ 4da:	c1 14       	cp	r12, r1
+ 4dc:	d1 04       	cpc	r13, r1
+ 4de:	21 f0       	breq	.+8      	; 0x4e8 <fnd_main+0xcc>
 			{
 				clear_stopwatch();
- 556:	6c df       	rcall	.-296    	; 0x430 <clear_stopwatch>
- 558:	aa 24       	eor	r10, r10
+ 4e0:	7f df       	rcall	.-258    	; 0x3e0 <clear_stopwatch>
+ 4e2:	aa 24       	eor	r10, r10
 				restart_stopwatch = 1; // 재시작이 가능하도록 재시작 토글 활성화
- 55a:	a3 94       	inc	r10
- 55c:	b1 2c       	mov	r11, r1
- 55e:	f8 01       	movw	r30, r16
+ 4e4:	a3 94       	inc	r10
+ 4e6:	b1 2c       	mov	r11, r1
+ 4e8:	80 91 24 01 	lds	r24, 0x0124	; 0x800124 <msec_count>
 			}
 		}
 		
+		if (msec_count >= 1000)
+ 4ec:	90 91 25 01 	lds	r25, 0x0125	; 0x800125 <msec_count+0x1>
+ 4f0:	a0 91 26 01 	lds	r26, 0x0126	; 0x800126 <msec_count+0x2>
+ 4f4:	b0 91 27 01 	lds	r27, 0x0127	; 0x800127 <msec_count+0x3>
+ 4f8:	88 3e       	cpi	r24, 0xE8	; 232
+ 4fa:	93 40       	sbci	r25, 0x03	; 3
+ 4fc:	a1 05       	cpc	r26, r1
+ 4fe:	b1 05       	cpc	r27, r1
+ 500:	d8 f0       	brcs	.+54     	; 0x538 <fnd_main+0x11c>
+ 502:	10 92 24 01 	sts	0x0124, r1	; 0x800124 <msec_count>
+		{
+			msec_count = 0;
+ 506:	10 92 25 01 	sts	0x0125, r1	; 0x800125 <msec_count+0x1>
+ 50a:	10 92 26 01 	sts	0x0126, r1	; 0x800126 <msec_count+0x2>
+ 50e:	10 92 27 01 	sts	0x0127, r1	; 0x800127 <msec_count+0x3>
+ 512:	80 91 1c 01 	lds	r24, 0x011C	; 0x80011c <sec_count>
+			sec_count++;
+ 516:	90 91 1d 01 	lds	r25, 0x011D	; 0x80011d <sec_count+0x1>
+ 51a:	a0 91 1e 01 	lds	r26, 0x011E	; 0x80011e <sec_count+0x2>
+ 51e:	b0 91 1f 01 	lds	r27, 0x011F	; 0x80011f <sec_count+0x3>
+ 522:	01 96       	adiw	r24, 0x01	; 1
+ 524:	a1 1d       	adc	r26, r1
+ 526:	b1 1d       	adc	r27, r1
+ 528:	80 93 1c 01 	sts	0x011C, r24	; 0x80011c <sec_count>
+ 52c:	90 93 1d 01 	sts	0x011D, r25	; 0x80011d <sec_count+0x1>
+ 530:	a0 93 1e 01 	sts	0x011E, r26	; 0x80011e <sec_count+0x2>
+ 534:	b0 93 1f 01 	sts	0x011F, r27	; 0x80011f <sec_count+0x3>
+ 538:	f8 01       	movw	r30, r16
+		}
+		
 		fp[state]();
- 560:	ee 0f       	add	r30, r30
- 562:	ff 1f       	adc	r31, r31
- 564:	e0 50       	subi	r30, 0x00	; 0
- 566:	ff 4f       	sbci	r31, 0xFF	; 255
- 568:	01 90       	ld	r0, Z+
- 56a:	f0 81       	ld	r31, Z
- 56c:	e0 2d       	mov	r30, r0
- 56e:	09 95       	icall
- 570:	8d cf       	rjmp	.-230    	; 0x48c <fnd_main+0x20>
+ 53a:	ee 0f       	add	r30, r30
+ 53c:	ff 1f       	adc	r31, r31
+ 53e:	e0 50       	subi	r30, 0x00	; 0
+ 540:	ff 4f       	sbci	r31, 0xFF	; 255
+ 542:	01 90       	ld	r0, Z+
+ 544:	f0 81       	ld	r31, Z
+ 546:	e0 2d       	mov	r30, r0
+ 548:	09 95       	icall
+ 54a:	76 cf       	rjmp	.-276    	; 0x438 <fnd_main+0x1c>
 
-00000572 <__vector_16>:
- 572:	1f 92       	push	r1
- 574:	0f 92       	push	r0
- 576:	0f b6       	in	r0, 0x3f	; 63
- 578:	0f 92       	push	r0
- 57a:	11 24       	eor	r1, r1
- 57c:	8f 93       	push	r24
- 57e:	9f 93       	push	r25
- 580:	af 93       	push	r26
- 582:	bf 93       	push	r27
- 584:	86 e0       	ldi	r24, 0x06	; 6
- 586:	82 bf       	out	0x32, r24	; 50
- 588:	80 91 24 01 	lds	r24, 0x0124	; 0x800124 <msec_count>
- 58c:	90 91 25 01 	lds	r25, 0x0125	; 0x800125 <msec_count+0x1>
- 590:	a0 91 26 01 	lds	r26, 0x0126	; 0x800126 <msec_count+0x2>
- 594:	b0 91 27 01 	lds	r27, 0x0127	; 0x800127 <msec_count+0x3>
+0000054c <__vector_16>:
+extern int fnd_main(void);
+
+volatile uint32_t msec_count = 0;
+volatile uint32_t fnd_refreshrate = 0;
+ISR(TIMER0_OVF_vect) // interrupt service routine :routine은 interrupt 서비스 함수
+{
+ 54c:	1f 92       	push	r1
+ 54e:	0f 92       	push	r0
+ 550:	0f b6       	in	r0, 0x3f	; 63
+ 552:	0f 92       	push	r0
+ 554:	11 24       	eor	r1, r1
+ 556:	8f 93       	push	r24
+ 558:	9f 93       	push	r25
+ 55a:	af 93       	push	r26
+ 55c:	bf 93       	push	r27
+	TCNT0 = 6; // 6 ~ 256 : 250개 (1ms) 그래서 TCNT0를 6으로 설정
+ 55e:	86 e0       	ldi	r24, 0x06	; 6
+ 560:	82 bf       	out	0x32, r24	; 50
+	msec_count++; // 1ms마다 msec_count가 1씩 증가
+ 562:	80 91 24 01 	lds	r24, 0x0124	; 0x800124 <msec_count>
+ 566:	90 91 25 01 	lds	r25, 0x0125	; 0x800125 <msec_count+0x1>
+ 56a:	a0 91 26 01 	lds	r26, 0x0126	; 0x800126 <msec_count+0x2>
+ 56e:	b0 91 27 01 	lds	r27, 0x0127	; 0x800127 <msec_count+0x3>
+ 572:	01 96       	adiw	r24, 0x01	; 1
+ 574:	a1 1d       	adc	r26, r1
+ 576:	b1 1d       	adc	r27, r1
+ 578:	80 93 24 01 	sts	0x0124, r24	; 0x800124 <msec_count>
+ 57c:	90 93 25 01 	sts	0x0125, r25	; 0x800125 <msec_count+0x1>
+ 580:	a0 93 26 01 	sts	0x0126, r26	; 0x800126 <msec_count+0x2>
+ 584:	b0 93 27 01 	sts	0x0127, r27	; 0x800127 <msec_count+0x3>
+	fnd_refreshrate++;
+ 588:	80 91 20 01 	lds	r24, 0x0120	; 0x800120 <fnd_refreshrate>
+ 58c:	90 91 21 01 	lds	r25, 0x0121	; 0x800121 <fnd_refreshrate+0x1>
+ 590:	a0 91 22 01 	lds	r26, 0x0122	; 0x800122 <fnd_refreshrate+0x2>
+ 594:	b0 91 23 01 	lds	r27, 0x0123	; 0x800123 <fnd_refreshrate+0x3>
  598:	01 96       	adiw	r24, 0x01	; 1
  59a:	a1 1d       	adc	r26, r1
  59c:	b1 1d       	adc	r27, r1
- 59e:	80 93 24 01 	sts	0x0124, r24	; 0x800124 <msec_count>
- 5a2:	90 93 25 01 	sts	0x0125, r25	; 0x800125 <msec_count+0x1>
- 5a6:	a0 93 26 01 	sts	0x0126, r26	; 0x800126 <msec_count+0x2>
- 5aa:	b0 93 27 01 	sts	0x0127, r27	; 0x800127 <msec_count+0x3>
- 5ae:	80 91 20 01 	lds	r24, 0x0120	; 0x800120 <fnd_refreshrate>
- 5b2:	90 91 21 01 	lds	r25, 0x0121	; 0x800121 <fnd_refreshrate+0x1>
- 5b6:	a0 91 22 01 	lds	r26, 0x0122	; 0x800122 <fnd_refreshrate+0x2>
- 5ba:	b0 91 23 01 	lds	r27, 0x0123	; 0x800123 <fnd_refreshrate+0x3>
- 5be:	01 96       	adiw	r24, 0x01	; 1
- 5c0:	a1 1d       	adc	r26, r1
- 5c2:	b1 1d       	adc	r27, r1
- 5c4:	80 93 20 01 	sts	0x0120, r24	; 0x800120 <fnd_refreshrate>
- 5c8:	90 93 21 01 	sts	0x0121, r25	; 0x800121 <fnd_refreshrate+0x1>
- 5cc:	a0 93 22 01 	sts	0x0122, r26	; 0x800122 <fnd_refreshrate+0x2>
- 5d0:	b0 93 23 01 	sts	0x0123, r27	; 0x800123 <fnd_refreshrate+0x3>
- 5d4:	bf 91       	pop	r27
- 5d6:	af 91       	pop	r26
- 5d8:	9f 91       	pop	r25
- 5da:	8f 91       	pop	r24
- 5dc:	0f 90       	pop	r0
- 5de:	0f be       	out	0x3f, r0	; 63
- 5e0:	0f 90       	pop	r0
- 5e2:	1f 90       	pop	r1
- 5e4:	18 95       	reti
+ 59e:	80 93 20 01 	sts	0x0120, r24	; 0x800120 <fnd_refreshrate>
+ 5a2:	90 93 21 01 	sts	0x0121, r25	; 0x800121 <fnd_refreshrate+0x1>
+ 5a6:	a0 93 22 01 	sts	0x0122, r26	; 0x800122 <fnd_refreshrate+0x2>
+ 5aa:	b0 93 23 01 	sts	0x0123, r27	; 0x800123 <fnd_refreshrate+0x3>
+}
+ 5ae:	bf 91       	pop	r27
+ 5b0:	af 91       	pop	r26
+ 5b2:	9f 91       	pop	r25
+ 5b4:	8f 91       	pop	r24
+ 5b6:	0f 90       	pop	r0
+ 5b8:	0f be       	out	0x3f, r0	; 63
+ 5ba:	0f 90       	pop	r0
+ 5bc:	1f 90       	pop	r1
+ 5be:	18 95       	reti
 
-000005e6 <init_timer0>:
- 5e6:	86 e0       	ldi	r24, 0x06	; 6
- 5e8:	82 bf       	out	0x32, r24	; 50
- 5ea:	83 b7       	in	r24, 0x33	; 51
- 5ec:	84 60       	ori	r24, 0x04	; 4
- 5ee:	83 bf       	out	0x33, r24	; 51
- 5f0:	87 b7       	in	r24, 0x37	; 55
- 5f2:	81 60       	ori	r24, 0x01	; 1
- 5f4:	87 bf       	out	0x37, r24	; 55
- 5f6:	78 94       	sei
- 5f8:	08 95       	ret
+000005c0 <init_timer0>:
+	}
+}
 
-000005fa <main>:
- 5fa:	f5 df       	rcall	.-22     	; 0x5e6 <init_timer0>
- 5fc:	ad dd       	rcall	.-1190   	; 0x158 <init_fnd>
- 5fe:	36 df       	rcall	.-404    	; 0x46c <fnd_main>
- 600:	ff cf       	rjmp	.-2      	; 0x600 <main+0x6>
+void init_timer0()
+{
+	TCNT0 = 6;
+ 5c0:	86 e0       	ldi	r24, 0x06	; 6
+ 5c2:	82 bf       	out	0x32, r24	; 50
 
-00000602 <__udivmodsi4>:
- 602:	a1 e2       	ldi	r26, 0x21	; 33
- 604:	1a 2e       	mov	r1, r26
- 606:	aa 1b       	sub	r26, r26
- 608:	bb 1b       	sub	r27, r27
- 60a:	fd 01       	movw	r30, r26
- 60c:	0d c0       	rjmp	.+26     	; 0x628 <__udivmodsi4_ep>
+	TCCR0 |= 1 << CS02 | 0 << CS01 | 0 << CS00;
+ 5c4:	83 b7       	in	r24, 0x33	; 51
+ 5c6:	84 60       	ori	r24, 0x04	; 4
+ 5c8:	83 bf       	out	0x33, r24	; 51
 
-0000060e <__udivmodsi4_loop>:
- 60e:	aa 1f       	adc	r26, r26
- 610:	bb 1f       	adc	r27, r27
- 612:	ee 1f       	adc	r30, r30
- 614:	ff 1f       	adc	r31, r31
- 616:	a2 17       	cp	r26, r18
- 618:	b3 07       	cpc	r27, r19
- 61a:	e4 07       	cpc	r30, r20
- 61c:	f5 07       	cpc	r31, r21
- 61e:	20 f0       	brcs	.+8      	; 0x628 <__udivmodsi4_ep>
- 620:	a2 1b       	sub	r26, r18
- 622:	b3 0b       	sbc	r27, r19
- 624:	e4 0b       	sbc	r30, r20
- 626:	f5 0b       	sbc	r31, r21
+	TIMSK |= 1 << TOIE0;
+ 5ca:	87 b7       	in	r24, 0x37	; 55
+ 5cc:	81 60       	ori	r24, 0x01	; 1
+ 5ce:	87 bf       	out	0x37, r24	; 55
 
-00000628 <__udivmodsi4_ep>:
- 628:	66 1f       	adc	r22, r22
- 62a:	77 1f       	adc	r23, r23
- 62c:	88 1f       	adc	r24, r24
- 62e:	99 1f       	adc	r25, r25
- 630:	1a 94       	dec	r1
- 632:	69 f7       	brne	.-38     	; 0x60e <__udivmodsi4_loop>
- 634:	60 95       	com	r22
- 636:	70 95       	com	r23
- 638:	80 95       	com	r24
- 63a:	90 95       	com	r25
- 63c:	9b 01       	movw	r18, r22
- 63e:	ac 01       	movw	r20, r24
- 640:	bd 01       	movw	r22, r26
- 642:	cf 01       	movw	r24, r30
- 644:	08 95       	ret
+	sei();
+ 5d0:	78 94       	sei
+ 5d2:	08 95       	ret
 
-00000646 <_exit>:
- 646:	f8 94       	cli
+000005d4 <main>:
+	fnd_refreshrate++;
+}
 
-00000648 <__stop_program>:
- 648:	ff cf       	rjmp	.-2      	; 0x648 <__stop_program>
+int main(void)
+{
+	init_timer0();
+ 5d4:	f5 df       	rcall	.-22     	; 0x5c0 <init_timer0>
+	init_fnd();
+ 5d6:	c0 dd       	rcall	.-1152   	; 0x158 <init_fnd>
+	
+	fnd_main();
+ 5d8:	21 df       	rcall	.-446    	; 0x41c <fnd_main>
+ 5da:	ff cf       	rjmp	.-2      	; 0x5da <main+0x6>
+
+000005dc <__udivmodsi4>:
+ 5dc:	a1 e2       	ldi	r26, 0x21	; 33
+ 5de:	1a 2e       	mov	r1, r26
+ 5e0:	aa 1b       	sub	r26, r26
+ 5e2:	bb 1b       	sub	r27, r27
+ 5e4:	fd 01       	movw	r30, r26
+ 5e6:	0d c0       	rjmp	.+26     	; 0x602 <__udivmodsi4_ep>
+
+000005e8 <__udivmodsi4_loop>:
+ 5e8:	aa 1f       	adc	r26, r26
+ 5ea:	bb 1f       	adc	r27, r27
+ 5ec:	ee 1f       	adc	r30, r30
+ 5ee:	ff 1f       	adc	r31, r31
+ 5f0:	a2 17       	cp	r26, r18
+ 5f2:	b3 07       	cpc	r27, r19
+ 5f4:	e4 07       	cpc	r30, r20
+ 5f6:	f5 07       	cpc	r31, r21
+ 5f8:	20 f0       	brcs	.+8      	; 0x602 <__udivmodsi4_ep>
+ 5fa:	a2 1b       	sub	r26, r18
+ 5fc:	b3 0b       	sbc	r27, r19
+ 5fe:	e4 0b       	sbc	r30, r20
+ 600:	f5 0b       	sbc	r31, r21
+
+00000602 <__udivmodsi4_ep>:
+ 602:	66 1f       	adc	r22, r22
+ 604:	77 1f       	adc	r23, r23
+ 606:	88 1f       	adc	r24, r24
+ 608:	99 1f       	adc	r25, r25
+ 60a:	1a 94       	dec	r1
+ 60c:	69 f7       	brne	.-38     	; 0x5e8 <__udivmodsi4_loop>
+ 60e:	60 95       	com	r22
+ 610:	70 95       	com	r23
+ 612:	80 95       	com	r24
+ 614:	90 95       	com	r25
+ 616:	9b 01       	movw	r18, r22
+ 618:	ac 01       	movw	r20, r24
+ 61a:	bd 01       	movw	r22, r26
+ 61c:	cf 01       	movw	r24, r30
+ 61e:	08 95       	ret
+
+00000620 <_exit>:
+ 620:	f8 94       	cli
+
+00000622 <__stop_program>:
+ 622:	ff cf       	rjmp	.-2      	; 0x622 <__stop_program>
