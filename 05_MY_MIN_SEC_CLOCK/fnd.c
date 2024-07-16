@@ -46,8 +46,9 @@ int fnd_main(void)
 			
 			if (button0_state)
 			{
-				state = 1;
 				temp = sec_count;
+				sec_count = 0;
+				state = 1;
 			}
 			else
 			{
@@ -106,7 +107,7 @@ void stopwatch(void)
 		fnd_refreshrate = 0;
 		fnd_display();
 	}
-	if (msec_count >= 12)
+	if (msec_count >= 16)
 	{
 		msec_count = 0;
 		sec_count++;
