@@ -1,5 +1,5 @@
 
-05_MY_MIN_SEC_CLOCK.elf:     file format elf32-avr
+05_STOPWATCH_CLOCK_PROJ.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
@@ -23,11 +23,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   9 .debug_frame  0000012c  00000000  00000000  000026c4  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    00000532  00000000  00000000  000027f0  2**0
+ 10 .debug_str    0000055f  00000000  00000000  000027f0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    000003ee  00000000  00000000  00002d22  2**0
+ 11 .debug_loc    000003ee  00000000  00000000  00002d4f  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000078  00000000  00000000  00003110  2**0
+ 12 .debug_ranges 00000078  00000000  00000000  0000313d  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -147,24 +147,12 @@ Disassembly of section .text:
   c6:	9c cf       	rjmp	.-200    	; 0x0 <__vectors>
 
 000000c8 <init_button>:
-// 00001111
-// DDRD &= 0x0f; // 4, 5, 6, 7을 input. PORTD.4 가독성이 떨어진다.
-
-void init_button(void)
-{
-	BUTTON_DDR &= ~(1 << BUTTON0PIN | 1 << BUTTON1PIN | 1 << BUTTON2PIN | 1 << BUTTON3PIN);
   c8:	81 b3       	in	r24, 0x11	; 17
   ca:	8f 70       	andi	r24, 0x0F	; 15
   cc:	81 bb       	out	0x11, r24	; 17
   ce:	08 95       	ret
 
 000000d0 <get_button>:
-
-	static unsigned char button_status[BUTTON_NUMBER] =
-	{BUTTON_RELEASE, BUTTON_RELEASE, BUTTON_RELEASE, BUTTON_RELEASE}; // 지역변수에 static을 선언하면 전역변수처럼 활용가능
-	//
-	
-	current_state = BUTTON_PIN & (1 << button_pin); // 버튼을 읽는다.
   d0:	20 b3       	in	r18, 0x10	; 16
   d2:	42 2f       	mov	r20, r18
   d4:	50 e0       	ldi	r21, 0x00	; 0
@@ -177,7 +165,6 @@ void init_button(void)
   e2:	e2 f7       	brpl	.-8      	; 0xdc <get_button+0xc>
   e4:	24 23       	and	r18, r20
   e6:	35 23       	and	r19, r21
-	if (current_state && button_status[button_num] == BUTTON_RELEASE) // 버튼이 처음 눌려진 상태.
   e8:	21 15       	cp	r18, r1
   ea:	31 05       	cpc	r19, r1
   ec:	b9 f0       	breq	.+46     	; 0x11c <get_button+0x4c>
@@ -202,21 +189,14 @@ void init_button(void)
  106:	e1 f7       	brne	.-8      	; 0x100 <get_button+0x30>
  108:	00 c0       	rjmp	.+0      	; 0x10a <get_button+0x3a>
  10a:	00 00       	nop
-	{
-		_delay_ms(60); // noise가 지나가기를 기다린다.
-		button_status[button_num] = BUTTON_PRESS; // 처음 눌려진 상태가 아니다
  10c:	fc 01       	movw	r30, r24
  10e:	ec 5e       	subi	r30, 0xEC	; 236
  110:	fe 4f       	sbci	r31, 0xFE	; 254
  112:	21 e0       	ldi	r18, 0x01	; 1
  114:	20 83       	st	Z, r18
-		return 0; // 아직은 완전히 눌렀다 땐 상태가 아니다.
  116:	80 e0       	ldi	r24, 0x00	; 0
  118:	90 e0       	ldi	r25, 0x00	; 0
  11a:	08 95       	ret
-		
-	}
-	else if (button_status[button_num] == BUTTON_PRESS && current_state == BUTTON_RELEASE)
  11c:	fc 01       	movw	r30, r24
  11e:	ec 5e       	subi	r30, 0xEC	; 236
  120:	fe 4f       	sbci	r31, 0xFE	; 254
@@ -225,8 +205,6 @@ void init_button(void)
  126:	91 f4       	brne	.+36     	; 0x14c <get_button+0x7c>
  128:	23 2b       	or	r18, r19
  12a:	99 f4       	brne	.+38     	; 0x152 <get_button+0x82>
-	{	// 버튼이 이전에 눌려진 상태였으며 현재는 떼어진 상태이면
-		button_status[button_num] = BUTTON_RELEASE; // 다음 버튼을 체크 하기위해서 초기화
  12c:	fc 01       	movw	r30, r24
  12e:	ec 5e       	subi	r30, 0xEC	; 236
  130:	fe 4f       	sbci	r31, 0xFE	; 254
@@ -240,14 +218,9 @@ void init_button(void)
  140:	e1 f7       	brne	.-8      	; 0x13a <get_button+0x6a>
  142:	00 c0       	rjmp	.+0      	; 0x144 <get_button+0x74>
  144:	00 00       	nop
-		_delay_ms(60); // 뗀 상태의 noise가 지나가기를 기다린다.
-		return 1; // 완전히 1번 눌렀다 땐 상태로 인정
  146:	81 e0       	ldi	r24, 0x01	; 1
  148:	90 e0       	ldi	r25, 0x00	; 0
  14a:	08 95       	ret
-	}
-	
-	return 0; // 버튼이 open 상태
  14c:	80 e0       	ldi	r24, 0x00	; 0
  14e:	90 e0       	ldi	r25, 0x00	; 0
  150:	08 95       	ret
@@ -984,12 +957,6 @@ int fnd_main(void)
  570:	8d cf       	rjmp	.-230    	; 0x48c <fnd_main+0x20>
 
 00000572 <__vector_16>:
-extern int fnd_main(void);
-
-volatile uint32_t msec_count = 0;
-volatile uint32_t fnd_refreshrate = 0;
-ISR(TIMER0_OVF_vect) // interrupt service routine :routine은 interrupt 서비스 함수
-{
  572:	1f 92       	push	r1
  574:	0f 92       	push	r0
  576:	0f b6       	in	r0, 0x3f	; 63
@@ -999,10 +966,8 @@ ISR(TIMER0_OVF_vect) // interrupt service routine :routine은 interrupt 서비�
  57e:	9f 93       	push	r25
  580:	af 93       	push	r26
  582:	bf 93       	push	r27
-	TCNT0 = 6; // 6 ~ 256 : 250개 (1ms) 그래서 TCNT0를 6으로 설정
  584:	86 e0       	ldi	r24, 0x06	; 6
  586:	82 bf       	out	0x32, r24	; 50
-	msec_count++; // 1ms마다 msec_count가 1씩 증가
  588:	80 91 24 01 	lds	r24, 0x0124	; 0x800124 <msec_count>
  58c:	90 91 25 01 	lds	r25, 0x0125	; 0x800125 <msec_count+0x1>
  590:	a0 91 26 01 	lds	r26, 0x0126	; 0x800126 <msec_count+0x2>
@@ -1014,7 +979,6 @@ ISR(TIMER0_OVF_vect) // interrupt service routine :routine은 interrupt 서비�
  5a2:	90 93 25 01 	sts	0x0125, r25	; 0x800125 <msec_count+0x1>
  5a6:	a0 93 26 01 	sts	0x0126, r26	; 0x800126 <msec_count+0x2>
  5aa:	b0 93 27 01 	sts	0x0127, r27	; 0x800127 <msec_count+0x3>
-	fnd_refreshrate++;
  5ae:	80 91 20 01 	lds	r24, 0x0120	; 0x800120 <fnd_refreshrate>
  5b2:	90 91 21 01 	lds	r25, 0x0121	; 0x800121 <fnd_refreshrate+0x1>
  5b6:	a0 91 22 01 	lds	r26, 0x0122	; 0x800122 <fnd_refreshrate+0x2>
@@ -1026,7 +990,6 @@ ISR(TIMER0_OVF_vect) // interrupt service routine :routine은 interrupt 서비�
  5c8:	90 93 21 01 	sts	0x0121, r25	; 0x800121 <fnd_refreshrate+0x1>
  5cc:	a0 93 22 01 	sts	0x0122, r26	; 0x800122 <fnd_refreshrate+0x2>
  5d0:	b0 93 23 01 	sts	0x0123, r27	; 0x800123 <fnd_refreshrate+0x3>
-}
  5d4:	bf 91       	pop	r27
  5d6:	af 91       	pop	r26
  5d8:	9f 91       	pop	r25
@@ -1038,41 +1001,20 @@ ISR(TIMER0_OVF_vect) // interrupt service routine :routine은 interrupt 서비�
  5e4:	18 95       	reti
 
 000005e6 <init_timer0>:
-	}
-}
-
-void init_timer0()
-{
-	TCNT0 = 6;
  5e6:	86 e0       	ldi	r24, 0x06	; 6
  5e8:	82 bf       	out	0x32, r24	; 50
-
-	TCCR0 |= 1 << CS02 | 0 << CS01 | 0 << CS00;
  5ea:	83 b7       	in	r24, 0x33	; 51
  5ec:	84 60       	ori	r24, 0x04	; 4
  5ee:	83 bf       	out	0x33, r24	; 51
-
-	TIMSK |= 1 << TOIE0;
  5f0:	87 b7       	in	r24, 0x37	; 55
  5f2:	81 60       	ori	r24, 0x01	; 1
  5f4:	87 bf       	out	0x37, r24	; 55
-
-	sei();
  5f6:	78 94       	sei
  5f8:	08 95       	ret
 
 000005fa <main>:
-	fnd_refreshrate++;
-}
-
-int main(void)
-{
-	init_timer0();
  5fa:	f5 df       	rcall	.-22     	; 0x5e6 <init_timer0>
-	init_fnd();
  5fc:	ad dd       	rcall	.-1190   	; 0x158 <init_fnd>
-	
-	fnd_main();
  5fe:	36 df       	rcall	.-404    	; 0x46c <fnd_main>
  600:	ff cf       	rjmp	.-2      	; 0x600 <main+0x6>
 

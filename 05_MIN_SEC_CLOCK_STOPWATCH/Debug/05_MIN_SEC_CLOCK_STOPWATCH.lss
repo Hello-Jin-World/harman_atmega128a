@@ -435,13 +435,13 @@ int fnd_main(void)
 			fnd_display();
  298:	1e df       	rcall	.-452    	; 0xd6 <fnd_display>
 		}
-		if (msec_count >= 100)
+		if (msec_count >= 1000)
  29a:	80 91 16 01 	lds	r24, 0x0116	; 0x800116 <msec_count>
  29e:	90 91 17 01 	lds	r25, 0x0117	; 0x800117 <msec_count+0x1>
  2a2:	a0 91 18 01 	lds	r26, 0x0118	; 0x800118 <msec_count+0x2>
  2a6:	b0 91 19 01 	lds	r27, 0x0119	; 0x800119 <msec_count+0x3>
- 2aa:	84 36       	cpi	r24, 0x64	; 100
- 2ac:	91 05       	cpc	r25, r1
+ 2aa:	88 3e       	cpi	r24, 0xE8	; 232
+ 2ac:	93 40       	sbci	r25, 0x03	; 3
  2ae:	a1 05       	cpc	r26, r1
  2b0:	b1 05       	cpc	r27, r1
  2b2:	f0 f2       	brcs	.-68     	; 0x270 <fnd_main+0x2>

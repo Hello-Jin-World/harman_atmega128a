@@ -555,14 +555,14 @@ END GROUP
  .debug_frame   0x00000034       0x94 fnd.o
  .debug_frame   0x000000c8       0x64 main.o
 
-.debug_str      0x00000000      0x532
+.debug_str      0x00000000      0x55f
  *(.debug_str)
  .debug_str     0x00000000      0x27d C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega128a/avr51/crtatmega128a.o
  .debug_str     0x0000027d      0x1c3 button.o
                                 0x1f7 (size before relaxing)
- .debug_str     0x00000440       0xce fnd.o
-                                0x25d (size before relaxing)
- .debug_str     0x0000050e       0x24 main.o
+ .debug_str     0x00000440       0xfb fnd.o
+                                0x261 (size before relaxing)
+ .debug_str     0x0000053b       0x24 main.o
                                 0x1ab (size before relaxing)
 
 .debug_loc      0x00000000      0x3ee
@@ -597,5 +597,5 @@ END GROUP
 
 .debug_macro
  *(.debug_macro)
-OUTPUT(05_MY_MIN_SEC_CLOCK.elf elf32-avr)
+OUTPUT(05_STOPWATCH_CLOCK_PROJ.elf elf32-avr)
 LOAD linker stubs
