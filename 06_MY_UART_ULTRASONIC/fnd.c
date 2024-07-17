@@ -239,12 +239,12 @@ void fnd_display_us(int *dis_cm)
 
 		case 2 :
 		FND_DIGIT_PORT = ~0x20;
-		FND_DATA_PORT = fnd_font[*dis_cm /58 / 100]; //세자리수
+		FND_DATA_PORT = fnd_font[*dis_cm /58 / 100]; // 세자리수
 		break;
 
 		case 3 :
 		FND_DIGIT_PORT = ~0x10;
-		FND_DATA_PORT = fnd_font[*dis_cm /58 / 1000]; // 10단위 분
+		FND_DATA_PORT = fnd_font[*dis_cm /58 / 1000]; // 네자리수
 		break;
 	}
 	digit_select++;

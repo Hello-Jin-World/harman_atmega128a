@@ -48,45 +48,45 @@ void ultrasonic_trigger()
 
 void ultrasonic_led()
 {
-	if  (ultrasonic_check_timer >= 100)
+	if  (ultrasonic_check_timer >= 2)
 	{
 		ultrasonic_check_timer = 0;
 		
 		if (ultrasonic_distance / 58 >= 0 && ultrasonic_distance / 58 <= 2) // 0~2cm led 1개 on
 		{
-			PORTA = 0b00000001;
+			PORTA = 0x01;
 		}
 		else if (ultrasonic_distance / 58 > 2 && ultrasonic_distance / 58 <= 4) // 2~4cm led 2개 on
 		{
-			PORTA = 0b00000011;
+			PORTA = 0x03;
 		}
 		else if (ultrasonic_distance / 58 > 4 && ultrasonic_distance / 58 <= 6) // 4~6cm led 3개 on
 		{
-			PORTA = 0b00000111;
+			PORTA = 0x07;
 		}
 		else if (ultrasonic_distance / 58 > 6 && ultrasonic_distance / 58 <= 8) // 6~8cm led 4개 on
 		{
-			PORTA = 0b00001111;
+			PORTA = 0x0f;
 		}
 		else if (ultrasonic_distance / 58 > 8 && ultrasonic_distance / 58 <= 10) // 8~10cm led 5개 on
 		{
-			PORTA = 0b00011111;
+			PORTA = 0x1f;
 		}
 		else if (ultrasonic_distance / 58 > 10 && ultrasonic_distance / 58 <= 12) // 10~12cm led 6개 on
 		{
-			PORTA = 0b00111111;
+			PORTA = 0x3f;
 		}
 		else if (ultrasonic_distance / 58 > 12 && ultrasonic_distance / 58 <= 14) // 12~14cm led 7개 on
 		{
-			PORTA = 0b01111111;
+			PORTA = 0x7f;
 		}
 		else if (ultrasonic_distance / 58 > 14 && ultrasonic_distance / 58 <= 16) // 14~16cm led 8개 on
 		{
-			PORTA = 0b11111111;
+			PORTA = 0xff;
 		}
 		else
 		{
-			PORTA = 0x00; // 그 외엔 모든 led off
+			PORTA = 0; // 그 외엔 모든 led off
 		}
 		fnd_display_us(&ultrasonic_distance); // 실시간으로 fnd에 거리 display
 		ultrasonic_trigger();		
