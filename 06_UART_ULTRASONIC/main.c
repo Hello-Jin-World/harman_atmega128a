@@ -12,15 +12,24 @@
 #include <stdio.h>   // printf scanf fgets등이 정의 되어 있다. 
 
 #include "def.h"
+#include "ultrasonic.h"
 
 volatile uint32_t msec_count=0;   // 인터럽드 서비스 루틴에서 쓰는 변수 type앞에는
                                 // volatile이라고 선언
 								// 이는 최적화를 방지 하기 위함이다. 
 volatile uint32_t fnd_dis=0;  // fnd의 잔상 효과를 유지 하기 위한 변수 2ms
+volatile uint32_t ultrasonic_check_timer = 0; // 1000ms에 한번씩 
+
 int led_main(void);   // 선언
+
 extern int fnd_main(void);
 extern void init_uart0(void);
 extern void UART0_transmit(uint8_t data);
+extern void init_uart1(void);
+extern void UART1_transmit(uint8_t data);
+extern void init_ultrasonic();
+extern void ultrasonic_distance_check();
+extern void bt_command_processing(void);
 
 // for printf
 FILE OUTPUT = FDEV_SETUP_STREAM(UART0_transmit, NULL, _FDEV_SETUP_WRITE);
@@ -30,21 +39,36 @@ ISR(TIMER0_OVF_vect)
 	TCNT0=6;  // 6~256 : 250(1ms) 그래서 TCNT0를 6으로 설정
 	msec_count++;  // 1ms마다 ms_count가 1씩 증가
 	fnd_dis++;   // fnd 잔상효과 유지 하기 위한 timer 2ms  	
+	ultrasonic_check_timer++;
 }
 
 int main(void)
 {
     init_timer0();
 	init_uart0();
+	init_uart1();
+	init_ultrasonic();
 	stdout = &OUTPUT;  // printf가 동작 될 수 있도록 stdout에 OUTPUT화일 포인터 assign
 	                 				 
 	DDRA=0xff;   // led를 출력 모드로 
     sei();     // 전역적으로 interrupt 허용
-printf("Hello SEONGJIN\n");	
+	
+//printf("Hello SEONGJIN\n");	
+
+#if 0
+	while (1)
+	{
+		printf("0525\n"); // 0x41 0x12
+		_delay_ms(100);
+	}
+#else
     while (1) 
     {
 		pc_command_processing();
+		bt_command_processing();
+		ultrasonic_distance_check();
     }
+#endif
 }
 
 void init_timer0()
@@ -62,5 +86,5 @@ void init_timer0()
 	TCCR0 |= 1 << CS02 | 0 << CS01 | 0 << CS00;	
 // 5. TIMER0 OVERFLOW를 허용(enable)
 	TIMSK |= 1 << TOIE0;  // TIMSK |= 0x01;
-	sei();    // 전역적(대문)으로 interrupt 허용 
+	//sei();    // 전역적(대문)으로 interrupt 허용 
 }

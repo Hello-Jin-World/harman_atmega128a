@@ -9,7 +9,7 @@
 #include <avr/io.h>
 #include "button.h"
 
-extern int led_main(void); // extern : led_main함수는 다른 파일에 있는 함수이다.라고 컴파일러한테 신고하는 것
+// extern : led_main함수는 다른 파일에 있는 함수이다.라고 컴파일러한테 신고하는 것
 extern void init_button(void);
 extern int get_button(int button_num, int button_pin);
 extern void led_all_on(void);

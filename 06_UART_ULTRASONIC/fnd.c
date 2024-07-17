@@ -214,3 +214,4 @@ void fnd_display(void)
 	digit_select++;
 	digit_select %= 4; //다음 표시할 자리수 선택
 }
+

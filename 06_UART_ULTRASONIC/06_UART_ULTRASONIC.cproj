@@ -158,6 +158,12 @@
     <Compile Include="uart1.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="ultrasonic.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="ultrasonic.h">
+      <SubType>compile</SubType>
+    </Compile>
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>
