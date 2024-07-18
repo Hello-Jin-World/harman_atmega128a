@@ -23,11 +23,6 @@ int led_main(void) // 정의
 	}
 }
 
-void led_ultrasonic()
-{
-	PORTA += 0b00000001 << led_state;
-}
-
 void shift_left_keep_ledon(void)
 {
 	PORTA=0;

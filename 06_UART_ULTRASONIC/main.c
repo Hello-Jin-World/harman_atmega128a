@@ -29,6 +29,7 @@ extern void init_uart1(void);
 extern void UART1_transmit(uint8_t data);
 extern void init_ultrasonic();
 extern void ultrasonic_distance_check();
+extern void pc_command_processing(void);
 extern void bt_command_processing(void);
 
 // for printf
