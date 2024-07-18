@@ -10,8 +10,10 @@ void display_clock();
 void stopwatch();
 void pause_stopwatch();
 void clear_stopwatch();
+void final_fan_display();
 
 uint32_t sec_count = 0; // 초를 재는 count 변수 unsigned int = uint32_t
+uint32_t min_count = 0; // 분을 재는 count 변수
 
 extern volatile uint32_t fnd_refreshrate; // fnd 잔상효과를 유지하기 위한 변수 2ms
 extern volatile uint32_t msec_count;
@@ -88,7 +90,7 @@ int fnd_main(void)
 		fp_clock[state_mod]();
 	}
 }
-
+/*
 void display_clock(void)
 {
 	if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
@@ -136,7 +138,7 @@ void clear_stopwatch(void)
 		fnd_display();
 	}
 }
-
+*/
 void init_fnd(void)
 {
 	FND_DATA_DDR = 0xff; // 출력모드로 설정
@@ -144,14 +146,10 @@ void init_fnd(void)
 	FND_DIGIT_DDR |= 1 << FND_DIGIT_D1 | 1 << FND_DIGIT_D2 |
 					 1 << FND_DIGIT_D3 | 1 << FND_DIGIT_D4;
 
-#if 0 // comm 애노우드
-	FND_DATA_PORT = ~0x00; // FND를 all off  ~0x00 = 0xff
-#else // comm 캐소우드
 	FND_DATA_PORT = 0x00; // FND를 all off
-#endif
 }
 
-
+/*
 
 void fnd_display(void)
 {
@@ -214,6 +212,38 @@ void fnd_display(void)
 	digit_select++;
 	digit_select %= 4; //다음 표시할 자리수 선택
 }
+*/
 
+//////////선풍기 시각 설정 함수//////////////
+void fan_time_fnd_display(void)
+{
+						  // 0      1      2      3      4      5      6      7      8      9      .
+	uint8_t fnd_font[] = {~0xc0, ~0xf9, ~0xa4, ~0xb0, ~0x99, ~0x92, ~0x82, ~0xd8, ~0x80, ~0x90, ~0x7f};
 
+	static int digit_select = 0; // 자리수 선택 변수 0~3   static : 전역변수처럼 작동
 
+	switch(digit_select)
+	{
+		case 0 :
+		FND_DIGIT_PORT = ~0x80;
+		FND_DATA_PORT = fnd_font[sec_count % 10];   // 0~9초
+		break;
+
+		case 1 :
+		FND_DIGIT_PORT = ~0x40;
+		FND_DATA_PORT = fnd_font[sec_count / 10 % 6]; // 10단위 초
+		break;
+
+		case 2 :
+		FND_DIGIT_PORT = ~0x20;
+		FND_DATA_PORT = fnd_font[min_count % 10] | fnd_font[10]; // 1단위 분
+		break;
+
+		case 3 :
+		FND_DIGIT_PORT = ~0x10;
+		FND_DATA_PORT = fnd_font[min_count / 10 % 6]; // 10단위 분
+		break;
+	}
+	digit_select++;
+	digit_select %= 4; //다음 표시할 자리수 선택
+}

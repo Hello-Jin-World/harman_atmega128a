@@ -26,7 +26,7 @@ extern void pc_command_processing(void);
 extern void bt_command_processing(void);
 extern void make_pwm_led_control(void);
 extern void init_button(void);
-extern void hw_pwm_fan_control();
+extern void hw_pwm_fan_control(void);
 
 // for printf
 FILE OUTPUT = FDEV_SETUP_STREAM(UART0_transmit, NULL, _FDEV_SETUP_WRITE);

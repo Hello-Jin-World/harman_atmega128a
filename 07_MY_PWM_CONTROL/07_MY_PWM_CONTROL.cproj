@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>7.0</ProjectVersion>
     <ToolchainName>com.Atmel.AVRGCC8.C</ToolchainName>
-    <ProjectGuid>{57d4127b-bab7-4bd7-a8a9-418ee57943fa}</ProjectGuid>
+    <ProjectGuid>{de0be810-866c-4238-86cc-9de58e246aa6}</ProjectGuid>
     <avrdevice>ATmega128A</avrdevice>
     <avrdeviceseries>none</avrdeviceseries>
     <OutputType>Executable</OutputType>
@@ -12,9 +12,9 @@
     <OutputFileName>$(MSBuildProjectName)</OutputFileName>
     <OutputFileExtension>.elf</OutputFileExtension>
     <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
-    <AssemblyName>07_PWM_CONTROL</AssemblyName>
-    <Name>07_PWM_CONTROL</Name>
-    <RootNamespace>07_PWM_CONTROL</RootNamespace>
+    <AssemblyName>07_MY_PWM_CONTROL</AssemblyName>
+    <Name>07_MY_PWM_CONTROL</Name>
+    <RootNamespace>07_MY_PWM_CONTROL</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
