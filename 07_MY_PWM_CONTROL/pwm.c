@@ -85,7 +85,7 @@ void hw_pwm_fan_control(void)
 				fan_state = STOP;
 			}
 		}
-		else if (get_button(BUTTON3, BUTTON3PIN))
+		if (get_button(BUTTON3, BUTTON3PIN))
 		{
 			fan_state = SETTING;
 		}
@@ -109,14 +109,13 @@ void fan_start(void)
 		if (sec_count < 0)
 		{
 			min_count--;
-			if (min_count == 0 && sec_count <= 0)
+			sec_count = 59;
+			if (min_count == 0 && sec_count == 0)
 			{
-// 				sec_count = 0;
-// 				min_count = 0;
-// 				OCR3C = 0;
-// 				fan_state = STOP;
-				init_fnd();
-				return break;
+				sec_count = 0;
+				min_count = 0;
+				OCR3C = 0;
+				fan_state = STOP; // 이 부분을 추가하여 팬 상태를 중지로 설정
 			}
 		}
 	}
@@ -129,7 +128,6 @@ void fan_stop(void)
 
 void time_setting_mode(void)
 {
-	init_button(); // button 초기화
 	while(return_enable)
 	{
 		if (get_button(BUTTON0, BUTTON0PIN))
@@ -150,6 +148,11 @@ void time_setting_mode(void)
 		{
 			return_enable = 0;
 			fan_state = STOP;
+		}
+		if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
+		{
+			fnd_refreshrate = 0;
+			fan_time_fnd_display();
 		}
 	}
 }
