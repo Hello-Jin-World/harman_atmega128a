@@ -10,6 +10,8 @@ led.c
 
 main.c
 
+pwm.c
+
 uart0.c
 
 uart1.c
