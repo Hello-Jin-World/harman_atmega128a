@@ -12,6 +12,7 @@ volatile uint32_t msec_count=0;   // 인터럽드 서비스 루틴에서 쓰는 
 // 이는 최적화를 방지 하기 위함이다.
 volatile uint32_t fnd_refreshrate=0;  // fnd의 잔상 효과를 유지 하기 위한 변수 2ms
 volatile uint32_t check_timer = 0; // 5000ms에 한번씩
+volatile uint32_t roading_clock_change = 0;
 
 int led_main(void);   // 선언
 
@@ -32,16 +33,15 @@ extern void n298n_dcmotor_pwm_control(void);
 extern void init_timer3_pwm();
 extern void init_n289n();
 
-
-// for printf
 FILE OUTPUT = FDEV_SETUP_STREAM(UART0_transmit, NULL, _FDEV_SETUP_WRITE);
 
 ISR(TIMER0_OVF_vect)
 {
-	TCNT0=6;  // 6~256 : 250(1ms) 그래서 TCNT0를 6으로 설정
-	msec_count++;  // 1ms마다 ms_count가 1씩 증가
-	fnd_refreshrate++;   // fnd 잔상효과 유지 하기 위한 timer 2ms
+	TCNT0=6;
+	msec_count++; 
+	fnd_refreshrate++; 
 	check_timer++;
+	roading_clock_change++;
 }
 
 int main(void)
@@ -59,18 +59,10 @@ int main(void)
 	DDRA=0xff;   // led를 출력 모드로
 	sei();     // 전역적으로 interrupt 허용
 	
-	//hw_pwm_fan_control();
-	
 	fnd_main();
-	
-	//make_pwm_led_control();
-	//n298n_dcmotor_pwm_control();
 
 	while (1)
 	{
-		//pc_command_processing();
-		//bt_command_processing();
-		//ultrasonic_distance_check();
 	}
 }
 

@@ -8,7 +8,8 @@
 
 
 void init_fnd(void);
-void fnd_display(void);
+void fnd_display(void); // 숫자 표시
+void fnd_roading_display(); // 로딩, 모드 표시
 int fnd_main(void);
 
 // 버튼
@@ -33,17 +34,19 @@ void dumy_fanc();
 
 uint32_t sec_count = 0; // 초를 재는 count 변수 unsigned int = uint32_t
 volatile int led_shift_num = 0;
-// uint32_t  = 0; 
 
 extern volatile uint32_t fnd_refreshrate; // fnd 잔상효과를 유지하기 위한 변수 2ms
 extern volatile uint32_t msec_count;
-extern volatile uint32_t check_timer;
+extern volatile uint32_t check_timer; // 모터 회전 방향 반대로 하기위한 시각 체크 변수
+extern volatile uint32_t roading_clock_change;
 
 int select_wash_mode = 4; // 메인화면에서 모드 선택 변수
 int auto_wash_mode = 4; // 자동 세탁 모드안에서 진행과정 선택 변수
 int auto_wash_mode_toggle = 1; // 자동 세탁 모드 안에서 모든 과정을 마쳤는지 아는 토글 / 이게 0 되면 세탁을 시작함.
 int total_wash_time = 90; // 총 세탁 시각 default : 60초 + default 탈수 시간 30초
 int spin_strength_val = 160; // 1단계 115, 2단계 160, 3단계 205, 4단계 250
+int roading_rot = 0; // 로딩  돌아가는거 보여주는 변수
+int roading_clock_change_val = 1;
 
 void (*fp_wash_mode[])() =
 {
@@ -315,20 +318,34 @@ void auto_wash_start(void)
 	{
 		washing_machine_fan_control(&spin_strength_val);
 		
-		if (msec_count >= 1000)
+		if (msec_count >= 1000) // 1초마다 시간 1초씩 감소하고 로딩 회전이 됨.
 		{
 			msec_count = 0;
 			sec_count--;
+			roading_rot++;
+			roading_rot %= 3;
+		}
+		if (roading_clock_change >= 3000) // 3초마다 로딩창이랑 시간 화면 뜨는거 토글
+		{
+			roading_clock_change = 0;
+			roading_clock_change_val = !roading_clock_change_val;
 		}
 		
 		if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
 		{
 			fnd_refreshrate = 0;
-			fnd_display();
+			if (roading_clock_change_val)
+			{
+				fnd_display(); // 시간 보여주기
+			}
+			else
+			{
+				fnd_roading_display(&roading_rot); // 로딩 보여주기
+			}
 		}
 	}
 	OCR3C = 0;
-	sec_count = 0;
+	sec_count = 0; // 다 끝나면 끝
 	auto_wash_mode = 4;
 }
 
@@ -350,8 +367,6 @@ void init_fnd(void)
 
 	FND_DATA_PORT = 0x00; // FND를 all off
 }
-
-
 
 void fnd_display(void)
 {
@@ -375,10 +390,7 @@ void fnd_display(void)
 
 		case 2 :
 		FND_DIGIT_PORT = ~0x20;
-		if (sec_count % 2 == 1)
 			FND_DATA_PORT = fnd_font[sec_count / 60 % 10] | fnd_font[10]; // 1단위 분
-		else
-			FND_DATA_PORT = fnd_font[sec_count / 60 % 10]; // 1단위 분
 		break;
 
 		case 3 :
@@ -389,6 +401,53 @@ void fnd_display(void)
 	digit_select++;
 	digit_select %= 4; //다음 표시할 자리수 선택
 }
+
+void fnd_roading_display(int *roading_rot) // 진행 로딩 상황 표시 
+{
+	int a,b,c,d;                 //  [     -      _       ]		-,_	  꺼짐
+	uint8_t fnd_roading_font[] = {~0xc6, ~0xfe, ~0xf7, ~0xf0, ~0xf6, ~0xff};
+	if (*roading_rot == 0)
+	{
+		a = 0; b = 1, c = 2, d = 3;	
+	}
+	else if (*roading_rot == 1)
+	{
+		a = 0; b = 2, c = 1, d = 3;
+	}
+	else if (*roading_rot == 2)
+	{
+		a = 5; b = 4, c = 4, d = 5;
+	}
+
+	static int digit_select = 0; // 자리수 선택 변수 0~3   static : 전역변수처럼 작동
+
+	switch(digit_select)
+	{
+		case 0 :
+		FND_DIGIT_PORT = ~0x80;
+		FND_DATA_PORT = fnd_roading_font[d];
+		break;
+
+		case 1 :
+		FND_DIGIT_PORT = ~0x40;
+
+		FND_DATA_PORT = fnd_roading_font[b];
+		break;
+
+		case 2 :
+		FND_DIGIT_PORT = ~0x20;
+		FND_DATA_PORT = fnd_roading_font[c];
+		break;
+
+		case 3 :
+		FND_DIGIT_PORT = ~0x10;
+		FND_DATA_PORT = fnd_roading_font[a];
+		break;
+	}
+	digit_select++;
+	digit_select %= 4; //다음 표시할 자리수 선택
+}
+
 
 
 
