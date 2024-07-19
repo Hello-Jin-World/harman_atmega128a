@@ -29,6 +29,10 @@ extern void init_button(void);
 extern void hw_pwm_fan_control(void);
 extern void n298n_dcmotor_pwm_control(void);
 
+extern void init_timer3_pwm();
+extern void init_n289n();
+
+
 // for printf
 FILE OUTPUT = FDEV_SETUP_STREAM(UART0_transmit, NULL, _FDEV_SETUP_WRITE);
 
@@ -46,6 +50,9 @@ int main(void)
 	init_uart0();
 	init_uart1();
 	init_ultrasonic();
+	init_button();
+	init_timer3_pwm();
+	init_n289n();
 	
 	stdout = &OUTPUT;  // printf가 동작 될 수 있도록 stdout에 OUTPUT화일 포인터 assign
 	

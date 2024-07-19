@@ -8,7 +8,7 @@ void hw_pwm_fan_control();
 void init_timer3_pwm(void);
 void init_n289n(void);
 void n298n_dcmotor_pwm_control(void);
-void washing_machine_fan_control();
+/*void washing_machine_fan_control();*/
 
 extern int get_button(int button_num, int button_pin);
 extern void shift_left_keep_ledon();
@@ -50,7 +50,6 @@ void init_n289n(void)
 {
 	//PF6 : IN1 (N298N)
 	//PF7 : IN2 (N298N)
-	DDRF |= 1 << 6 | 1 << 7;
 	PORTF &= ~(1 << 6 | 1 << 7);  // 6, 7 reset
 	PORTF |= 1 << 6; // 정회전
 }
@@ -67,10 +66,10 @@ void init_n289n(void)
 	1	0	정회전
 	1	1	STOP // 둘 다 1인데 멈추는 이유는 둘다 5v가 걸리면 전압차가 없어서 멈춘다.
 */
-void washing_machine_fan_control(int *total_wash_time)
-{
-	
-}
+// void washing_machine_fan_control(int *spin_strength)
+// {
+// 	OCR3C = *spin_strength;
+// }
 
 #if 0
 void n298n_dcmotor_pwm_control(void)

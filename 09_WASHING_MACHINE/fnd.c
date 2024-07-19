@@ -15,7 +15,7 @@ int fnd_main(void);
 extern void init_button(void);
 extern int get_button(int button_num, int button_pin);
 // 모터
-extern void washing_machine_fan_control();
+/*extern void washing_machine_fan_control(int*);*/
 
 // 메인 화면에서 선택하는 함수들
 void auto_wash();
@@ -69,7 +69,6 @@ int fnd_main(void)
 	init_fnd(); // fnd 초기화
 	init_button(); // button 초기화
 	
-
 	int button1_state = 0;
 	int button2_state = 0;
 	int button3_state = 0;
@@ -315,10 +314,23 @@ void auto_wash_start(void)
 {
 	sec_count = total_wash_time;
 	
-	//while (sec_count > 0)
-	//{
-		washing_machine_fan_control(&sec_count);
-	//}
+	while (sec_count > 0)
+	{
+		/*washing_machine_fan_control(&spin_strength_val);*/
+		OCR3C = spin_strength_val;
+		if (msec_count >= 1000)
+		{
+			msec_count = 0;
+			sec_count--;
+		}
+		if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
+		{
+			fnd_refreshrate = 0;
+			fnd_display();
+		}
+	}
+	sec_count = 0;
+	auto_wash_mode = 4;
 }
 
 void dumy_fanc()
