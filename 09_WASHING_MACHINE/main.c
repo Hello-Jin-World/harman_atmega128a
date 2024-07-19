@@ -46,6 +46,7 @@ int main(void)
 	init_uart0();
 	init_uart1();
 	init_ultrasonic();
+	
 	stdout = &OUTPUT;  // printf가 동작 될 수 있도록 stdout에 OUTPUT화일 포인터 assign
 	
 	DDRA=0xff;   // led를 출력 모드로

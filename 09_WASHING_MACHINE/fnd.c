@@ -14,6 +14,8 @@ int fnd_main(void);
 // 버튼
 extern void init_button(void);
 extern int get_button(int button_num, int button_pin);
+// 모터
+extern void washing_machine_fan_control();
 
 // 메인 화면에서 선택하는 함수들
 void auto_wash();
@@ -297,7 +299,7 @@ void spindry_strength()
 			}
 			PORTA = 0;
 			sec_count = 0;
-			auto_wash_mode_toggle = 0;
+			auto_wash_mode = 3;
 			spindry_strength_toggle = 0;
 			
 		}
@@ -311,12 +313,17 @@ void spindry_strength()
 
 void auto_wash_start(void)
 {
+	sec_count = total_wash_time;
 	
+	//while (sec_count > 0)
+	//{
+		washing_machine_fan_control(&sec_count);
+	//}
 }
 
 void dumy_fanc()
 {
-	
+	//더미 함수
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
