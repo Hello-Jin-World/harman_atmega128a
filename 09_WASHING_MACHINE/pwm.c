@@ -14,6 +14,9 @@ extern int get_button(int button_num, int button_pin);
 extern void shift_left_keep_ledon();
 extern void shift_right_keep_ledon();
 
+extern uint32_t sec_count; // 초를 재는 count 변수 unsigned int = uint32_t
+volatile uint32_t check_timer;
+
 
 /*
 	16bit 3번 timer/counter를 사용
@@ -66,10 +69,19 @@ void init_n289n(void)
 	1	0	정회전
 	1	1	STOP // 둘 다 1인데 멈추는 이유는 둘다 5v가 걸리면 전압차가 없어서 멈춘다.
 */
-// void washing_machine_fan_control(int *spin_strength)
-// {
-// 	OCR3C = *spin_strength;
-// }
+void washing_machine_fan_control(int *spin_strength)
+{
+	OCR3C = *spin_strength;
+	if (check_timer >= 5000)
+	{
+		check_timer = 0;
+		PORTF |= 1 << 6; // 정회전
+	}
+	else
+	{
+		PORTF |= 1 << 7; // 역회전
+	}
+}
 
 #if 0
 void n298n_dcmotor_pwm_control(void)

@@ -15,7 +15,7 @@ int fnd_main(void);
 extern void init_button(void);
 extern int get_button(int button_num, int button_pin);
 // 모터
-/*extern void washing_machine_fan_control(int*);*/
+extern void washing_machine_fan_control(int *spin_strength);
 
 // 메인 화면에서 선택하는 함수들
 void auto_wash();
@@ -43,7 +43,7 @@ int select_wash_mode = 4; // 메인화면에서 모드 선택 변수
 int auto_wash_mode = 4; // 자동 세탁 모드안에서 진행과정 선택 변수
 int auto_wash_mode_toggle = 1; // 자동 세탁 모드 안에서 모든 과정을 마쳤는지 아는 토글 / 이게 0 되면 세탁을 시작함.
 int total_wash_time = 90; // 총 세탁 시각 default : 60초 + default 탈수 시간 30초
-int spin_strength_val = 160; // 1단계 70, 2단계 115, 3단계 160, 4단계 205, 5단계 250
+int spin_strength_val = 160; // 1단계 115, 2단계 160, 3단계 205, 4단계 250
 
 void (*fp_wash_mode[])() =
 {
@@ -170,6 +170,8 @@ void auto_wash(void) // 자동 세탁
 void fast_wash(void) // 쾌속 세탁
 {
 	sec_count = 2;
+	
+	
 }
 
 void rinse_and_spindry(void) // 헹굼 + 탈수
@@ -261,7 +263,7 @@ void spindry_strength()
 	PORTA = 0x01;
 	int spindry_strength_toggle = 1; // 버튼1 누를 때 까지 반복
 	
-	sec_count = 3; // deflaut 탈수 강도
+	sec_count = 3; // deflaut 탈수 강도 최대 4까지
 	
 	while (spindry_strength_toggle)
 	{
@@ -278,21 +280,17 @@ void spindry_strength()
 		{
 			if(sec_count == 1)
 			{
-				spin_strength_val = 70;
+				spin_strength_val = 115;
 			}
 			else if (sec_count == 2)
 			{
-				spin_strength_val = 115;
+				spin_strength_val = 160;
 			}
 			else if (sec_count == 3)
 			{
-				spin_strength_val = 160;
-			}
-			else if (sec_count == 4)
-			{
 				spin_strength_val = 205;
 			}
-			else if (sec_count == 5)
+			else if (sec_count == 4)
 			{
 				spin_strength_val = 250;
 			}
@@ -300,7 +298,6 @@ void spindry_strength()
 			sec_count = 0;
 			auto_wash_mode = 3;
 			spindry_strength_toggle = 0;
-			
 		}
 		if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
 		{
@@ -316,9 +313,9 @@ void auto_wash_start(void)
 	
 	while (sec_count > 0)
 	{
-		/*washing_machine_fan_control(&spin_strength_val);*/
-		OCR3C = spin_strength_val;
-		if (msec_count >= 200)
+		//OCR3C = spin_strength_val; // 이부분을 함수로 표현하고 싶음
+		washing_machine_fan_control(&spin_strength_val);
+		if (msec_count >= 1000)
 		{
 			msec_count = 0;
 			sec_count--;

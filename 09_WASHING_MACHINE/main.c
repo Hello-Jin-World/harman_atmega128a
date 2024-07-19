@@ -11,7 +11,7 @@ volatile uint32_t msec_count=0;   // 인터럽드 서비스 루틴에서 쓰는 
 // volatile이라고 선언
 // 이는 최적화를 방지 하기 위함이다.
 volatile uint32_t fnd_refreshrate=0;  // fnd의 잔상 효과를 유지 하기 위한 변수 2ms
-volatile uint32_t check_timer = 0; // 1000ms에 한번씩
+volatile uint32_t check_timer = 0; // 5000ms에 한번씩
 
 int led_main(void);   // 선언
 
