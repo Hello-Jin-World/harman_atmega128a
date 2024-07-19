@@ -416,7 +416,7 @@ void fnd_loading_display(int *loading_rot) // 진행 로딩 상황 표시
 	}
 	else if (*loading_rot == 2)
 	{
-		a = 5; b = 4, c = 4, d = 5;
+		a = 1; b = 4, c = 4, d = 2;
 	}
 
 	static int digit_select = 0; // 자리수 선택 변수 0~3   static : 전역변수처럼 작동
