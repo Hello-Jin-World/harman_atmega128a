@@ -276,7 +276,7 @@ void spindry_strength()
 		{
 			sec_count += 1;
 		}
-		if (get_button(BUTTON1, BUTTON1PIN))
+		if (get_button(BUTTON1, BUTTON1PIN)) // 버튼 1 누르면 세팅한 강도에 맞는 회전값 반환
 		{
 			if(sec_count == 1)
 			{
@@ -313,13 +313,14 @@ void auto_wash_start(void)
 	
 	while (sec_count > 0)
 	{
-		//OCR3C = spin_strength_val; // 이부분을 함수로 표현하고 싶음
 		washing_machine_fan_control(&spin_strength_val);
+		
 		if (msec_count >= 1000)
 		{
 			msec_count = 0;
 			sec_count--;
 		}
+		
 		if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
 		{
 			fnd_refreshrate = 0;
