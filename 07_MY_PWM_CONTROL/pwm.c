@@ -21,7 +21,6 @@ extern void fan_time_fnd_display(void);
 extern volatile uint32_t fnd_refreshrate; // fnd 잔상효과를 유지하기 위한 변수 2ms
 extern volatile uint32_t msec_count; // 1초를 세기 위한 변수
 extern uint32_t sec_count; // 초를 재는 count 변수 unsigned int = uint32_t
-extern uint32_t min_count; // 분을 재는 count 변수
 
 void (*fan_fp[])() =
 {
@@ -32,17 +31,7 @@ void (*fan_fp[])() =
 
 int fan_state = 0;
 int return_enable = 1;
-/*
-	16bit 3번 timer/counter를 사용
-	pwm출력 신호
-	============
-	PE3 : OC3A
-	PE4 : OC3B    현재 초음파센서 INT4가 연결되어 있음
-	PE5 : OC3C <-- 모터 연결
-	BTN0 : start/stop
-	BTN1 : speed-up (OCR3C : 20증가 최대 250)
-	BTN2 : speed-down (OCR3C : 20감소 최소 60)
-*/
+
 void init_timer3_pwm(void)
 {
 	// DDRE |= 1 << 3 | 1 << 4 | 1 << 5; 현재 4번에 초음파가 연결되어 있다.
@@ -79,14 +68,21 @@ void hw_pwm_fan_control(void)
 			if (button0_state)
 			{
 				fan_state = START;
+				return_enable = 1;
 			}
 			else
 			{
 				fan_state = STOP;
 			}
 		}
+		if (get_button(BUTTON2, BUTTON2PIN)) // reset
+		{
+			sec_count = 0;
+			fan_state = STOP;
+		}
 		if (get_button(BUTTON3, BUTTON3PIN))
 		{
+			button0_state = 0;
 			fan_state = SETTING;
 		}
 		if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
@@ -101,24 +97,17 @@ void hw_pwm_fan_control(void)
 void fan_start(void)
 {
 	OCR3C = 127;
+	if (sec_count == 0)
+	{
+		fan_state=STOP;
+		OCR3C=0;
+	}
 	if (msec_count >= 1000)
 	{
 		msec_count = 0;
-		
-		sec_count--;
-		if (sec_count < 0)
-		{
-			min_count--;
-			sec_count = 59;
-			if (min_count == 0 && sec_count == 0)
-			{
-				sec_count = 0;
-				min_count = 0;
-				OCR3C = 0;
-				fan_state = STOP; // 이 부분을 추가하여 팬 상태를 중지로 설정
-			}
-		}
+		sec_count--;	
 	}
+
 }
 
 void fan_stop(void)
@@ -133,16 +122,10 @@ void time_setting_mode(void)
 		if (get_button(BUTTON0, BUTTON0PIN))
 		{
 			sec_count++;
-			if (sec_count == 60)
-			{
-				min_count++;
-			}
-			sec_count %= 60;
 		}
 		if (get_button(BUTTON1, BUTTON1PIN))
 		{
-			min_count++;
-			min_count %= 60;
+			sec_count += 60;
 		}
 		if (get_button(BUTTON3, BUTTON3PIN))
 		{

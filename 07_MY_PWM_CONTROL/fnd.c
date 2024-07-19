@@ -13,14 +13,13 @@ void clear_stopwatch();
 void final_fan_display();
 
 uint32_t sec_count = 0; // 초를 재는 count 변수 unsigned int = uint32_t
-uint32_t min_count = 0; // 분을 재는 count 변수
+//uint32_t min_count = 0; // 분을 재는 count 변수
 
 extern volatile uint32_t fnd_refreshrate; // fnd 잔상효과를 유지하기 위한 변수 2ms
 extern volatile uint32_t msec_count;
 
 int fnd_main(void)
 {
-	
 }
 
 void init_fnd(void)
@@ -55,12 +54,12 @@ void fan_time_fnd_display(void)
 
 		case 2 :
 		FND_DIGIT_PORT = ~0x20;
-		FND_DATA_PORT = fnd_font[min_count % 10] | fnd_font[10]; // 1단위 분
+		FND_DATA_PORT = fnd_font[sec_count / 60 % 10] | fnd_font[10]; // 1단위 분
 		break;
 
 		case 3 :
 		FND_DIGIT_PORT = ~0x10;
-		FND_DATA_PORT = fnd_font[min_count / 10 % 6]; // 10단위 분
+		FND_DATA_PORT = fnd_font[sec_count / 600 % 10]; // 10단위 분
 		break;
 	}
 	digit_select++;
