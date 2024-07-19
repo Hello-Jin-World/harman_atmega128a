@@ -1461,13 +1461,13 @@ void auto_wash_start(void)
      8d8:	90 91 15 01 	lds	r25, 0x0115	; 0x800115 <spin_strength_val+0x1>
      8dc:	90 93 83 00 	sts	0x0083, r25	; 0x800083 <__TEXT_REGION_LENGTH__+0x7e0083>
      8e0:	80 93 82 00 	sts	0x0082, r24	; 0x800082 <__TEXT_REGION_LENGTH__+0x7e0082>
-		if (msec_count >= 1000)
+		if (msec_count >= 200)
      8e4:	80 91 56 01 	lds	r24, 0x0156	; 0x800156 <msec_count>
      8e8:	90 91 57 01 	lds	r25, 0x0157	; 0x800157 <msec_count+0x1>
      8ec:	a0 91 58 01 	lds	r26, 0x0158	; 0x800158 <msec_count+0x2>
      8f0:	b0 91 59 01 	lds	r27, 0x0159	; 0x800159 <msec_count+0x3>
-     8f4:	88 3e       	cpi	r24, 0xE8	; 232
-     8f6:	93 40       	sbci	r25, 0x03	; 3
+     8f4:	88 3c       	cpi	r24, 0xC8	; 200
+     8f6:	91 05       	cpc	r25, r1
      8f8:	a1 05       	cpc	r26, r1
      8fa:	b1 05       	cpc	r27, r1
      8fc:	d8 f0       	brcs	.+54     	; 0x934 <auto_wash_start+0x82>

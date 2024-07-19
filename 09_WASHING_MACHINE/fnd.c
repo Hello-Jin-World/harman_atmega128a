@@ -318,7 +318,7 @@ void auto_wash_start(void)
 	{
 		/*washing_machine_fan_control(&spin_strength_val);*/
 		OCR3C = spin_strength_val;
-		if (msec_count >= 1000)
+		if (msec_count >= 200)
 		{
 			msec_count = 0;
 			sec_count--;
