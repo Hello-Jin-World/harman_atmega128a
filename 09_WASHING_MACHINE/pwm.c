@@ -93,8 +93,7 @@ void n298n_dcmotor_pwm_control(void)
 		}
 		else if (get_button(BUTTON3, BUTTON3PIN)) // 방향 설정
 		{
-			forward = !forward;
-			PORTF &= ~(1 << 6 | 1 << 7);  // 6, 7 reset
+		 	PORTF &= ~(1 << 6 | 1 << 7);  // 6, 7 reset
 			
 			if (forward)
 			{	
