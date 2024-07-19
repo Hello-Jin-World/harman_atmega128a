@@ -26,6 +26,7 @@ void main_screen();
 void water_temperature();
 void rinse_frequency();
 void spindry_strength();
+void auto_wash_start();
 void dumy_fanc();
 
 uint32_t sec_count = 0; // 초를 재는 count 변수 unsigned int = uint32_t
@@ -37,9 +38,9 @@ extern volatile uint32_t msec_count;
 extern volatile uint32_t check_timer;
 
 int select_wash_mode = 4; // 메인화면에서 모드 선택 변수
-int auto_wash_mode = 3; // 자동 세탁 모드안에서 진행과정 선택 변수
+int auto_wash_mode = 4; // 자동 세탁 모드안에서 진행과정 선택 변수
 int auto_wash_mode_toggle = 1; // 자동 세탁 모드 안에서 모든 과정을 마쳤는지 아는 토글 / 이게 0 되면 세탁을 시작함.
-int total_wash_time = 30; // 총 세탁 시각 default : 30초
+int total_wash_time = 90; // 총 세탁 시각 default : 60초 + default 탈수 시간 30초
 int spin_strength_val = 160; // 1단계 70, 2단계 115, 3단계 160, 4단계 205, 5단계 250
 
 void (*fp_wash_mode[])() =
@@ -56,6 +57,7 @@ void (*auto_wash_select[])() =
 	water_temperature,
 	rinse_frequency,
 	spindry_strength,
+	auto_wash_start,
 	dumy_fanc
 };
 
@@ -305,6 +307,11 @@ void spindry_strength()
 			fnd_display();
 		}
 	}
+}
+
+void auto_wash_start(void)
+{
+	
 }
 
 void dumy_fanc()
