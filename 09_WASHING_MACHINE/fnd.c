@@ -59,11 +59,11 @@ void (*fp_wash_mode[])() =
 
 void (*auto_wash_select[])() =
 {
-	water_temperature,
-	rinse_frequency,
-	spindry_strength,
-	auto_wash_start,
-	dumy_fanc
+	water_temperature, // 물 온도 선택
+	rinse_frequency, // 헹굼 횟수 선택
+	spindry_strength, // 탈수 강도 선택
+	auto_wash_start, // 세탁 시작
+	dumy_fanc // 더미
 };
 
 int fnd_main(void)
@@ -138,7 +138,6 @@ int fnd_main(void)
 
 void auto_wash(void) // 자동 세탁
 {
-	PORTA = 0xff;
 	sec_count = 1;
 	
 	int auto_step_led = 0;
@@ -318,7 +317,7 @@ void auto_wash_start(void)
 	{
 		washing_machine_fan_control(&spin_strength_val);
 		
-		if (msec_count >= 1000) // 1초마다 시간 1초씩 감소하고 로딩 회전이 됨.
+		if (msec_count >= 250) // 1초마다 시간 1초씩 감소하고 로딩 회전이 됨.
 		{
 			msec_count = 0;
 			sec_count--;
@@ -329,6 +328,32 @@ void auto_wash_start(void)
 		{
 			loading_clock_change = 0;
 			loading_clock_change_val = !loading_clock_change_val;
+		}
+		
+		/////여기에 일반세탁 60초 + 헹굼 횟수 * 10초 + 탈수 30초로 구분을 해야함
+		if (total_wash_time - sec_count <= 30)
+		{
+			PORTA = 0xff;
+		}
+		
+		else if (total_wash_time - sec_count < 60 && total_wash_time - sec_count > 30)
+		{
+			PORTA = 0x7e;
+		}
+		
+		else if (total_wash_time - sec_count == 60)
+		{
+			PORTA = 0x3c;
+		}
+		
+		else if (sec_count == 30)
+		{
+			PORTA = 0x18;
+		}
+		
+		else if (sec_count == 0)
+		{
+			PORTA = 0;
 		}
 		
 		if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
@@ -404,19 +429,19 @@ void fnd_display(void)
 
 void fnd_loading_display(int *loading_rot) // 진행 로딩 상황 표시 
 {
-	int a,b,c,d;                 //  [     -      _       ]		-,_	  꺼짐
-	uint8_t fnd_loading_font[] = {~0xc6, ~0xfe, ~0xf7, ~0xf0, ~0xf6, ~0xff};
+	int a,b,c,d;                 //  |-     -|    |_   _|     -      _    -,_	  꺼짐
+	uint8_t fnd_loading_font[] = {~0xce, ~0xf8, ~0xc7, ~0xf1, ~0xfe, ~0xf7, ~0xf6, ~0xff};
 	if (*loading_rot == 0)
 	{
-		a = 0; b = 1, c = 2, d = 3;	
+		a = 0; b = 5, c = 4, d = 3;	
 	}
 	else if (*loading_rot == 1)
 	{
-		a = 0; b = 2, c = 1, d = 3;
+		a = 2; b = 4, c = 5, d = 1;
 	}
 	else if (*loading_rot == 2)
 	{
-		a = 1; b = 4, c = 4, d = 2;
+		a = 4; b = 6, c = 6, d = 5;
 	}
 
 	static int digit_select = 0; // 자리수 선택 변수 0~3   static : 전역변수처럼 작동
