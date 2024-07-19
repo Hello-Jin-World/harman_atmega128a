@@ -329,6 +329,7 @@ void auto_wash_start(void)
 			fnd_display();
 		}
 	}
+	OCR3C = 0;
 	sec_count = 0;
 	auto_wash_mode = 4;
 }
