@@ -601,9 +601,9 @@ END GROUP
  .text.spindry_strength
                 0x00000718      0x162 fnd.o
                 0x00000718                spindry_strength
- .text.fnd_roading_display
+ .text.fnd_loading_display
                 0x0000087a      0x13a fnd.o
-                0x0000087a                fnd_roading_display
+                0x0000087a                fnd_loading_display
  .text.auto_wash_start
                 0x000009b4      0x154 fnd.o
                 0x000009b4                auto_wash_start
@@ -757,9 +757,9 @@ END GROUP
  .data.fp_wash_mode
                 0x0080010a        0xa fnd.o
                 0x0080010a                fp_wash_mode
- .data.roading_clock_change_val
+ .data.loading_clock_change_val
                 0x00800114        0x2 fnd.o
-                0x00800114                roading_clock_change_val
+                0x00800114                loading_clock_change_val
  .data.spin_strength_val
                 0x00800116        0x2 fnd.o
                 0x00800116                spin_strength_val
@@ -798,15 +798,15 @@ END GROUP
                 0x00800152        0x2 fnd.o
  .bss.digit_select.1826
                 0x00800154        0x2 fnd.o
- .bss.roading_rot
+ .bss.loading_rot
                 0x00800156        0x2 fnd.o
-                0x00800156                roading_rot
+                0x00800156                loading_rot
  .bss.sec_count
                 0x00800158        0x4 fnd.o
                 0x00800158                sec_count
- .bss.roading_clock_change
+ .bss.loading_clock_change
                 0x0080015c        0x4 main.o
-                0x0080015c                roading_clock_change
+                0x0080015c                loading_clock_change
  .bss.check_timer
                 0x00800160        0x4 main.o
                 0x00800160                check_timer
@@ -981,22 +981,22 @@ END GROUP
  .debug_frame   0x000002dc       0xb4 uart1.o
  .debug_frame   0x00000390       0xc0 ultrasonic.o
 
-.debug_str      0x00000000      0x8a9
+.debug_str      0x00000000      0x8e9
  *(.debug_str)
  .debug_str     0x00000000      0x27d C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega128a/avr51/crtatmega128a.o
  .debug_str     0x0000027d      0x1c2 button.o
                                 0x1f6 (size before relaxing)
- .debug_str     0x0000043f      0x266 fnd.o
-                                0x3e4 (size before relaxing)
- .debug_str     0x000006a5       0xa1 main.o
-                                0x244 (size before relaxing)
- .debug_str     0x00000746       0x25 pwm.o
+ .debug_str     0x0000043f      0x2a6 fnd.o
+                                0x3fc (size before relaxing)
+ .debug_str     0x000006e5       0xa1 main.o
+                                0x25c (size before relaxing)
+ .debug_str     0x00000786       0x25 pwm.o
                                 0x1c5 (size before relaxing)
- .debug_str     0x0000076b       0x75 uart0.o
+ .debug_str     0x000007ab       0x75 uart0.o
                                 0x1f0 (size before relaxing)
- .debug_str     0x000007e0       0x54 uart1.o
+ .debug_str     0x00000820       0x54 uart1.o
                                 0x1f3 (size before relaxing)
- .debug_str     0x00000834       0x75 ultrasonic.o
+ .debug_str     0x00000874       0x75 ultrasonic.o
                                 0x236 (size before relaxing)
 
 .debug_loc      0x00000000      0x96e

@@ -23,11 +23,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   9 .debug_frame  00000450  00000000  00000000  00005aac  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000008a9  00000000  00000000  00005efc  2**0
+ 10 .debug_str    000008e9  00000000  00000000  00005efc  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    0000096e  00000000  00000000  000067a5  2**0
+ 11 .debug_loc    0000096e  00000000  00000000  000067e5  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000148  00000000  00000000  00007113  2**0
+ 12 .debug_ranges 00000148  00000000  00000000  00007153  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -147,24 +147,12 @@ Disassembly of section .text:
       c8:	9b cf       	rjmp	.-202    	; 0x0 <__vectors>
 
 000000ca <init_button>:
-// 00001111
-// DDRD &= 0x0f; // 4, 5, 6, 7을 input. PORTD.4 가독성이 떨어진다.
-
-void init_button(void)
-{
-	BUTTON_DDR &= ~(1 << BUTTON0PIN | 1 << BUTTON1PIN | 1 << BUTTON2PIN | 1 << BUTTON3PIN);
       ca:	81 b3       	in	r24, 0x11	; 17
       cc:	8f 70       	andi	r24, 0x0F	; 15
       ce:	81 bb       	out	0x11, r24	; 17
       d0:	08 95       	ret
 
 000000d2 <get_button>:
-
-	static unsigned char button_status[BUTTON_NUMBER] =
-	{BUTTON_RELEASE, BUTTON_RELEASE, BUTTON_RELEASE, BUTTON_RELEASE}; // 지역변수에 static을 선언하면 전역변수처럼 활용가능
-	//
-	
-	current_state = BUTTON_PIN & (1 << button_pin); // 버튼을 읽는다.
       d2:	20 b3       	in	r18, 0x10	; 16
       d4:	42 2f       	mov	r20, r18
       d6:	50 e0       	ldi	r21, 0x00	; 0
@@ -177,7 +165,6 @@ void init_button(void)
       e4:	e2 f7       	brpl	.-8      	; 0xde <get_button+0xc>
       e6:	24 23       	and	r18, r20
       e8:	35 23       	and	r19, r21
-	if (current_state && button_status[button_num] == BUTTON_RELEASE) // 버튼이 처음 눌려진 상태.
       ea:	21 15       	cp	r18, r1
       ec:	31 05       	cpc	r19, r1
       ee:	b9 f0       	breq	.+46     	; 0x11e <get_button+0x4c>
@@ -202,21 +189,14 @@ void init_button(void)
      108:	e1 f7       	brne	.-8      	; 0x102 <get_button+0x30>
      10a:	00 c0       	rjmp	.+0      	; 0x10c <get_button+0x3a>
      10c:	00 00       	nop
-	{
-		_delay_ms(60); // noise가 지나가기를 기다린다.
-		button_status[button_num] = BUTTON_PRESS; // 처음 눌려진 상태가 아니다
      10e:	fc 01       	movw	r30, r24
      110:	e2 5b       	subi	r30, 0xB2	; 178
      112:	fe 4f       	sbci	r31, 0xFE	; 254
      114:	21 e0       	ldi	r18, 0x01	; 1
      116:	20 83       	st	Z, r18
-		return 0; // 아직은 완전히 눌렀다 땐 상태가 아니다.
      118:	80 e0       	ldi	r24, 0x00	; 0
      11a:	90 e0       	ldi	r25, 0x00	; 0
      11c:	08 95       	ret
-		
-	}
-	else if (button_status[button_num] == BUTTON_PRESS && current_state == BUTTON_RELEASE)
      11e:	fc 01       	movw	r30, r24
      120:	e2 5b       	subi	r30, 0xB2	; 178
      122:	fe 4f       	sbci	r31, 0xFE	; 254
@@ -225,8 +205,6 @@ void init_button(void)
      128:	91 f4       	brne	.+36     	; 0x14e <get_button+0x7c>
      12a:	23 2b       	or	r18, r19
      12c:	99 f4       	brne	.+38     	; 0x154 <get_button+0x82>
-	{	// 버튼이 이전에 눌려진 상태였으며 현재는 떼어진 상태이면
-		button_status[button_num] = BUTTON_RELEASE; // 다음 버튼을 체크 하기위해서 초기화
      12e:	fc 01       	movw	r30, r24
      130:	e2 5b       	subi	r30, 0xB2	; 178
      132:	fe 4f       	sbci	r31, 0xFE	; 254
@@ -240,14 +218,9 @@ void init_button(void)
      142:	e1 f7       	brne	.-8      	; 0x13c <get_button+0x6a>
      144:	00 c0       	rjmp	.+0      	; 0x146 <get_button+0x74>
      146:	00 00       	nop
-		_delay_ms(60); // 뗀 상태의 noise가 지나가기를 기다린다.
-		return 1; // 완전히 1번 눌렀다 땐 상태로 인정
      148:	81 e0       	ldi	r24, 0x01	; 1
      14a:	90 e0       	ldi	r25, 0x00	; 0
      14c:	08 95       	ret
-	}
-	
-	return 0; // 버튼이 open 상태
      14e:	80 e0       	ldi	r24, 0x00	; 0
      150:	90 e0       	ldi	r25, 0x00	; 0
      152:	08 95       	ret
@@ -1394,12 +1367,12 @@ void spindry_strength()
      876:	cf 91       	pop	r28
      878:	08 95       	ret
 
-0000087a <fnd_roading_display>:
+0000087a <fnd_loading_display>:
 	digit_select++;
 	digit_select %= 4; //다음 표시할 자리수 선택
 }
 
-void fnd_roading_display(int *roading_rot) // 진행 로딩 상황 표시 
+void fnd_loading_display(int *loading_rot) // 진행 로딩 상황 표시 
 {
      87a:	ef 92       	push	r14
      87c:	ff 92       	push	r15
@@ -1407,14 +1380,14 @@ void fnd_roading_display(int *roading_rot) // 진행 로딩 상황 표시
      880:	1f 93       	push	r17
      882:	cf 93       	push	r28
      884:	df 93       	push	r29
-     886:	00 d0       	rcall	.+0      	; 0x888 <fnd_roading_display+0xe>
-     888:	00 d0       	rcall	.+0      	; 0x88a <fnd_roading_display+0x10>
-     88a:	00 d0       	rcall	.+0      	; 0x88c <fnd_roading_display+0x12>
+     886:	00 d0       	rcall	.+0      	; 0x888 <fnd_loading_display+0xe>
+     888:	00 d0       	rcall	.+0      	; 0x88a <fnd_loading_display+0x10>
+     88a:	00 d0       	rcall	.+0      	; 0x88c <fnd_loading_display+0x12>
      88c:	cd b7       	in	r28, 0x3d	; 61
      88e:	de b7       	in	r29, 0x3e	; 62
      890:	9c 01       	movw	r18, r24
 	int a,b,c,d;                 //  [     -      _       ]		-,_	  꺼짐
-	uint8_t fnd_roading_font[] = {~0xc6, ~0xfe, ~0xf7, ~0xf0, ~0xf6, ~0xff};
+	uint8_t fnd_loading_font[] = {~0xc6, ~0xfe, ~0xf7, ~0xf0, ~0xf6, ~0xff};
      892:	96 e0       	ldi	r25, 0x06	; 6
      894:	e9 e3       	ldi	r30, 0x39	; 57
      896:	f1 e0       	ldi	r31, 0x01	; 1
@@ -1423,31 +1396,31 @@ void fnd_roading_display(int *roading_rot) // 진행 로딩 상황 표시
      89c:	01 90       	ld	r0, Z+
      89e:	0d 92       	st	X+, r0
      8a0:	9a 95       	dec	r25
-     8a2:	e1 f7       	brne	.-8      	; 0x89c <fnd_roading_display+0x22>
-	if (*roading_rot == 0)
+     8a2:	e1 f7       	brne	.-8      	; 0x89c <fnd_loading_display+0x22>
+	if (*loading_rot == 0)
      8a4:	f9 01       	movw	r30, r18
      8a6:	80 81       	ld	r24, Z
      8a8:	91 81       	ldd	r25, Z+1	; 0x01
      8aa:	00 97       	sbiw	r24, 0x00	; 0
-     8ac:	31 f0       	breq	.+12     	; 0x8ba <fnd_roading_display+0x40>
+     8ac:	31 f0       	breq	.+12     	; 0x8ba <fnd_loading_display+0x40>
 	{
 		a = 0; b = 1, c = 2, d = 3;	
 	}
-	else if (*roading_rot == 1)
+	else if (*loading_rot == 1)
      8ae:	81 30       	cpi	r24, 0x01	; 1
      8b0:	91 05       	cpc	r25, r1
-     8b2:	79 f0       	breq	.+30     	; 0x8d2 <fnd_roading_display+0x58>
+     8b2:	79 f0       	breq	.+30     	; 0x8d2 <fnd_loading_display+0x58>
 	{
 		a = 0; b = 2, c = 1, d = 3;
 	}
-	else if (*roading_rot == 2)
+	else if (*loading_rot == 2)
      8b4:	02 97       	sbiw	r24, 0x02	; 2
-     8b6:	21 f5       	brne	.+72     	; 0x900 <fnd_roading_display+0x86>
-     8b8:	18 c0       	rjmp	.+48     	; 0x8ea <fnd_roading_display+0x70>
+     8b6:	21 f5       	brne	.+72     	; 0x900 <fnd_loading_display+0x86>
+     8b8:	18 c0       	rjmp	.+48     	; 0x8ea <fnd_loading_display+0x70>
 {
 	int a,b,c,d;                 //  [     -      _       ]		-,_	  꺼짐
-	uint8_t fnd_roading_font[] = {~0xc6, ~0xfe, ~0xf7, ~0xf0, ~0xf6, ~0xff};
-	if (*roading_rot == 0)
+	uint8_t fnd_loading_font[] = {~0xc6, ~0xfe, ~0xf7, ~0xf0, ~0xf6, ~0xff};
+	if (*loading_rot == 0)
 	{
 		a = 0; b = 1, c = 2, d = 3;	
      8ba:	0f 2e       	mov	r0, r31
@@ -1461,9 +1434,9 @@ void fnd_roading_display(int *roading_rot) // 진행 로딩 상황 표시
      8ca:	10 e0       	ldi	r17, 0x00	; 0
      8cc:	40 e0       	ldi	r20, 0x00	; 0
      8ce:	50 e0       	ldi	r21, 0x00	; 0
-     8d0:	17 c0       	rjmp	.+46     	; 0x900 <fnd_roading_display+0x86>
+     8d0:	17 c0       	rjmp	.+46     	; 0x900 <fnd_loading_display+0x86>
 	}
-	else if (*roading_rot == 1)
+	else if (*loading_rot == 1)
 	{
 		a = 0; b = 2, c = 1, d = 3;
      8d2:	0f 2e       	mov	r0, r31
@@ -1477,9 +1450,9 @@ void fnd_roading_display(int *roading_rot) // 진행 로딩 상황 표시
      8e2:	10 e0       	ldi	r17, 0x00	; 0
      8e4:	40 e0       	ldi	r20, 0x00	; 0
      8e6:	50 e0       	ldi	r21, 0x00	; 0
-     8e8:	0b c0       	rjmp	.+22     	; 0x900 <fnd_roading_display+0x86>
+     8e8:	0b c0       	rjmp	.+22     	; 0x900 <fnd_loading_display+0x86>
 	}
-	else if (*roading_rot == 2)
+	else if (*loading_rot == 2)
 	{
 		a = 5; b = 4, c = 4, d = 5;
      8ea:	0f 2e       	mov	r0, r31
@@ -1502,23 +1475,23 @@ void fnd_roading_display(int *roading_rot) // 진행 로딩 상황 표시
      904:	90 91 53 01 	lds	r25, 0x0153	; 0x800153 <digit_select.1840+0x1>
      908:	81 30       	cpi	r24, 0x01	; 1
      90a:	91 05       	cpc	r25, r1
-     90c:	a9 f0       	breq	.+42     	; 0x938 <fnd_roading_display+0xbe>
-     90e:	1c f4       	brge	.+6      	; 0x916 <fnd_roading_display+0x9c>
+     90c:	a9 f0       	breq	.+42     	; 0x938 <fnd_loading_display+0xbe>
+     90e:	1c f4       	brge	.+6      	; 0x916 <fnd_loading_display+0x9c>
      910:	89 2b       	or	r24, r25
-     912:	39 f0       	breq	.+14     	; 0x922 <fnd_roading_display+0xa8>
-     914:	31 c0       	rjmp	.+98     	; 0x978 <fnd_roading_display+0xfe>
+     912:	39 f0       	breq	.+14     	; 0x922 <fnd_loading_display+0xa8>
+     914:	31 c0       	rjmp	.+98     	; 0x978 <fnd_loading_display+0xfe>
      916:	82 30       	cpi	r24, 0x02	; 2
      918:	91 05       	cpc	r25, r1
-     91a:	c9 f0       	breq	.+50     	; 0x94e <fnd_roading_display+0xd4>
+     91a:	c9 f0       	breq	.+50     	; 0x94e <fnd_loading_display+0xd4>
      91c:	03 97       	sbiw	r24, 0x03	; 3
-     91e:	11 f1       	breq	.+68     	; 0x964 <fnd_roading_display+0xea>
-     920:	2b c0       	rjmp	.+86     	; 0x978 <fnd_roading_display+0xfe>
+     91e:	11 f1       	breq	.+68     	; 0x964 <fnd_loading_display+0xea>
+     920:	2b c0       	rjmp	.+86     	; 0x978 <fnd_loading_display+0xfe>
 	{
 		case 0 :
 		FND_DIGIT_PORT = ~0x80;
      922:	8f e7       	ldi	r24, 0x7F	; 127
      924:	88 bb       	out	0x18, r24	; 24
-		FND_DATA_PORT = fnd_roading_font[d];
+		FND_DATA_PORT = fnd_loading_font[d];
      926:	e1 e0       	ldi	r30, 0x01	; 1
      928:	f0 e0       	ldi	r31, 0x00	; 0
      92a:	ec 0f       	add	r30, r28
@@ -1528,14 +1501,14 @@ void fnd_roading_display(int *roading_rot) // 진행 로딩 상황 표시
      932:	80 81       	ld	r24, Z
      934:	85 bb       	out	0x15, r24	; 21
 		break;
-     936:	20 c0       	rjmp	.+64     	; 0x978 <fnd_roading_display+0xfe>
+     936:	20 c0       	rjmp	.+64     	; 0x978 <fnd_loading_display+0xfe>
 
 		case 1 :
 		FND_DIGIT_PORT = ~0x40;
      938:	8f eb       	ldi	r24, 0xBF	; 191
      93a:	88 bb       	out	0x18, r24	; 24
 
-		FND_DATA_PORT = fnd_roading_font[b];
+		FND_DATA_PORT = fnd_loading_font[b];
      93c:	e1 e0       	ldi	r30, 0x01	; 1
      93e:	f0 e0       	ldi	r31, 0x00	; 0
      940:	ec 0f       	add	r30, r28
@@ -1545,13 +1518,13 @@ void fnd_roading_display(int *roading_rot) // 진행 로딩 상황 표시
      948:	80 81       	ld	r24, Z
      94a:	85 bb       	out	0x15, r24	; 21
 		break;
-     94c:	15 c0       	rjmp	.+42     	; 0x978 <fnd_roading_display+0xfe>
+     94c:	15 c0       	rjmp	.+42     	; 0x978 <fnd_loading_display+0xfe>
 
 		case 2 :
 		FND_DIGIT_PORT = ~0x20;
      94e:	8f ed       	ldi	r24, 0xDF	; 223
      950:	88 bb       	out	0x18, r24	; 24
-		FND_DATA_PORT = fnd_roading_font[c];
+		FND_DATA_PORT = fnd_loading_font[c];
      952:	e1 e0       	ldi	r30, 0x01	; 1
      954:	f0 e0       	ldi	r31, 0x00	; 0
      956:	ec 0f       	add	r30, r28
@@ -1561,13 +1534,13 @@ void fnd_roading_display(int *roading_rot) // 진행 로딩 상황 표시
      95e:	80 81       	ld	r24, Z
      960:	85 bb       	out	0x15, r24	; 21
 		break;
-     962:	0a c0       	rjmp	.+20     	; 0x978 <fnd_roading_display+0xfe>
+     962:	0a c0       	rjmp	.+20     	; 0x978 <fnd_loading_display+0xfe>
 
 		case 3 :
 		FND_DIGIT_PORT = ~0x10;
      964:	8f ee       	ldi	r24, 0xEF	; 239
      966:	88 bb       	out	0x18, r24	; 24
-		FND_DATA_PORT = fnd_roading_font[a];
+		FND_DATA_PORT = fnd_loading_font[a];
      968:	e1 e0       	ldi	r30, 0x01	; 1
      96a:	f0 e0       	ldi	r31, 0x00	; 0
      96c:	ec 0f       	add	r30, r28
@@ -1586,7 +1559,7 @@ void fnd_roading_display(int *roading_rot) // 진행 로딩 상황 표시
      982:	83 70       	andi	r24, 0x03	; 3
      984:	90 78       	andi	r25, 0x80	; 128
      986:	99 23       	and	r25, r25
-     988:	24 f4       	brge	.+8      	; 0x992 <fnd_roading_display+0x118>
+     988:	24 f4       	brge	.+8      	; 0x992 <fnd_loading_display+0x118>
      98a:	01 97       	sbiw	r24, 0x01	; 1
      98c:	8c 6f       	ori	r24, 0xFC	; 252
      98e:	9f 6f       	ori	r25, 0xFF	; 255
@@ -1662,44 +1635,44 @@ void auto_wash_start(void)
      a20:	90 93 59 01 	sts	0x0159, r25	; 0x800159 <sec_count+0x1>
      a24:	a0 93 5a 01 	sts	0x015A, r26	; 0x80015a <sec_count+0x2>
      a28:	b0 93 5b 01 	sts	0x015B, r27	; 0x80015b <sec_count+0x3>
-			roading_rot++;
-     a2c:	80 91 56 01 	lds	r24, 0x0156	; 0x800156 <roading_rot>
-     a30:	90 91 57 01 	lds	r25, 0x0157	; 0x800157 <roading_rot+0x1>
+			loading_rot++;
+     a2c:	80 91 56 01 	lds	r24, 0x0156	; 0x800156 <loading_rot>
+     a30:	90 91 57 01 	lds	r25, 0x0157	; 0x800157 <loading_rot+0x1>
      a34:	01 96       	adiw	r24, 0x01	; 1
-			roading_rot %= 3;
+			loading_rot %= 3;
      a36:	63 e0       	ldi	r22, 0x03	; 3
      a38:	70 e0       	ldi	r23, 0x00	; 0
      a3a:	61 d4       	rcall	.+2242   	; 0x12fe <__divmodhi4>
-     a3c:	90 93 57 01 	sts	0x0157, r25	; 0x800157 <roading_rot+0x1>
-     a40:	80 93 56 01 	sts	0x0156, r24	; 0x800156 <roading_rot>
+     a3c:	90 93 57 01 	sts	0x0157, r25	; 0x800157 <loading_rot+0x1>
+     a40:	80 93 56 01 	sts	0x0156, r24	; 0x800156 <loading_rot>
 		}
-		if (roading_clock_change >= 3000) // 3초마다 로딩창이랑 시간 화면 뜨는거 토글
-     a44:	80 91 5c 01 	lds	r24, 0x015C	; 0x80015c <roading_clock_change>
-     a48:	90 91 5d 01 	lds	r25, 0x015D	; 0x80015d <roading_clock_change+0x1>
-     a4c:	a0 91 5e 01 	lds	r26, 0x015E	; 0x80015e <roading_clock_change+0x2>
-     a50:	b0 91 5f 01 	lds	r27, 0x015F	; 0x80015f <roading_clock_change+0x3>
+		if (loading_clock_change >= 3000) // 3초마다 로딩창이랑 시간 화면 뜨는거 토글
+     a44:	80 91 5c 01 	lds	r24, 0x015C	; 0x80015c <loading_clock_change>
+     a48:	90 91 5d 01 	lds	r25, 0x015D	; 0x80015d <loading_clock_change+0x1>
+     a4c:	a0 91 5e 01 	lds	r26, 0x015E	; 0x80015e <loading_clock_change+0x2>
+     a50:	b0 91 5f 01 	lds	r27, 0x015F	; 0x80015f <loading_clock_change+0x3>
      a54:	88 3b       	cpi	r24, 0xB8	; 184
      a56:	9b 40       	sbci	r25, 0x0B	; 11
      a58:	a1 05       	cpc	r26, r1
      a5a:	b1 05       	cpc	r27, r1
      a5c:	b0 f0       	brcs	.+44     	; 0xa8a <auto_wash_start+0xd6>
 		{
-			roading_clock_change = 0;
-     a5e:	10 92 5c 01 	sts	0x015C, r1	; 0x80015c <roading_clock_change>
-     a62:	10 92 5d 01 	sts	0x015D, r1	; 0x80015d <roading_clock_change+0x1>
-     a66:	10 92 5e 01 	sts	0x015E, r1	; 0x80015e <roading_clock_change+0x2>
-     a6a:	10 92 5f 01 	sts	0x015F, r1	; 0x80015f <roading_clock_change+0x3>
-			roading_clock_change_val = !roading_clock_change_val;
+			loading_clock_change = 0;
+     a5e:	10 92 5c 01 	sts	0x015C, r1	; 0x80015c <loading_clock_change>
+     a62:	10 92 5d 01 	sts	0x015D, r1	; 0x80015d <loading_clock_change+0x1>
+     a66:	10 92 5e 01 	sts	0x015E, r1	; 0x80015e <loading_clock_change+0x2>
+     a6a:	10 92 5f 01 	sts	0x015F, r1	; 0x80015f <loading_clock_change+0x3>
+			loading_clock_change_val = !loading_clock_change_val;
      a6e:	81 e0       	ldi	r24, 0x01	; 1
      a70:	90 e0       	ldi	r25, 0x00	; 0
-     a72:	20 91 14 01 	lds	r18, 0x0114	; 0x800114 <roading_clock_change_val>
-     a76:	30 91 15 01 	lds	r19, 0x0115	; 0x800115 <roading_clock_change_val+0x1>
+     a72:	20 91 14 01 	lds	r18, 0x0114	; 0x800114 <loading_clock_change_val>
+     a76:	30 91 15 01 	lds	r19, 0x0115	; 0x800115 <loading_clock_change_val+0x1>
      a7a:	23 2b       	or	r18, r19
      a7c:	11 f0       	breq	.+4      	; 0xa82 <auto_wash_start+0xce>
      a7e:	80 e0       	ldi	r24, 0x00	; 0
      a80:	90 e0       	ldi	r25, 0x00	; 0
-     a82:	90 93 15 01 	sts	0x0115, r25	; 0x800115 <roading_clock_change_val+0x1>
-     a86:	80 93 14 01 	sts	0x0114, r24	; 0x800114 <roading_clock_change_val>
+     a82:	90 93 15 01 	sts	0x0115, r25	; 0x800115 <loading_clock_change_val+0x1>
+     a86:	80 93 14 01 	sts	0x0114, r24	; 0x800114 <loading_clock_change_val>
 		}
 		
 		if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
@@ -1717,9 +1690,9 @@ void auto_wash_start(void)
      aa6:	10 92 65 01 	sts	0x0165, r1	; 0x800165 <fnd_refreshrate+0x1>
      aaa:	10 92 66 01 	sts	0x0166, r1	; 0x800166 <fnd_refreshrate+0x2>
      aae:	10 92 67 01 	sts	0x0167, r1	; 0x800167 <fnd_refreshrate+0x3>
-			if (roading_clock_change_val)
-     ab2:	80 91 14 01 	lds	r24, 0x0114	; 0x800114 <roading_clock_change_val>
-     ab6:	90 91 15 01 	lds	r25, 0x0115	; 0x800115 <roading_clock_change_val+0x1>
+			if (loading_clock_change_val)
+     ab2:	80 91 14 01 	lds	r24, 0x0114	; 0x800114 <loading_clock_change_val>
+     ab6:	90 91 15 01 	lds	r25, 0x0115	; 0x800115 <loading_clock_change_val+0x1>
      aba:	89 2b       	or	r24, r25
 			{
 				fnd_display(); // 시간 보여주기
@@ -1728,11 +1701,11 @@ void auto_wash_start(void)
 			}
 			else
 			{
-				fnd_roading_display(&roading_rot); // 로딩 보여주기
+				fnd_loading_display(&loading_rot); // 로딩 보여주기
      ac0:	03 c0       	rjmp	.+6      	; 0xac8 <auto_wash_start+0x114>
      ac2:	86 e5       	ldi	r24, 0x56	; 86
      ac4:	91 e0       	ldi	r25, 0x01	; 1
-     ac6:	d9 de       	rcall	.-590    	; 0x87a <fnd_roading_display>
+     ac6:	d9 de       	rcall	.-590    	; 0x87a <fnd_loading_display>
 
 void auto_wash_start(void)
 {
@@ -1749,7 +1722,7 @@ void auto_wash_start(void)
      ade:	09 f0       	breq	.+2      	; 0xae2 <auto_wash_start+0x12e>
      ae0:	7a cf       	rjmp	.-268    	; 0x9d6 <auto_wash_start+0x22>
 			{
-				fnd_roading_display(&roading_rot); // 로딩 보여주기
+				fnd_loading_display(&loading_rot); // 로딩 보여주기
 			}
 		}
 	}
@@ -1823,18 +1796,18 @@ ISR(TIMER0_OVF_vect)
      b84:	90 93 61 01 	sts	0x0161, r25	; 0x800161 <check_timer+0x1>
      b88:	a0 93 62 01 	sts	0x0162, r26	; 0x800162 <check_timer+0x2>
      b8c:	b0 93 63 01 	sts	0x0163, r27	; 0x800163 <check_timer+0x3>
-	roading_clock_change++;
-     b90:	80 91 5c 01 	lds	r24, 0x015C	; 0x80015c <roading_clock_change>
-     b94:	90 91 5d 01 	lds	r25, 0x015D	; 0x80015d <roading_clock_change+0x1>
-     b98:	a0 91 5e 01 	lds	r26, 0x015E	; 0x80015e <roading_clock_change+0x2>
-     b9c:	b0 91 5f 01 	lds	r27, 0x015F	; 0x80015f <roading_clock_change+0x3>
+	loading_clock_change++;
+     b90:	80 91 5c 01 	lds	r24, 0x015C	; 0x80015c <loading_clock_change>
+     b94:	90 91 5d 01 	lds	r25, 0x015D	; 0x80015d <loading_clock_change+0x1>
+     b98:	a0 91 5e 01 	lds	r26, 0x015E	; 0x80015e <loading_clock_change+0x2>
+     b9c:	b0 91 5f 01 	lds	r27, 0x015F	; 0x80015f <loading_clock_change+0x3>
      ba0:	01 96       	adiw	r24, 0x01	; 1
      ba2:	a1 1d       	adc	r26, r1
      ba4:	b1 1d       	adc	r27, r1
-     ba6:	80 93 5c 01 	sts	0x015C, r24	; 0x80015c <roading_clock_change>
-     baa:	90 93 5d 01 	sts	0x015D, r25	; 0x80015d <roading_clock_change+0x1>
-     bae:	a0 93 5e 01 	sts	0x015E, r26	; 0x80015e <roading_clock_change+0x2>
-     bb2:	b0 93 5f 01 	sts	0x015F, r27	; 0x80015f <roading_clock_change+0x3>
+     ba6:	80 93 5c 01 	sts	0x015C, r24	; 0x80015c <loading_clock_change>
+     baa:	90 93 5d 01 	sts	0x015D, r25	; 0x80015d <loading_clock_change+0x1>
+     bae:	a0 93 5e 01 	sts	0x015E, r26	; 0x80015e <loading_clock_change+0x2>
+     bb2:	b0 93 5f 01 	sts	0x015F, r27	; 0x80015f <loading_clock_change+0x3>
 }
      bb6:	bf 91       	pop	r27
      bb8:	af 91       	pop	r26
@@ -1866,7 +1839,7 @@ void init_timer0()
      bd8:	08 95       	ret
 
 00000bda <main>:
-	roading_clock_change++;
+	loading_clock_change++;
 }
 
 int main(void)
@@ -1906,73 +1879,43 @@ int main(void)
      bfe:	82 b1       	in	r24, 0x02	; 2
      c00:	88 62       	ori	r24, 0x28	; 40
      c02:	82 b9       	out	0x02, r24	; 2
-void init_timer3_pwm(void)
-{
-	// DDRE |= 1 << 3 | 1 << 4 | 1 << 5; 현재 4번에 초음파가 연결되어 있다.
-	DDRE |= 1 << 3 | 1 << 5;
-	// 모드 5 : 8비트 고속 pwm    TCCR3A레지스터 WGM30과 TCCR3B레지스터 WGM32를 1로 만든다.
-	TCCR3A |= 1 << WGM30;
      c04:	ab e8       	ldi	r26, 0x8B	; 139
      c06:	b0 e0       	ldi	r27, 0x00	; 0
      c08:	8c 91       	ld	r24, X
      c0a:	81 60       	ori	r24, 0x01	; 1
      c0c:	8c 93       	st	X, r24
-	TCCR3B |= 1 << WGM32;
      c0e:	ea e8       	ldi	r30, 0x8A	; 138
      c10:	f0 e0       	ldi	r31, 0x00	; 0
      c12:	80 81       	ld	r24, Z
      c14:	88 60       	ori	r24, 0x08	; 8
      c16:	80 83       	st	Z, r24
-	// 비반전모드 top : 0x00ff  비교일치값(pwm)지정 : OCR3C
-	// TCCR3A레지스터의 COM3C1을 1로 set
-	// 비교일치 발생시 OC3C의 출력 핀은 LOw로 바뀌고 BOTTOM에서 HIGH로 바뀐다.
-	TCCR3A |= 1 << COM3C1;
      c18:	8c 91       	ld	r24, X
      c1a:	88 60       	ori	r24, 0x08	; 8
      c1c:	8c 93       	st	X, r24
-	// 분주비 : 64   16,000,000hz -> 250,000hz         TCCR3B의 CS30, CS31을 1로 set
-	// 주기 : 1 / 250,000 -> 4us
-	// 250000hz에서 256개의 펄스를 count하면 소요시간 : 1.02ms
-	//			    127개의 펄스를 count하면 소요시간 : 0.51ms
-	TCCR3B |= 1 << CS31 | 1 << CS30;
      c1e:	80 81       	ld	r24, Z
      c20:	83 60       	ori	r24, 0x03	; 3
      c22:	80 83       	st	Z, r24
-	OCR3C = 0; // 비교일치값 (Output Compare Register : PWM 값
      c24:	10 92 83 00 	sts	0x0083, r1	; 0x800083 <__TEXT_REGION_LENGTH__+0x7e0083>
      c28:	10 92 82 00 	sts	0x0082, r1	; 0x800082 <__TEXT_REGION_LENGTH__+0x7e0082>
      c2c:	08 95       	ret
 
 00000c2e <init_n289n>:
-}
-
-void init_n289n(void)
-{
-	PORTF &= ~(1 << 6 | 1 << 7);  // 6, 7 reset
      c2e:	e2 e6       	ldi	r30, 0x62	; 98
      c30:	f0 e0       	ldi	r31, 0x00	; 0
      c32:	80 81       	ld	r24, Z
      c34:	8f 73       	andi	r24, 0x3F	; 63
      c36:	80 83       	st	Z, r24
-	PORTF |= 1 << 6; // 정회전
      c38:	80 81       	ld	r24, Z
      c3a:	80 64       	ori	r24, 0x40	; 64
      c3c:	80 83       	st	Z, r24
      c3e:	08 95       	ret
 
 00000c40 <washing_machine_fan_control>:
-}
-
-void washing_machine_fan_control(int *spin_strength)
-{
-	OCR3C = *spin_strength;
      c40:	fc 01       	movw	r30, r24
      c42:	80 81       	ld	r24, Z
      c44:	91 81       	ldd	r25, Z+1	; 0x01
      c46:	90 93 83 00 	sts	0x0083, r25	; 0x800083 <__TEXT_REGION_LENGTH__+0x7e0083>
      c4a:	80 93 82 00 	sts	0x0082, r24	; 0x800082 <__TEXT_REGION_LENGTH__+0x7e0082>
-	
-	if (check_timer >= 5000)
      c4e:	80 91 60 01 	lds	r24, 0x0160	; 0x800160 <check_timer>
      c52:	90 91 61 01 	lds	r25, 0x0161	; 0x800161 <check_timer+0x1>
      c56:	a0 91 62 01 	lds	r26, 0x0162	; 0x800162 <check_timer+0x2>
@@ -1982,14 +1925,11 @@ void washing_machine_fan_control(int *spin_strength)
      c62:	a1 05       	cpc	r26, r1
      c64:	b1 05       	cpc	r27, r1
      c66:	d8 f0       	brcs	.+54     	; 0xc9e <washing_machine_fan_control+0x5e>
-	{
-		PORTF &= ~(1 << 6 | 1 << 7);  // 6, 7 reset
      c68:	e2 e6       	ldi	r30, 0x62	; 98
      c6a:	f0 e0       	ldi	r31, 0x00	; 0
      c6c:	80 81       	ld	r24, Z
      c6e:	8f 73       	andi	r24, 0x3F	; 63
      c70:	80 83       	st	Z, r24
-		fan_forward = !fan_forward;
      c72:	81 e0       	ldi	r24, 0x01	; 1
      c74:	90 e0       	ldi	r25, 0x00	; 0
      c76:	20 91 2c 01 	lds	r18, 0x012C	; 0x80012c <fan_forward>
@@ -2000,30 +1940,20 @@ void washing_machine_fan_control(int *spin_strength)
      c84:	90 e0       	ldi	r25, 0x00	; 0
      c86:	90 93 2d 01 	sts	0x012D, r25	; 0x80012d <fan_forward+0x1>
      c8a:	80 93 2c 01 	sts	0x012C, r24	; 0x80012c <fan_forward>
-		check_timer = 0;
      c8e:	10 92 60 01 	sts	0x0160, r1	; 0x800160 <check_timer>
      c92:	10 92 61 01 	sts	0x0161, r1	; 0x800161 <check_timer+0x1>
      c96:	10 92 62 01 	sts	0x0162, r1	; 0x800162 <check_timer+0x2>
      c9a:	10 92 63 01 	sts	0x0163, r1	; 0x800163 <check_timer+0x3>
-	}
-	
-	if (fan_forward)
      c9e:	80 91 2c 01 	lds	r24, 0x012C	; 0x80012c <fan_forward>
      ca2:	90 91 2d 01 	lds	r25, 0x012D	; 0x80012d <fan_forward+0x1>
      ca6:	89 2b       	or	r24, r25
      ca8:	31 f0       	breq	.+12     	; 0xcb6 <washing_machine_fan_control+0x76>
-	{
-		PORTF |= 1 << 6; // 정회전
      caa:	e2 e6       	ldi	r30, 0x62	; 98
      cac:	f0 e0       	ldi	r31, 0x00	; 0
      cae:	80 81       	ld	r24, Z
      cb0:	80 64       	ori	r24, 0x40	; 64
      cb2:	80 83       	st	Z, r24
      cb4:	08 95       	ret
-	}
-	else
-	{
-		PORTF |= 1 << 7; // 역회전
      cb6:	e2 e6       	ldi	r30, 0x62	; 98
      cb8:	f0 e0       	ldi	r31, 0x00	; 0
      cba:	80 81       	ld	r24, Z
@@ -2032,12 +1962,6 @@ void washing_machine_fan_control(int *spin_strength)
      cc0:	08 95       	ret
 
 00000cc2 <__vector_18>:
-
-// PC로 부터 1 byte가 들어올때 마다 이곳으로 들어온다 (RX INT)
-// 예) led_all_on\n --> 이곳 11번이 들어온다 
-//     led_all_off\n
-ISR(USART0_RX_vect)
-{
      cc2:	1f 92       	push	r1
      cc4:	0f 92       	push	r0
      cc6:	0f b6       	in	r0, 0x3f	; 63
@@ -2062,22 +1986,14 @@ ISR(USART0_RX_vect)
      cec:	1f 92       	push	r1
      cee:	cd b7       	in	r28, 0x3d	; 61
      cf0:	de b7       	in	r29, 0x3e	; 62
-	volatile static int i=0;
-	volatile uint8_t data;
-	
-	data = UDR0;  // uart0의 H/W register(UDR0)로 부터 1 byte를 읽어 간다. 
      cf2:	8c b1       	in	r24, 0x0c	; 12
      cf4:	89 83       	std	Y+1, r24	; 0x01
-	              // data = UDR0를 실행 하면 UDR0의 내용이 빈다(empty)
-	if (data == '\r' || data == '\n')
      cf6:	89 81       	ldd	r24, Y+1	; 0x01
      cf8:	8d 30       	cpi	r24, 0x0D	; 13
      cfa:	19 f0       	breq	.+6      	; 0xd02 <__vector_18+0x40>
      cfc:	89 81       	ldd	r24, Y+1	; 0x01
      cfe:	8a 30       	cpi	r24, 0x0A	; 10
      d00:	61 f5       	brne	.+88     	; 0xd5a <__vector_18+0x98>
-	{
-		rx_buff[rear][i] = '\0';   // \n --> \0(문장의 끝을 알리는 indicator)
      d02:	20 91 6e 01 	lds	r18, 0x016E	; 0x80016e <rear>
      d06:	30 91 6f 01 	lds	r19, 0x016F	; 0x80016f <rear+0x1>
      d0a:	80 91 6c 01 	lds	r24, 0x016C	; 0x80016c <i.1894>
@@ -2093,16 +2009,13 @@ ISR(USART0_RX_vect)
      d22:	e8 0f       	add	r30, r24
      d24:	f9 1f       	adc	r31, r25
      d26:	10 82       	st	Z, r1
-		i=0;   // 다음 string을 저장 하기 위해 index값을 0으로 만든다. 
      d28:	10 92 6d 01 	sts	0x016D, r1	; 0x80016d <i.1894+0x1>
      d2c:	10 92 6c 01 	sts	0x016C, r1	; 0x80016c <i.1894>
-		rear++;
      d30:	80 91 6e 01 	lds	r24, 0x016E	; 0x80016e <rear>
      d34:	90 91 6f 01 	lds	r25, 0x016F	; 0x80016f <rear+0x1>
      d38:	01 96       	adiw	r24, 0x01	; 1
      d3a:	90 93 6f 01 	sts	0x016F, r25	; 0x80016f <rear+0x1>
      d3e:	80 93 6e 01 	sts	0x016E, r24	; 0x80016e <rear>
-		rear %= COMMAND_NUMBER;   // 0 ~ 9 if (rear >= 9) rear =0;
      d42:	80 91 6e 01 	lds	r24, 0x016E	; 0x80016e <rear>
      d46:	90 91 6f 01 	lds	r25, 0x016F	; 0x80016f <rear+0x1>
      d4a:	6a e0       	ldi	r22, 0x0A	; 10
@@ -2111,12 +2024,6 @@ ISR(USART0_RX_vect)
      d50:	90 93 6f 01 	sts	0x016F, r25	; 0x80016f <rear+0x1>
      d54:	80 93 6e 01 	sts	0x016E, r24	; 0x80016e <rear>
      d58:	1c c0       	rjmp	.+56     	; 0xd92 <__vector_18+0xd0>
-		// !!!! 이곳에 queue full (rx_buff) 상태를 check하는 로직이 들어 가야 한다. !!!!!
-	}
-	else
-	{
-		// !!!!! COMMAND_LENGTH를 check 하는 로직 추가 !!!!
-		rx_buff[rear][i++] = data;
      d5a:	60 91 6e 01 	lds	r22, 0x016E	; 0x80016e <rear>
      d5e:	70 91 6f 01 	lds	r23, 0x016F	; 0x80016f <rear+0x1>
      d62:	80 91 6c 01 	lds	r24, 0x016C	; 0x80016c <i.1894>
@@ -2139,9 +2046,6 @@ ISR(USART0_RX_vect)
      d8c:	e8 0f       	add	r30, r24
      d8e:	f9 1f       	adc	r31, r25
      d90:	40 83       	st	Z, r20
-	}
-		  
-}
      d92:	0f 90       	pop	r0
      d94:	df 91       	pop	r29
      d96:	cf 91       	pop	r28
@@ -2166,58 +2070,29 @@ ISR(USART0_RX_vect)
      dbc:	18 95       	reti
 
 00000dbe <init_uart0>:
-3. RX(수신) : interrupt 방식 
-*/
-void init_uart0(void)
-{
-	// 1. 9600bps 설정
-	UBRR0H = 0x00;
      dbe:	10 92 90 00 	sts	0x0090, r1	; 0x800090 <__TEXT_REGION_LENGTH__+0x7e0090>
-	UBRR0L = 207;   // 9600bps 표9-9
      dc2:	8f ec       	ldi	r24, 0xCF	; 207
      dc4:	89 b9       	out	0x09, r24	; 9
-	// 2배속 통신
-	UCSR0A |= 1 << U2X0; // 2배속 통신
      dc6:	8b b1       	in	r24, 0x0b	; 11
      dc8:	82 60       	ori	r24, 0x02	; 2
      dca:	8b b9       	out	0x0b, r24	; 11
-	UCSR0C |= 0x06; // 비동기(ASYNC)/data8bits/none parity
      dcc:	e5 e9       	ldi	r30, 0x95	; 149
      dce:	f0 e0       	ldi	r31, 0x00	; 0
      dd0:	80 81       	ld	r24, Z
      dd2:	86 60       	ori	r24, 0x06	; 6
      dd4:	80 83       	st	Z, r24
-	// RXEN0 : UART0으로 부터 수신이 가능 하도록
-	// TXEN0 : UART0으로 부터 송신이 가능 하도록 한다. 
-	// RXCIE0 : UART0로 부터 1byte가 들어 오면(stop bit가 들어오면) rx interrupt를 발생 시켜라 
-    UCSR0B |= 1 << RXEN0 | 1 << TXEN0 | 1 << RXCIE0;
      dd6:	8a b1       	in	r24, 0x0a	; 10
      dd8:	88 69       	ori	r24, 0x98	; 152
      dda:	8a b9       	out	0x0a, r24	; 10
      ddc:	08 95       	ret
 
 00000dde <UART0_transmit>:
-}
-
-// UART0로 1byte를 전송 하는 함수
-void UART0_transmit(uint8_t data)
-{
-	while( !(UCSR0A & 1 << UDRE0) )   // 데이터가 전송 중이면 전송이 끝날떄 까지 기다린다. 
      dde:	5d 9b       	sbis	0x0b, 5	; 11
      de0:	fe cf       	rjmp	.-4      	; 0xdde <UART0_transmit>
-		;   // no operation NOP
-	
-	UDR0 = data;   // HW전송 register(UDR0)에 data를 쏴준다.  
      de2:	8c b9       	out	0x0c, r24	; 12
      de4:	08 95       	ret
 
 00000de6 <__vector_30>:
-
-// BT로 부터 1 byte가 들어올때 마다 이곳으로 들어온다 (RX INT)
-// 예) led_all_on\n --> 이곳 11번이 들어온다 
-//     led_all_off\n
-ISR(USART1_RX_vect)
-{
      de6:	1f 92       	push	r1
      de8:	0f 92       	push	r0
      dea:	0f b6       	in	r0, 0x3f	; 63
@@ -2242,22 +2117,14 @@ ISR(USART1_RX_vect)
      e10:	1f 92       	push	r1
      e12:	cd b7       	in	r28, 0x3d	; 61
      e14:	de b7       	in	r29, 0x3e	; 62
-	volatile static int i=0;
-	volatile uint8_t data;
-	
-	data = UDR1;  // uart0의 H/W register(UDR1)로 부터 1 byte를 읽어 간다. 
      e16:	80 91 9c 00 	lds	r24, 0x009C	; 0x80009c <__TEXT_REGION_LENGTH__+0x7e009c>
      e1a:	89 83       	std	Y+1, r24	; 0x01
-	              // data = UDR1를 실행 하면 UDR1의 내용이 빈다(empty)
-	if (data == '\r' || data == '\n')
      e1c:	89 81       	ldd	r24, Y+1	; 0x01
      e1e:	8d 30       	cpi	r24, 0x0D	; 13
      e20:	19 f0       	breq	.+6      	; 0xe28 <__vector_30+0x42>
      e22:	89 81       	ldd	r24, Y+1	; 0x01
      e24:	8a 30       	cpi	r24, 0x0A	; 10
      e26:	61 f5       	brne	.+88     	; 0xe80 <__vector_30+0x9a>
-	{
-		rx1_buff[rear1][i] = '\0';   // \n --> \0(문장의 끝을 알리는 indicator)
      e28:	20 91 72 01 	lds	r18, 0x0172	; 0x800172 <rear1>
      e2c:	30 91 73 01 	lds	r19, 0x0173	; 0x800173 <rear1+0x1>
      e30:	80 91 70 01 	lds	r24, 0x0170	; 0x800170 <i.1896>
@@ -2273,16 +2140,13 @@ ISR(USART1_RX_vect)
      e48:	e8 0f       	add	r30, r24
      e4a:	f9 1f       	adc	r31, r25
      e4c:	10 82       	st	Z, r1
-		i=0;   // 다음 string을 저장 하기 위해 index값을 0으로 만든다. 
      e4e:	10 92 71 01 	sts	0x0171, r1	; 0x800171 <i.1896+0x1>
      e52:	10 92 70 01 	sts	0x0170, r1	; 0x800170 <i.1896>
-		rear1++;
      e56:	80 91 72 01 	lds	r24, 0x0172	; 0x800172 <rear1>
      e5a:	90 91 73 01 	lds	r25, 0x0173	; 0x800173 <rear1+0x1>
      e5e:	01 96       	adiw	r24, 0x01	; 1
      e60:	90 93 73 01 	sts	0x0173, r25	; 0x800173 <rear1+0x1>
      e64:	80 93 72 01 	sts	0x0172, r24	; 0x800172 <rear1>
-		rear1 %= COMMAND_NUMBER;   // 0 ~ 9 if (rear1 >= 9) rear1 =0;
      e68:	80 91 72 01 	lds	r24, 0x0172	; 0x800172 <rear1>
      e6c:	90 91 73 01 	lds	r25, 0x0173	; 0x800173 <rear1+0x1>
      e70:	6a e0       	ldi	r22, 0x0A	; 10
@@ -2291,12 +2155,6 @@ ISR(USART1_RX_vect)
      e76:	90 93 73 01 	sts	0x0173, r25	; 0x800173 <rear1+0x1>
      e7a:	80 93 72 01 	sts	0x0172, r24	; 0x800172 <rear1>
      e7e:	1c c0       	rjmp	.+56     	; 0xeb8 <__vector_30+0xd2>
-		// !!!! 이곳에 queue full (rx1_buff) 상태를 check하는 로직이 들어 가야 한다. !!!!!
-	}
-	else
-	{
-		// !!!!! COMMAND_LENGTH를 check 하는 로직 추가 !!!!
-		rx1_buff[rear1][i++] = data;
      e80:	60 91 72 01 	lds	r22, 0x0172	; 0x800172 <rear1>
      e84:	70 91 73 01 	lds	r23, 0x0173	; 0x800173 <rear1+0x1>
      e88:	80 91 70 01 	lds	r24, 0x0170	; 0x800170 <i.1896>
@@ -2319,9 +2177,6 @@ ISR(USART1_RX_vect)
      eb2:	e8 0f       	add	r30, r24
      eb4:	f9 1f       	adc	r31, r25
      eb6:	40 83       	st	Z, r20
-	}
-		  
-}
      eb8:	0f 90       	pop	r0
      eba:	df 91       	pop	r29
      ebc:	cf 91       	pop	r28
@@ -2346,33 +2201,19 @@ ISR(USART1_RX_vect)
      ee2:	18 95       	reti
 
 00000ee4 <init_uart1>:
-3. RX(수신) : interrupt 방식 
-*/
-void init_uart1(void)
-{
-	// 1. 9600bps 설정
-	UBRR1H = 0x00;
      ee4:	10 92 98 00 	sts	0x0098, r1	; 0x800098 <__TEXT_REGION_LENGTH__+0x7e0098>
-	UBRR1L = 207;   // 9600bps 표9-9
      ee8:	8f ec       	ldi	r24, 0xCF	; 207
      eea:	80 93 99 00 	sts	0x0099, r24	; 0x800099 <__TEXT_REGION_LENGTH__+0x7e0099>
-	// 2배속 통신
-	UCSR1A |= 1 << U2X1; // 2배속 통신
      eee:	eb e9       	ldi	r30, 0x9B	; 155
      ef0:	f0 e0       	ldi	r31, 0x00	; 0
      ef2:	80 81       	ld	r24, Z
      ef4:	82 60       	ori	r24, 0x02	; 2
      ef6:	80 83       	st	Z, r24
-	UCSR1C |= 0x06; // 비동기(ASYNC)/data8bits/none parity
      ef8:	ed e9       	ldi	r30, 0x9D	; 157
      efa:	f0 e0       	ldi	r31, 0x00	; 0
      efc:	80 81       	ld	r24, Z
      efe:	86 60       	ori	r24, 0x06	; 6
      f00:	80 83       	st	Z, r24
-	// RXEN1 : UART1으로 부터 수신이 가능 하도록
-	// TXEN1 : UART1으로 부터 송신이 가능 하도록 한다. 
-	// RXCIE1 : UART1로 부터 1byte가 들어 오면(stop bit가 들어오면) rx interrupt를 발생 시켜라 
-    UCSR1B |= 1 << RXEN1 | 1 << TXEN1 | 1 << RXCIE1;
      f02:	ea e9       	ldi	r30, 0x9A	; 154
      f04:	f0 e0       	ldi	r31, 0x00	; 0
      f06:	80 81       	ld	r24, Z
@@ -2381,12 +2222,6 @@ void init_uart1(void)
      f0c:	08 95       	ret
 
 00000f0e <__vector_5>:
-char scm[50];
-
-// PE4 : 외부 INT4 초음파 센서 상승, 하강 edge 둘 다 이곳으로 들어온다.
-//결국은 상승edge에서 1번, 하강edge에서 1번씩 이곳으로 들어온다.
-ISR(INT4_vect)
-{
      f0e:	1f 92       	push	r1
      f10:	0f 92       	push	r0
      f12:	0f b6       	in	r0, 0x3f	; 63
@@ -2406,21 +2241,11 @@ ISR(INT4_vect)
      f2e:	bf 93       	push	r27
      f30:	ef 93       	push	r30
      f32:	ff 93       	push	r31
-	// 1. 상승 edge
-	if (ECHO_PIN & (1 << ECHO))
      f34:	0c 9b       	sbis	0x01, 4	; 1
      f36:	03 c0       	rjmp	.+6      	; 0xf3e <__vector_5+0x30>
-	{
-		TCNT1 = 0;
      f38:	1d bc       	out	0x2d, r1	; 45
      f3a:	1c bc       	out	0x2c, r1	; 44
      f3c:	31 c0       	rjmp	.+98     	; 0xfa0 <__vector_5+0x92>
-	}
-	// 2. 하강 edge
-	else
-	{
-		// ECHO 핀에 들어온 펄스 길이를 us로 환산
-		ultrasonic_distance = 1000000.0 * TCNT1 * 1024 / F_CPU;
      f3e:	6c b5       	in	r22, 0x2c	; 44
      f40:	7d b5       	in	r23, 0x2d	; 45
      f42:	80 e0       	ldi	r24, 0x00	; 0
@@ -2444,12 +2269,6 @@ ISR(INT4_vect)
      f66:	a9 d0       	rcall	.+338    	; 0x10ba <__fixsfsi>
      f68:	70 93 75 01 	sts	0x0175, r23	; 0x800175 <ultrasonic_distance+0x1>
      f6c:	60 93 74 01 	sts	0x0174, r22	; 0x800174 <ultrasonic_distance>
-		
-		// 예) TCNT1에 10이 들어 있다고 가정하자
-		// 15.625khz의 1주기가 64us이다.
-		// 64us * 10 == 640us
-		// 640us / 58us (58us는 초음파 센서에서 1cm이동하는데 58us가 소요됨). ==> 11cm 
-		sprintf(scm, "dis : %dcm\n", ultrasonic_distance / 58); // sprintf는 버퍼에 찍는 것
      f70:	80 91 74 01 	lds	r24, 0x0174	; 0x800174 <ultrasonic_distance>
      f74:	90 91 75 01 	lds	r25, 0x0175	; 0x800175 <ultrasonic_distance+0x1>
      f78:	6a e3       	ldi	r22, 0x3A	; 58
@@ -2472,8 +2291,6 @@ ISR(INT4_vect)
      f9a:	0f 90       	pop	r0
      f9c:	0f 90       	pop	r0
      f9e:	0f 90       	pop	r0
-	}
-}
      fa0:	ff 91       	pop	r31
      fa2:	ef 91       	pop	r30
      fa4:	bf 91       	pop	r27
@@ -2495,35 +2312,20 @@ ISR(INT4_vect)
      fc4:	18 95       	reti
 
 00000fc6 <init_ultrasonic>:
-
-void init_ultrasonic()
-{
-	TRIG_DDR |= 1 << TRIG; // output mode로 설정
      fc6:	e4 e6       	ldi	r30, 0x64	; 100
      fc8:	f0 e0       	ldi	r31, 0x00	; 0
      fca:	80 81       	ld	r24, Z
      fcc:	80 61       	ori	r24, 0x10	; 16
      fce:	80 83       	st	Z, r24
-	ECHO_DDR &= ~(1 << ECHO); // input mode로 설정
      fd0:	82 b1       	in	r24, 0x02	; 2
      fd2:	8f 7e       	andi	r24, 0xEF	; 239
      fd4:	82 b9       	out	0x02, r24	; 2
-	
-	// 0 1 : 상승, 하강 edge에 둘 다 INT를 띄우도록 설정
-	// INT0~3은 EICRA, INT4~7은 EICRB 레지스터
-	EICRB |= 0 << ISC41 | 1 << ISC40; // INT4니까 EICRB에서 ISC41, 40
      fd6:	8a b7       	in	r24, 0x3a	; 58
      fd8:	81 60       	ori	r24, 0x01	; 1
      fda:	8a bf       	out	0x3a, r24	; 58
-	
-	// 16bit timer1을 설정해서 사용 16비트는 0~65535(0xffff)가 최대
-	// 16Mhz를 1024로 분주 16000000/1024 --> 15625hz --> 15.625khz
-	// 1주기 (1개의 펄스 소요시간) 1/15625 = 0.000064sec = 64us	
-	TCCR1B |=  1 << CS12 | 1 << CS10; // 1024로 분주
      fdc:	8e b5       	in	r24, 0x2e	; 46
      fde:	85 60       	ori	r24, 0x05	; 5
      fe0:	8e bd       	out	0x2e, r24	; 46
-	EIMSK |= 1 << INT4; // 외부 인터럽트4번 (ECHO) 사용
      fe2:	89 b7       	in	r24, 0x39	; 57
      fe4:	80 61       	ori	r24, 0x10	; 16
      fe6:	89 bf       	out	0x39, r24	; 57
