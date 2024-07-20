@@ -46,6 +46,7 @@ void init_n289n(void)
 
 void washing_machine_fan_control(int *spin_strength)
 {
+	//int pause_toggle = 0; // 일시정지 토글
 	OCR3C = *spin_strength;
 	
 	if (check_timer >= 5000)
@@ -55,12 +56,23 @@ void washing_machine_fan_control(int *spin_strength)
 		check_timer = 0;
 	}
 	
-	if (fan_forward)
+	if (fan_forward == 1 /*&& pause_toggle == 0*/)
 	{
 		PORTF |= 1 << 6; // 정회전
 	}
-	else
+	else if (fan_forward == 0 /*&& pause_toggle == 0*/)
 	{
 		PORTF |= 1 << 7; // 역회전
 	}
+	
+// 	if (get_button(BUTTON0, BUTTON0PIN)) // 버튼 0을 받으면 일시정지
+// 	{
+// 		pause_toggle = !pause_toggle;
+// 		
+// 		if(pause_toggle)
+// 		{
+// 			PORTF |= 1 << 6 | 1 << 7;
+// 		}
+// 	}
+	
 }
