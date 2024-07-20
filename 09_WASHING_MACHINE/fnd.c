@@ -1,6 +1,6 @@
 ﻿#include "fnd.h"
 #include "button.h"
-#define AUTO_WASH 0
+#define CUSTOM_WASH 0
 #define FAST_WASH 1
 #define RINSE_AND_SPINDRY 2
 #define ONLY_SPINDRY 3
@@ -17,19 +17,21 @@ extern void init_button(void);
 extern int get_button(int button_num, int button_pin);
 // 모터
 extern void washing_machine_fan_control(int *spin_strength);
+// LED
+extern void make_pwm_led_control();
 
 // 메인 화면에서 선택하는 함수들
-void auto_wash();
+void custom_wash();
 void fast_wash();
 void rinse_and_spindry();
 void only_spindry();
 void main_screen();
 
-//자동 세척 모드에서 선탁하는 함수들
+// 수동 세탁 모드에서 선탁하는 함수들
 void water_temperature();
 void rinse_frequency();
 void spindry_strength();
-void auto_wash_start();
+void custom_wash_start();
 void dumy_fanc();
 
 uint32_t sec_count = 0; // 초를 재는 count 변수 unsigned int = uint32_t
@@ -41,28 +43,28 @@ extern volatile uint32_t check_timer; // 모터 회전 방향 반대로 하기�
 extern volatile uint32_t loading_clock_change;
 
 int select_wash_mode = 4; // 메인화면에서 모드 선택 변수
-int auto_wash_mode = 4; // 자동 세탁 모드안에서 진행과정 선택 변수
-int auto_wash_mode_toggle = 1; // 자동 세탁 모드 안에서 모든 과정을 마쳤는지 아는 토글 / 이게 0 되면 세탁을 시작함.
+int custom_wash_mode = 4; // 커스텀 세탁 모드안에서 진행과정 선택 변수
+int custom_wash_mode_toggle = 1; // 커스텀 세탁 모드 안에서 모든 과정을 마쳤는지 아는 토글 / 이게 0 되면 세탁을 시작함.
 int total_wash_time = 90; // 총 세탁 시각 default : 60초 + default 탈수 시간 30초
-int spin_strength_val = 160; // 1단계 115, 2단계 160, 3단계 205, 4단계 250
+int spin_strength_val = 0; // 1단계 115, 2단계 160, 3단계 205, 4단계 250
 int loading_rot = 0; // 로딩  돌아가는거 보여주는 변수
 int loading_clock_change_val = 1;
 
 void (*fp_wash_mode[])() =
 {
-	auto_wash, // 0 자동 세탁
-	fast_wash, // 1 쾌속 세탁
+	custom_wash, // 0 수동 세탁
+	fasr_wash, // 1 쾌속 세탁
 	rinse_and_spindry, // 2 헹굼 + 탈수
 	only_spindry, // 3 탈수 단독
 	main_screen // 4 Idle 메인화면
 };
 
-void (*auto_wash_select[])() =
+void (*custom_wash_select[])() =
 {
 	water_temperature, // 물 온도 선택
 	rinse_frequency, // 헹굼 횟수 선택
 	spindry_strength, // 탈수 강도 선택
-	auto_wash_start, // 세탁 시작
+	custom_wash_start, // 세탁 시작
 	dumy_fanc // 더미
 };
 
@@ -78,9 +80,9 @@ int fnd_main(void)
 	
 	while(1)
 	{
-		if (get_button(BUTTON0, BUTTON0PIN)) // 버튼 0을 받으면 자동 세탁 모드로 진입
+		if (get_button(BUTTON0, BUTTON0PIN)) // 버튼 0을 받으면 수동 세탁 모드로 진입
 		{
-			select_wash_mode = AUTO_WASH;
+			select_wash_mode = CUSTOM_WASH;
 		}
 		
 		if (get_button(BUTTON1, BUTTON1PIN)) // 버튼 1을 받으면 쾌속 세탁 모드로 진입
@@ -99,7 +101,7 @@ int fnd_main(void)
 		
 		if (get_button(BUTTON2, BUTTON2PIN)) // 버튼 2를 받으면 헹굼 + 탈수 모드로 진입
 		{
-			button2_state = !button2_state;\
+			button2_state = !button2_state;
 			
 			if (button2_state)
 			{
@@ -125,7 +127,7 @@ int fnd_main(void)
 			}
 		}
 		fp_wash_mode[select_wash_mode]();
-		//auto_wash_led_on(&led_shift_num);
+		
 		if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
 		{
 			fnd_refreshrate = 0;
@@ -136,8 +138,9 @@ int fnd_main(void)
 
 ////////////////////////////////////////////메인화면에서 동작하는 함수들////////////////////////////////////////////////
 
-void auto_wash(void) // 자동 세탁
+void custom_wash(void) // 수동 세탁
 {
+
 	sec_count = 1;
 	
 	int auto_step_led = 0;
@@ -153,7 +156,7 @@ void auto_wash(void) // 자동 세탁
 		{
 			if (auto_step_led == 0) // 물 온도 선택하기  --- 물온도 변수 필요하고 
 			{
-				auto_wash_mode = 0;
+				custom_wash_mode = 0;
 			}
 		}
 		if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
@@ -161,9 +164,9 @@ void auto_wash(void) // 자동 세탁
 			fnd_refreshrate = 0;
 			fnd_display();
 		}
-		auto_wash_select[auto_wash_mode]();
+		custom_wash_select[custom_wash_mode]();
 	}
-	// 여기까지 자동 세탁의 물온도, 헹굼횟수, 탈수 강도를 선택함 밑에서 지정한 시간만큼 모터가 돌아가고 탈수 강도에 맞게 30초 동안 강도에 맞게 진행
+	// 여기까지 수동 세탁의 물온도, 헹굼횟수, 탈수 강도를 선택함 밑에서 지정한 시간만큼 모터가 돌아가고 탈수 강도에 맞게 30초 동안 강도에 맞게 진행
 	
 	//여기에 시간 만큼 회전하는 함수 추가.
 	
@@ -172,8 +175,6 @@ void auto_wash(void) // 자동 세탁
 void fast_wash(void) // 쾌속 세탁
 {
 	sec_count = 2;
-	
-	
 }
 
 void rinse_and_spindry(void) // 헹굼 + 탈수
@@ -194,7 +195,7 @@ void main_screen(void) // 메인 화면
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-/////////////////////////////////////////자동 세척 모드에서 동작하는 함수들////////////////////////////////////////////
+/////////////////////////////////////////수동 세척 모드에서 동작하는 함수들////////////////////////////////////////////
 void water_temperature() // 물 온도 선택
 {
 	PORTA = 0x07;
@@ -216,7 +217,7 @@ void water_temperature() // 물 온도 선택
 		if (get_button(BUTTON1, BUTTON1PIN))
 		{	
 			sec_count = 0;
-			auto_wash_mode = 1;
+			custom_wash_mode = 1;
 			water_tem_toggle = 0;
 		}
 		if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
@@ -232,7 +233,7 @@ void rinse_frequency() // 헹굼 횟수 조절
 	PORTA = 0x03;
 	int rinse_frequency_toggle = 1; // 버튼1 누를 때 까지 반복
 	
-	sec_count = 5; // deflaut 헹굼 횟수
+	sec_count = 2; // deflaut 헹굼 횟수
 	
 	while (rinse_frequency_toggle)
 	{
@@ -249,7 +250,7 @@ void rinse_frequency() // 헹굼 횟수 조절
 		{
 			total_wash_time += sec_count * 10; // 버튼 1누르면 횟수 * 10초를 전역변수에 저장하고 다음 단계로 간 다음 탈출
 			sec_count = 0;
-			auto_wash_mode = 2;
+			custom_wash_mode = 2;
 			rinse_frequency_toggle = 0;
 		}
 		if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
@@ -262,7 +263,8 @@ void rinse_frequency() // 헹굼 횟수 조절
 
 void spindry_strength()
 {
-	PORTA = 0x01;
+	PORTA = 0x01;	
+
 	int spindry_strength_toggle = 1; // 버튼1 누를 때 까지 반복
 	
 	sec_count = 3; // deflaut 탈수 강도 최대 4까지
@@ -297,9 +299,9 @@ void spindry_strength()
 				spin_strength_val = 250;
 			}
 			PORTA = 0;
-			sec_count = 0;
-			auto_wash_mode = 3;
 			spindry_strength_toggle = 0;
+			custom_wash_mode = 3;
+			sec_count = 0;
 		}
 		if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
 		{
@@ -309,8 +311,10 @@ void spindry_strength()
 	}
 }
 
-void auto_wash_start(void)
+
+void custom_wash_start(void)
 {
+	int led_pwm_count; // LED 몇개 킬건지 정하는 변수
 	sec_count = total_wash_time;
 	
 	while (sec_count > 0)
@@ -333,32 +337,33 @@ void auto_wash_start(void)
 		/////여기에 일반세탁 60초 + 헹굼 횟수 * 10초 + 탈수 30초로 구분을 해야함
 		if (total_wash_time - sec_count <= 30)
 		{
-			PORTA = 0xff;
+			led_pwm_count = 255; // 0xff
 		}
 		
 		else if (total_wash_time - sec_count < 60 && total_wash_time - sec_count > 30)
 		{
-			PORTA = 0x7e;
+			led_pwm_count = 126; // 0x7c
 		}
 		
 		else if (total_wash_time - sec_count == 60)
 		{
-			PORTA = 0x3c;
+			led_pwm_count = 60; // 0x3c
 		}
 		
 		else if (sec_count == 30)
 		{
-			PORTA = 0x18;
+			led_pwm_count = 24; // 0x18
 		}
 		
 		else if (sec_count == 0)
 		{
-			PORTA = 0;
+			led_pwm_count = 0;
 		}
 		
 		if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
 		{
 			fnd_refreshrate = 0;
+			make_pwm_led_control(&led_pwm_count);
 			if (loading_clock_change_val)
 			{
 				fnd_display(); // 시간 보여주기
@@ -368,10 +373,11 @@ void auto_wash_start(void)
 				fnd_loading_display(&loading_rot); // 로딩 보여주기
 			}
 		}
+		
 	}
 	OCR3C = 0;
 	sec_count = 0; // 다 끝나면 끝
-	auto_wash_mode = 4;
+	custom_wash_mode = 4;
 }
 
 void dumy_fanc()
@@ -472,6 +478,8 @@ void fnd_loading_display(int *loading_rot) // 진행 로딩 상황 표시
 	digit_select++;
 	digit_select %= 4; //다음 표시할 자리수 선택
 }
+
+
 
 
 
