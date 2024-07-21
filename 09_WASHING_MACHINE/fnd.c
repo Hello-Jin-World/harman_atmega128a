@@ -20,6 +20,8 @@ extern int get_button(int button_num, int button_pin);
 extern void washing_machine_fan_control();
 // LED
 extern void make_pwm_led_control();
+// 초음파
+extern void ultrasonic_distance_check();
 
 // 메인 화면에서 선택하는 함수들
 void custom_wash();
@@ -47,6 +49,7 @@ extern volatile uint32_t msec_count;
 extern volatile uint32_t check_timer; // 모터 회전 방향 반대로 하기위한 시각 체크 변수
 extern volatile uint32_t loading_clock_change;
 extern volatile uint32_t loading_refreshrate;
+extern volatile int ultrasonic_distance; // 초음파 거리 변수
 
 
 int select_wash_mode = MAIN_SCREEN; // 메인화면에서 모드 선택 변수
@@ -56,6 +59,7 @@ int total_wash_time = 90; // 총 세탁 시각 default : 60초 + default 탈수 
 int spin_strength_val = 0; // 1단계 115, 2단계 160, 3단계 205, 4단계 250
 volatile int loading_rot = 10; // 로딩  돌아가는거 보여주는 변수
 int loading_clock_change_val = 1; // 시간이랑 로딩 창 번갈아 가는거 변수
+int closed_check = 0;
 
 void (*fp_wash_mode[])() =
 {
@@ -86,13 +90,23 @@ int fnd_main(void)
 
 	while(1)
 	{
-		if (get_button(BUTTON0, BUTTON0PIN)) // 버튼 0을 받으면 수동 세탁 모드로 진입하고 계속 버튼 0을 누를수록 다음 모드로 순회하듯이 작동, 버튼 1을 누르면 해당되는 모드 진입, 버튼 3을 누르면 메인화면으로 되돌아가기
+		if (get_button(BUTTON0, BUTTON0PIN) && closed_check == 1) // 버튼 0을 받으면 수동 세탁 모드로 진입하고 계속 버튼 0을 누를수록 다음 모드로 순회하듯이 작동, 버튼 1을 누르면 해당되는 모드 진입, 버튼 3을 누르면 메인화면으로 되돌아가기
 		{
 			loading_rot = 5;
 			select_wash_mode = CUSTOM_WASH;
 		}
 		
 		fp_wash_mode[select_wash_mode]();
+		
+		ultrasonic_distance_check();
+		if (ultrasonic_distance / 58 > 0 && ultrasonic_distance / 58 < 10)
+		{
+			closed_check = 1;
+		}
+		else
+		{
+			closed_check = 0;
+		}
 		
 		if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
 		{
