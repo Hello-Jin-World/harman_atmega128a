@@ -45,7 +45,7 @@ extern volatile uint32_t msec_count;
 extern volatile uint32_t check_timer; // 모터 회전 방향 반대로 하기위한 시각 체크 변수
 extern volatile uint32_t loading_clock_change;
 
-int select_wash_mode = 4; // 메인화면에서 모드 선택 변수
+int select_wash_mode = MAIN_SCREEN; // 메인화면에서 모드 선택 변수
 int custom_wash_mode = 5; // 커스텀 세탁 모드안에서 진행과정 선택 변수
 int custom_wash_mode_toggle = 1; // 커스텀 세탁 모드 안에서 모든 과정을 마쳤는지 아는 토글 / 이게 0 되면 세탁을 시작함.
 int total_wash_time = 90; // 총 세탁 시각 default : 60초 + default 탈수 시간 30초
@@ -82,32 +82,31 @@ int fnd_main(void)
 
 	while(1)
 	{
-		if (get_button(BUTTON0, BUTTON0PIN)) // 버튼 0을 받으면 수동 세탁 모드로 진입
+		if (get_button(BUTTON0, BUTTON0PIN)) // 버튼 0을 받으면 수동 세탁 모드로 진입하고 계속 버튼 0을 누를수록 다음 모드로 순회하듯이 작동, 버튼 1을 누르면 해당되는 모드 진입, 버튼 3을 누르면 메인화면으로 되돌아가기
 		{
 			select_wash_mode = CUSTOM_WASH;
 		}
 		
-		if (get_button(BUTTON1, BUTTON1PIN)) // 버튼 1을 받으면 쾌속 세탁 모드로 진입
-		{
-			select_wash_mode = FAST_WASH;
-		}
-		
-		if (get_button(BUTTON2, BUTTON2PIN)) // 버튼 2를 받으면 헹굼 + 탈수 모드로 진입
-		{
-			select_wash_mode = RINSE_AND_SPINDRY;
-		}
-		
-		if (get_button(BUTTON3, BUTTON3PIN)) // 버튼 3을 받으면 탈수 단독 모드로 진입
-		{
-			select_wash_mode = ONLY_SPINDRY;
-		}
-		
+// 		if (get_button(BUTTON, BUTTON1PIN)) // 버튼 1을 받으면 쾌속 세탁 모드로 진입
+// 		{
+// 			select_wash_mode = FAST_WASH;
+// 		}
+// 		
+// 		if (get_button(BUTTON2, BUTTON2PIN)) // 버튼 2를 받으면 헹굼 + 탈수 모드로 진입
+// 		{
+// 			select_wash_mode = RINSE_AND_SPINDRY;
+// 		}
+// 		
+// 		if (get_button(BUTTON3, BUTTON3PIN)) // 버튼 3을 받으면 탈수 단독 모드로 진입
+// 		{
+// 			select_wash_mode = ONLY_SPINDRY;
+// 		}
+
 		fp_wash_mode[select_wash_mode]();
 		
 		if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
 		{
 			fnd_refreshrate = 0;
-			//fnd_display();
 			fnd_loading_display(10,&main_ment_on);
 		}
 		if (msec_count >= 400)
@@ -123,21 +122,26 @@ int fnd_main(void)
 
 void custom_wash(void) // 수동 세탁
 {
-
 	sec_count = 1;
 	
 	int auto_step_led = 0;
 	
 	while (auto_step_led < 4)
 	{
-		if (get_button(BUTTON0, BUTTON0PIN))
+		if (get_button(BUTTON0, BUTTON0PIN)) // 버튼 0을 받으면 다음 쾌속 세탁으로 이동
+		{
+			select_wash_mode = FAST_WASH;
+			break;
+		}
+		
+		if (get_button(BUTTON3, BUTTON3PIN))
 		{
 			select_wash_mode = 4;
 			break;
 		}
 		if (get_button(BUTTON1, BUTTON1PIN))
 		{
-			if (auto_step_led == 0) // 물 온도 선택하기  --- 물온도 변수 필요하고 
+			if (auto_step_led == 0) // 버튼 1을 누르면 수동 세탁을 시작하는 단계로 진입. 물 온도, 헹굼 횟수, 탈수 강도 선택 
 			{
 				custom_wash_mode = 0;
 			}
@@ -145,7 +149,7 @@ void custom_wash(void) // 수동 세탁
 		if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
 		{
 			fnd_refreshrate = 0;
-			fnd_display();
+			fnd_display(); // 여기 메인화면에서 동작하는 함수들은 그냥 알파벳 보여줘서 직관성을 높이는게 좋을듯
 		}
 		custom_wash_select[custom_wash_mode]();
 	}
@@ -158,9 +162,16 @@ void custom_wash(void) // 수동 세탁
 void fast_wash(void) // 쾌속 세탁
 {
 	sec_count = 2;
+	
 	while (1)
 	{
-		if (get_button(BUTTON1, BUTTON1PIN))
+		if (get_button(BUTTON0, BUTTON0PIN)) // 버튼 0을 받으면 다음 헹굼 + 탈수 세탁으로 이동
+		{
+			select_wash_mode = RINSE_AND_SPINDRY;
+			break;
+		}
+		
+		if (get_button(BUTTON3, BUTTON3PIN))
 		{
 			select_wash_mode = 4;
 			break;
@@ -176,9 +187,16 @@ void fast_wash(void) // 쾌속 세탁
 void rinse_and_spindry(void) // 헹굼 + 탈수
 {
 	sec_count = 3;
+	
 	while (1)
 	{
-		if (get_button(BUTTON2, BUTTON2PIN))
+		if (get_button(BUTTON0, BUTTON0PIN)) // 버튼 0을 받으면 다음 탈수 세탁으로 이동
+		{
+			select_wash_mode = ONLY_SPINDRY;
+			break;
+		}
+		
+		if (get_button(BUTTON3, BUTTON3PIN))
 		{
 			select_wash_mode = 4;
 			break;
@@ -196,6 +214,12 @@ void only_spindry(void) // 탈수
 	sec_count = 4;
 	while (1)
 	{
+		if (get_button(BUTTON0, BUTTON0PIN)) // 버튼 0을 받으면 다시 수동 세탁으로 이동
+		{
+			select_wash_mode = CUSTOM_WASH;
+			break;
+		}
+		
 		if (get_button(BUTTON3, BUTTON3PIN))
 		{
 			select_wash_mode = 4;
