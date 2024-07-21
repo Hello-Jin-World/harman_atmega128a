@@ -33,6 +33,7 @@ void water_temperature();
 void rinse_frequency();
 void spindry_strength();
 void custom_wash_start();
+void pause_wash();
 void end_display();
 void dumy_fanc();
 
@@ -339,11 +340,12 @@ void spindry_strength()
 
 void custom_wash_start(void)
 {
+	int return_enable = 1;
 	int led_pwm_count; // LED 몇개 킬건지 정하는 변수
 	
 	sec_count = total_wash_time;
 	
-	while (sec_count > 0)
+	while (sec_count > 0 && return_enable == 1)
 	{
 		washing_machine_fan_control(&spin_strength_val);
 		
@@ -399,15 +401,49 @@ void custom_wash_start(void)
 				fnd_loading_display(&loading_rot,10); // 로딩 보여주기
 			}
 		}
+		///// 일시정지 구현 
+		
+		if (get_button(BUTTON0, BUTTON0PIN)) // 버튼 0 누르면 일시정지
+		{
+			return_enable = 0;
+			pause_wash(&return_enable, &led_pwm_count);
+		}
+		
 	}
 	OCR3C = 0;
 	custom_wash_mode = 4; // end 화면으로 이동
 	sec_count = 0; // 다 끝나면 끝
 }
 
+void pause_wash(int *return_enable, int *led_pause_count)
+{
+	while (*return_enable == 0)
+	{
+		OCR3C = 0;
+		
+		if (get_button(BUTTON0, BUTTON0PIN)) // 버튼 0 누르면 이어서 시작
+		{
+			*return_enable = 1;
+			custom_wash_mode = 3;
+		}
+		if (get_button(BUTTON3, BUTTON3PIN)) // 버튼 3 누르면 세탁 취소
+		{
+			*return_enable = 1;
+			OCR3C = 0;
+			custom_wash_mode = 4;
+			sec_count = 0;
+		}
+		if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
+		{
+			fnd_refreshrate = 0;
+			fnd_display();
+		}
+		PORTA = *led_pause_count;
+	}
+}
+
 void end_display() // end 화면
 {
-	//더미 함수
 	int end_toggle = 1;
 	PORTA = 0;
 	loading_rot = 4; // end fnd display
@@ -424,12 +460,24 @@ void end_display() // end 화면
 			fnd_refreshrate = 0;
 			fnd_loading_display(&loading_rot,10); // end 보여주기
 		}
+		if (msec_count <= 500)
+		{
+			PORTA = 0b01010101;
+		}
+		else if (msec_count > 500)
+		{
+			PORTA = 0b10101010;
+			if (msec_count >= 1000)
+			{
+				msec_count = 0;
+			}
+		}
 	}
 }
 
 void dumy_fanc()
 {
-	
+	PORTA = 0;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
