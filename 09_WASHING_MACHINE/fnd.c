@@ -113,7 +113,8 @@ int fnd_main(void)
 			fnd_refreshrate = 0;
 			fnd_ment_display(&loading_rot,&main_ment_on);
 		}
-		if (msec_count >= 400)
+		
+		if (msec_count >= 400) // SELECT MODE 글씨 fnd에 400ms마다 한칸씩 밀리게 표시하기
 		{
 			msec_count = 0;
 			main_ment_on++;
@@ -126,12 +127,11 @@ int fnd_main(void)
 
 void custom_wash() // 수동 세탁
 {
-	sec_count = 1;
+	int custom_step_led = 0;
 	
-	int auto_step_led = 0;
-	
-	while (auto_step_led < 4)
+	while (custom_step_led < 4)
 	{
+		PORTA = 0xc0;
 		if (get_button(BUTTON0, BUTTON0PIN)) // 버튼 0을 받으면 다음 쾌속 세탁으로 이동
 		{
 			loading_rot = 6;
@@ -146,7 +146,7 @@ void custom_wash() // 수동 세탁
 		}
 		if (get_button(BUTTON1, BUTTON1PIN))
 		{
-			if (auto_step_led == 0) // 버튼 1을 누르면 수동 세탁을 시작하는 단계로 진입. 물 온도, 헹굼 횟수, 탈수 강도 선택
+			if (custom_step_led == 0) // 버튼 1을 누르면 수동 세탁을 시작하는 단계로 진입. 물 온도, 헹굼 횟수, 탈수 강도 선택
 			{
 				custom_wash_mode = 0;
 			}
@@ -167,10 +167,9 @@ void custom_wash() // 수동 세탁
 
 void auto_wash(int *auto_ment_on) // 자동 세탁
 {
-	sec_count = 2;
-	
 	while (1)
 	{
+		PORTA = 0x30;
 		if (get_button(BUTTON0, BUTTON0PIN)) // 버튼 0을 받으면 다음 헹굼 + 탈수 세탁으로 이동
 		{
 			loading_rot = 7;
@@ -178,25 +177,34 @@ void auto_wash(int *auto_ment_on) // 자동 세탁
 			break;
 		}
 		
+		if (get_button(BUTTON1, BUTTON1PIN)) // 버튼 1을 받으면 바로 자동 세탁 custom_wash_select[3]이 세탁 시작 함수라서 거기로 가기
+		{
+			total_wash_time = 150;
+			spin_strength_val = 160;
+			custom_wash_mode = 3;
+			break;
+		}
+		
 		if (get_button(BUTTON3, BUTTON3PIN))
 		{
 			select_wash_mode = 4;
 			break;
 		}
+		
 		if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
 		{
 			fnd_refreshrate = 0;
 			fnd_ment_display(&loading_rot, 10);
 		}
+		custom_wash_select[custom_wash_mode]();
 	}
 }
 
 void fast_wash(int *fast_ment_on) // 쾌속 세탁
 {
-	sec_count = 3;
-	
 	while (1)
 	{
+		PORTA = 0x0c;
 		if (get_button(BUTTON0, BUTTON0PIN)) // 버튼 0을 받으면 다음 탈수 세탁으로 이동
 		{
 			loading_rot = 8;
@@ -204,29 +212,11 @@ void fast_wash(int *fast_ment_on) // 쾌속 세탁
 			break;
 		}
 		
-		if (get_button(BUTTON3, BUTTON3PIN))
+		if (get_button(BUTTON1, BUTTON1PIN)) // 버튼 1을 받으면 바로 쾌속 세탁 custom_wash_select[3]이 세탁 시작 함수라서 거기로 가기
 		{
-			select_wash_mode = 4;
-			break;
-		}
-		if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
-		{
-			fnd_refreshrate = 0;
-			fnd_ment_display(&loading_rot, 10);
-		}
-	}
-}
-
-void only_spindry(int *dry_ment_on) // 탈수
-{
-	sec_count = 4;
-	
-	while (1)
-	{
-		if (get_button(BUTTON0, BUTTON0PIN)) // 버튼 0을 받으면 다시 수동 세탁으로 이동
-		{
-			loading_rot = 5;
-			select_wash_mode = CUSTOM_WASH;
+			total_wash_time = 70;
+			spin_strength_val = 250;
+			custom_wash_mode = 3;
 			break;
 		}
 		
@@ -235,11 +225,47 @@ void only_spindry(int *dry_ment_on) // 탈수
 			select_wash_mode = 4;
 			break;
 		}
+		
 		if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
 		{
 			fnd_refreshrate = 0;
 			fnd_ment_display(&loading_rot, 10);
 		}
+		custom_wash_select[custom_wash_mode]();
+	}
+}
+
+void only_spindry(int *dry_ment_on) // 탈수
+{
+	while (1)
+	{
+		PORTA = 0x03;
+		if (get_button(BUTTON0, BUTTON0PIN)) // 버튼 0을 받으면 다시 수동 세탁으로 이동
+		{
+			loading_rot = 5;
+			select_wash_mode = CUSTOM_WASH;
+			break;
+		}
+		
+		if (get_button(BUTTON1, BUTTON1PIN)) // 버튼 1을 받으면 바로 탈수 선택 custom_wash_select[2]이 탈수 강도 선택 함수라서 거기로 가기
+		{
+			total_wash_time = 30;
+			custom_wash_mode = 2;
+			break;
+		}
+		
+		if (get_button(BUTTON3, BUTTON3PIN))
+		{
+			select_wash_mode = 4;
+			break;
+		}
+		
+		if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
+		{
+			fnd_refreshrate = 0;
+			fnd_ment_display(&loading_rot, 10);
+		}
+		custom_wash_select[custom_wash_mode]();
 	}
 }
 
@@ -373,7 +399,7 @@ void spindry_strength()
 }
 
 
-void custom_wash_start(void)
+void custom_wash_start()
 {
 	int return_enable = 1;
 	int led_pwm_count; // LED 몇개 킬건지 정하는 변수
@@ -637,17 +663,17 @@ void fnd_display(void)
 void fnd_ment_display(int *loading_rot, int *main_ment) // 진행 로딩 상황 표시
 {
 	int a, b, c, d;
-								 
+	
 	uint8_t fnd_loading_font[] =
 	// s     e        l      e     c     t               m     o     d        e                    n
 	{~0x92, ~0x86, ~0xc7, ~0x86, ~0xc6, ~0x87, ~0xff, ~0xaa, ~0xa3, ~0xa1, ~0x86, ~0xff, ~0xff, ~0xab // 0~13
-	, ~0xc6, ~0x92, ~0x87, ~0xaa	// CSTM // 14번 칸 부터
-	, ~0x88, ~0xc1, ~0x87, ~0xc0	// AUTO // 18
-	, ~0x8e, ~0x88, ~0x92, ~0x87	// FAST // 22
-	, ~0xff, ~0xa1, ~0xaf, ~0x99	//  DRY // 26
-	, ~0xff, ~0xff, ~0x8c, ~0xaf, ~0x86, ~0x8c, ~0x88, ~0xaf, ~0x86, /*~0x7f, ~0x7f, ~0x7f*/ // 30~38   prepare
-//     ' '     ' '    p       r     e      p     a      r      e       .       .      .
-	};  
+		, ~0xc6, ~0x92, ~0x87, ~0xaa	// CSTM // 14번 칸 부터
+		, ~0x88, ~0xc1, ~0x87, ~0xc0	// AUTO // 18
+		, ~0x8e, ~0x88, ~0x92, ~0x87	// FAST // 22
+		, ~0xff, ~0xa1, ~0xaf, ~0x91	//  DRY // 26
+		, ~0xff, ~0xff, ~0x8c, ~0xaf, ~0x86, ~0x8c, ~0x88, ~0xaf, ~0x86, /*~0x7f, ~0x7f, ~0x7f*/ // 30~38   prepare
+		//     ' '     ' '    p       r     e      p     a      r      e       .       .      .
+	};
 	
 	if (*loading_rot == 4) // end screen
 	{
@@ -724,7 +750,7 @@ void fnd_loading_display(int *forward_state_count, int *forward_state) // 진행
 	uint8_t fnd_loading_font[] =
 	{
 		~0xce, ~0xf8, ~0xc7, ~0xf1, ~0xfe, ~0xf7, ~0xf6 // 0~6
-		//  |-     -|    |_     _|     -      _     -,_   
+		//  |-     -|    |_     _|     -      _     -,_
 	};
 	
 	if (*forward_state)
@@ -793,7 +819,6 @@ void fnd_loading_display(int *forward_state_count, int *forward_state) // 진행
 	digit_select++;
 	digit_select %= 4; //다음 표시할 자리수 선택
 }
-
 
 
 
