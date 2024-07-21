@@ -44,22 +44,23 @@ void init_n289n(void)
 	PORTF |= 1 << 6; // 정회전
 }
 
-void washing_machine_fan_control(int *spin_strength)
+void washing_machine_fan_control(int *spin_strength , int *forward_state)
 {
 	OCR3C = *spin_strength;
 	
-	if (check_timer >= 5000)
+	if (check_timer >= 10000) // 10초마다 방향 바뀜
 	{
 		PORTF &= ~(1 << 6 | 1 << 7);  // 6, 7 reset
 		fan_forward = !fan_forward;
+		*forward_state = !*forward_state;
 		check_timer = 0;
 	}
 	
-	if (fan_forward)
+	if (fan_forward == 1 /*&& pause_toggle == 0*/)
 	{
 		PORTF |= 1 << 6; // 정회전
 	}
-	else
+	else if (fan_forward == 0 /*&& pause_toggle == 0*/)
 	{
 		PORTF |= 1 << 7; // 역회전
 	}
