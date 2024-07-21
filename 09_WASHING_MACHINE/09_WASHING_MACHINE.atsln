@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Atmel Studio Solution File, Format Version 11.00
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "09_WASHING_MACHINE", "09_WASHING_MACHINE.cproj", "{70CD976D-1C97-4054-8CA2-84CBF38D2E6F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{70CD976D-1C97-4054-8CA2-84CBF38D2E6F}.Debug|AVR.ActiveCfg = Debug|AVR
+		{70CD976D-1C97-4054-8CA2-84CBF38D2E6F}.Debug|AVR.Build.0 = Debug|AVR
+		{70CD976D-1C97-4054-8CA2-84CBF38D2E6F}.Release|AVR.ActiveCfg = Release|AVR
+		{70CD976D-1C97-4054-8CA2-84CBF38D2E6F}.Release|AVR.Build.0 = Release|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

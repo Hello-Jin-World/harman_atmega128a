@@ -13,7 +13,10 @@ volatile uint32_t msec_count=0;   // 인터럽드 서비스 루틴에서 쓰는 
 volatile uint32_t fnd_refreshrate=0;  // fnd의 잔상 효과를 유지 하기 위한 변수 2ms
 volatile uint32_t check_timer = 0; // 5000ms에 한번씩
 volatile uint32_t loading_clock_change = 0;
+<<<<<<< HEAD
 volatile uint32_t loading_refreshrate = 0;
+=======
+>>>>>>> f7c8e277bed16fbc33dc845b054e8f50a16a8280
 
 int led_main(void);   // 선언
 
@@ -43,7 +46,10 @@ ISR(TIMER0_OVF_vect)
 	fnd_refreshrate++;
 	check_timer++;
 	loading_clock_change++;
+<<<<<<< HEAD
 	loading_refreshrate++;
+=======
+>>>>>>> f7c8e277bed16fbc33dc845b054e8f50a16a8280
 }
 
 int main(void)

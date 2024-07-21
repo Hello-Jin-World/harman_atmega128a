@@ -20,6 +20,7 @@ void make_pwm_led_control(int *led_pwm_count)
 	// dark --> bright --> dark 순서로 진행되는 코드
 	//while (1)
 	//{
+<<<<<<< HEAD
 	led_on_pwm(dim); // 지속적으로 on할거면 이 함수만 while 반복
 	dim += direction;
 	
@@ -31,6 +32,19 @@ void make_pwm_led_control(int *led_pwm_count)
 	{
 		direction = 1;
 	}
+=======
+ 		led_on_pwm(dim); // 지속적으로 on할거면 이 함수만 while 반복
+  		dim += direction;
+		  
+  		if (dim == 255) // 다 밝아지면 다시 어두워지도록 함
+  		{
+  			direction = -1;
+  		}
+ 		if (dim == 0) // 다 어두워지면 다시 밝아지도록 함
+  		{
+  			direction = 1;
+ 		}
+>>>>>>> f7c8e277bed16fbc33dc845b054e8f50a16a8280
 	//}
 }
 
