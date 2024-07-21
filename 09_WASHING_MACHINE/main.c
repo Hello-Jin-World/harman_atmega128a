@@ -35,6 +35,8 @@ extern void n298n_dcmotor_pwm_control(void);
 extern void init_timer3_pwm();
 extern void init_n289n();
 
+extern void buzzer_main();
+
 FILE OUTPUT = FDEV_SETUP_STREAM(UART0_transmit, NULL, _FDEV_SETUP_WRITE);
 
 ISR(TIMER0_OVF_vect)

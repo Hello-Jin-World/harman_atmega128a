@@ -18,8 +18,7 @@ void make_pwm_led_control(int *led_pwm_count)
 	//PORTA = "0xff"; // led all on
 	
 	// dark --> bright --> dark 순서로 진행되는 코드
-	//while (1)
-	//{
+	
 	led_on_pwm(dim); // 지속적으로 on할거면 이 함수만 while 반복
 	dim += direction;
 	
@@ -31,7 +30,6 @@ void make_pwm_led_control(int *led_pwm_count)
 	{
 		direction = 1;
 	}
-	//}
 }
 
 void led_on_pwm(int dim) // dim의 반복을 이용해서 밝기를 제어 (PWM의 HIGH 비율을 제어)

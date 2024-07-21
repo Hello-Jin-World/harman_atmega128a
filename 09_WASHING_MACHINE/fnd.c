@@ -128,9 +128,6 @@ void custom_wash() // 수동 세탁
 {
 	sec_count = 1;
 	
-	/*int custom_ment_on = 5;*/
-	
-	
 	int auto_step_led = 0;
 	
 	while (auto_step_led < 4)
@@ -154,11 +151,7 @@ void custom_wash() // 수동 세탁
 				custom_wash_mode = 0;
 			}
 		}
-// 		if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
-// 		{
-// 			fnd_refreshrate = 0;
-// 			fnd_display(); // 여기 메인화면에서 동작하는 함수들은 그냥 알파벳 보여줘서 직관성을 높이는게 좋을듯
-// 		}
+		
 		if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
 		{
 			fnd_refreshrate = 0;
@@ -175,8 +168,6 @@ void custom_wash() // 수동 세탁
 void auto_wash(int *auto_ment_on) // 자동 세탁
 {
 	sec_count = 2;
-	
-	/**auto_ment_on = 6;*/
 	
 	while (1)
 	{
@@ -202,7 +193,6 @@ void auto_wash(int *auto_ment_on) // 자동 세탁
 
 void fast_wash(int *fast_ment_on) // 쾌속 세탁
 {
-	/**fast_ment_on = 7;*/
 	sec_count = 3;
 	
 	while (1)
@@ -230,7 +220,6 @@ void fast_wash(int *fast_ment_on) // 쾌속 세탁
 void only_spindry(int *dry_ment_on) // 탈수
 {
 	sec_count = 4;
-	/**dry_ment_on = 8;*/
 	
 	while (1)
 	{
@@ -398,7 +387,7 @@ void custom_wash_start(void)
 	{
 		washing_machine_fan_control(&spin_strength_val, &forward_state);
 		
-		if (msec_count >= 1000) // 1초마다 시간 1초씩 감소하고 로딩 회전이 됨.
+		if (msec_count >= 500) // 1초마다 시간 1초씩 감소하고 로딩 회전이 됨.
 		{
 			msec_count = 0;
 			sec_count--;

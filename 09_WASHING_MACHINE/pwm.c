@@ -48,7 +48,7 @@ void washing_machine_fan_control(int *spin_strength , int *forward_state)
 {
 	OCR3C = *spin_strength;
 	
-	if (check_timer >= 10000) // 10초마다 방향 바뀜
+	if (check_timer >= 4500) // 4.5초마다 방향 바뀜
 	{
 		PORTF &= ~(1 << 6 | 1 << 7);  // 6, 7 reset
 		fan_forward = !fan_forward;

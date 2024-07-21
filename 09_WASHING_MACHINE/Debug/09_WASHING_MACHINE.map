@@ -971,24 +971,24 @@ END GROUP
  .debug_frame   0x000003e8       0xb4 uart1.o
  .debug_frame   0x0000049c       0xb0 ultrasonic.o
 
-.debug_str      0x00000000      0x9e2
+.debug_str      0x00000000      0xa22
  *(.debug_str)
  .debug_str     0x00000000      0x27d C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega128a/avr51/crtatmega128a.o
  .debug_str     0x0000027d      0x1c2 button.o
                                 0x1f6 (size before relaxing)
- .debug_str     0x0000043f      0x3a6 fnd.o
-                                0x52f (size before relaxing)
- .debug_str     0x000007e5       0x2f led.o
-                                0x1d9 (size before relaxing)
- .debug_str     0x00000814       0xa8 main.o
-                                0x26b (size before relaxing)
- .debug_str     0x000008bc       0x25 pwm.o
-                                0x1d3 (size before relaxing)
- .debug_str     0x000008e1       0x75 uart0.o
+ .debug_str     0x0000043f      0x3e6 fnd.o
+                                0x547 (size before relaxing)
+ .debug_str     0x00000825       0x2f led.o
+                                0x1f1 (size before relaxing)
+ .debug_str     0x00000854       0xa8 main.o
+                                0x283 (size before relaxing)
+ .debug_str     0x000008fc       0x25 pwm.o
+                                0x1eb (size before relaxing)
+ .debug_str     0x00000921       0x75 uart0.o
                                 0x1f0 (size before relaxing)
- .debug_str     0x00000956       0x54 uart1.o
+ .debug_str     0x00000996       0x54 uart1.o
                                 0x1f3 (size before relaxing)
- .debug_str     0x000009aa       0x38 ultrasonic.o
+ .debug_str     0x000009ea       0x38 ultrasonic.o
                                 0x236 (size before relaxing)
 
 .debug_loc      0x00000000      0xf1f
