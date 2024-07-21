@@ -35,7 +35,7 @@ void init_timer3_pwm(void)
 	// 250000hz에서 256개의 펄스를 count하면 소요시간 : 1.02ms
 	//			    127개의 펄스를 count하면 소요시간 : 0.51ms
 	TCCR3B |= 1 << CS31 | 1 << CS30;
-	OCR3C = 0; // 비교일치값 (Output Compare Register : PWM 값
+	OCR3C = 0; // 비교일치값 (Output Compare Register : PWM 값)
 }
 
 void init_n289n(void)

@@ -342,19 +342,19 @@ void spindry_strength()
 		{
 			if(sec_count == 1)
 			{
-				spin_strength_val = 120;
+				spin_strength_val = 123; // duty cycle 50%
 			}
 			else if (sec_count == 2)
 			{
-				spin_strength_val = 160;
+				spin_strength_val = 160; // duty cycle 62%
 			}
 			else if (sec_count == 3)
 			{
-				spin_strength_val = 205;
+				spin_strength_val = 205; // duty cycle 80%
 			}
 			else if (sec_count == 4)
 			{
-				spin_strength_val = 250;
+				spin_strength_val = 250; // duty cycle 98%
 			}
 			PORTA = 0;
 			spindry_strength_toggle = 0;

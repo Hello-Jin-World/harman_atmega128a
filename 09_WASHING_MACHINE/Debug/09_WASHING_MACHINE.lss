@@ -901,8 +901,8 @@ void spindry_strength()
      5d4:	b1 05       	cpc	r27, r1
      5d6:	39 f4       	brne	.+14     	; 0x5e6 <spindry_strength+0xc6>
 			{
-				spin_strength_val = 120;
-     5d8:	88 e7       	ldi	r24, 0x78	; 120
+				spin_strength_val = 123; // duty cycle 50%
+     5d8:	8b e7       	ldi	r24, 0x7B	; 123
      5da:	90 e0       	ldi	r25, 0x00	; 0
      5dc:	90 93 87 01 	sts	0x0187, r25	; 0x800187 <spin_strength_val+0x1>
      5e0:	80 93 86 01 	sts	0x0186, r24	; 0x800186 <spin_strength_val>
@@ -915,7 +915,7 @@ void spindry_strength()
      5ec:	b1 05       	cpc	r27, r1
      5ee:	39 f4       	brne	.+14     	; 0x5fe <spindry_strength+0xde>
 			{
-				spin_strength_val = 160;
+				spin_strength_val = 160; // duty cycle 62%
      5f0:	80 ea       	ldi	r24, 0xA0	; 160
      5f2:	90 e0       	ldi	r25, 0x00	; 0
      5f4:	90 93 87 01 	sts	0x0187, r25	; 0x800187 <spin_strength_val+0x1>
@@ -929,7 +929,7 @@ void spindry_strength()
      604:	b1 05       	cpc	r27, r1
      606:	39 f4       	brne	.+14     	; 0x616 <spindry_strength+0xf6>
 			{
-				spin_strength_val = 205;
+				spin_strength_val = 205; // duty cycle 80%
      608:	8d ec       	ldi	r24, 0xCD	; 205
      60a:	90 e0       	ldi	r25, 0x00	; 0
      60c:	90 93 87 01 	sts	0x0187, r25	; 0x800187 <spin_strength_val+0x1>
@@ -942,7 +942,7 @@ void spindry_strength()
      61a:	b1 05       	cpc	r27, r1
      61c:	31 f4       	brne	.+12     	; 0x62a <spindry_strength+0x10a>
 			{
-				spin_strength_val = 250;
+				spin_strength_val = 250; // duty cycle 98%
      61e:	8a ef       	ldi	r24, 0xFA	; 250
      620:	90 e0       	ldi	r25, 0x00	; 0
      622:	90 93 87 01 	sts	0x0187, r25	; 0x800187 <spin_strength_val+0x1>
@@ -963,7 +963,7 @@ void spindry_strength()
      644:	10 92 8b 01 	sts	0x018B, r1	; 0x80018b <sec_count+0x3>
 			else if (sec_count == 4)
 			{
-				spin_strength_val = 250;
+				spin_strength_val = 250; // duty cycle 98%
 			}
 			PORTA = 0;
 			spindry_strength_toggle = 0;
@@ -1993,7 +1993,7 @@ void nextstep_pause_wash()
      c9c:	00 e0       	ldi	r16, 0x00	; 0
      c9e:	10 e0       	ldi	r17, 0x00	; 0
 		}
-		if (loading_clock_change >= 300)
+		if (loading_clock_change >= 300) // 모드가 바뀔 때 prepare 글자를 출력함
      ca0:	80 91 90 01 	lds	r24, 0x0190	; 0x800190 <loading_clock_change>
      ca4:	90 91 91 01 	lds	r25, 0x0191	; 0x800191 <loading_clock_change+0x1>
      ca8:	a0 91 92 01 	lds	r26, 0x0192	; 0x800192 <loading_clock_change+0x2>
@@ -2740,6 +2740,7 @@ void custom_wash_start(void)
 		}
 		
 		/////여기에 일반세탁 60초 + 헹굼 횟수 * 10초 + 탈수 30초로 구분을 해야함
+		///// 일반세탁 60초 시작 /////
 		if (total_wash_time - sec_count <= 30) // 일반 세탁 30초 경과
     1164:	40 91 88 01 	lds	r20, 0x0188	; 0x800188 <sec_count>
     1168:	50 91 89 01 	lds	r21, 0x0189	; 0x800189 <sec_count+0x1>
@@ -2789,19 +2790,19 @@ void custom_wash_start(void)
     11bc:	8b 83       	std	Y+3, r24	; 0x03
     11be:	2c c0       	rjmp	.+88     	; 0x1218 <__stack+0x119>
 		}
-		
+		///// 일반세탁 60초 끝 /////
 		else if (total_wash_time - sec_count == 60)
     11c0:	8c 33       	cpi	r24, 0x3C	; 60
     11c2:	91 05       	cpc	r25, r1
     11c4:	a1 05       	cpc	r26, r1
     11c6:	b1 05       	cpc	r27, r1
 		{
-			nextstep_pause_wash();
+			nextstep_pause_wash(); // 모드가 바뀔 때 5초동안 멈춤
     11c8:	11 f4       	brne	.+4      	; 0x11ce <__stack+0xcf>
     11ca:	45 dd       	rcall	.-1398   	; 0xc56 <nextstep_pause_wash>
     11cc:	25 c0       	rjmp	.+74     	; 0x1218 <__stack+0x119>
 		}
-		
+		///// 헹굼 시작 /////
 		else if (total_wash_time - sec_count > 60 && sec_count > 30) // 헹굼
     11ce:	cd 97       	sbiw	r24, 0x3d	; 61
     11d0:	a1 05       	cpc	r26, r1
@@ -2820,19 +2821,19 @@ void custom_wash_start(void)
     11e6:	8b 83       	std	Y+3, r24	; 0x03
     11e8:	17 c0       	rjmp	.+46     	; 0x1218 <__stack+0x119>
 		}
-		
+		///// 헹굼 끝 /////
 		else if (sec_count == 30)
     11ea:	4e 31       	cpi	r20, 0x1E	; 30
     11ec:	51 05       	cpc	r21, r1
     11ee:	61 05       	cpc	r22, r1
     11f0:	71 05       	cpc	r23, r1
 		{
-			nextstep_pause_wash();
+			nextstep_pause_wash(); // 모드가 바뀔 때 5초동안 멈춤
     11f2:	11 f4       	brne	.+4      	; 0x11f8 <__stack+0xf9>
     11f4:	30 dd       	rcall	.-1440   	; 0xc56 <nextstep_pause_wash>
     11f6:	10 c0       	rjmp	.+32     	; 0x1218 <__stack+0x119>
 		}
-		
+		///// 탈수 시작 /////
 		else if (sec_count < 30)
     11f8:	4e 31       	cpi	r20, 0x1E	; 30
     11fa:	51 05       	cpc	r21, r1
@@ -2847,7 +2848,7 @@ void custom_wash_start(void)
     1208:	8b 83       	std	Y+3, r24	; 0x03
     120a:	06 c0       	rjmp	.+12     	; 0x1218 <__stack+0x119>
 		}
-		
+		///// 탈수 끝 /////
 		else if (sec_count == 0)
     120c:	45 2b       	or	r20, r21
     120e:	46 2b       	or	r20, r22
@@ -3254,7 +3255,7 @@ void init_timer3_pwm(void)
     1496:	80 81       	ld	r24, Z
     1498:	83 60       	ori	r24, 0x03	; 3
     149a:	80 83       	st	Z, r24
-	OCR3C = 0; // 비교일치값 (Output Compare Register : PWM 값
+	OCR3C = 0; // 비교일치값 (Output Compare Register : PWM 값)
     149c:	10 92 83 00 	sts	0x0083, r1	; 0x800083 <__TEXT_REGION_LENGTH__+0x7e0083>
     14a0:	10 92 82 00 	sts	0x0082, r1	; 0x800082 <__TEXT_REGION_LENGTH__+0x7e0082>
     14a4:	08 95       	ret
