@@ -398,21 +398,6 @@ void custom_wash_start(void)
 	{
 		washing_machine_fan_control(&spin_strength_val, &forward_state);
 		
-		ultrasonic_distance_check();   //// 세탁기 문이 닫혔는지 확인하고 닫혀있으면 1을, 열려있으면 0을 반환
-		if (ultrasonic_distance / 58 > 0 && ultrasonic_distance / 58 < 10)
-		{
-			closed_check = 1;
-		}
-		else
-		{
-			closed_check = 0;
-		}
-		if (closed_check == 0) /// 문이 열리면 일시 정지
-		{
-			return_enable = 0;
-			pause_wash(&return_enable, &led_pwm_count);
-		}
-		
 		if (msec_count >= 1000) // 1초마다 시간 1초씩 감소하고 로딩 회전이 됨.
 		{
 			msec_count = 0;
@@ -483,10 +468,26 @@ void custom_wash_start(void)
 			}
 		}
 		
+		ultrasonic_distance_check();   //// 세탁기 문이 닫혔는지 확인하고 닫혀있으면 1을, 열려있으면 0을 반환
+		if (ultrasonic_distance / 58 > 0 && ultrasonic_distance / 58 < 10)
+		{
+			closed_check = 1;
+		}
+		else
+		{
+			closed_check = 0;
+		}
+		
 		///// 일시정지 구현
 		
+		if (closed_check == 0) // 뚜껑 열리면 일시정지
+		{
+			return_enable = 0;
+			pause_wash(&return_enable, &led_pwm_count);
+		}
 		if (get_button(BUTTON0, BUTTON0PIN)) // 버튼 0 누르면 일시정지
 		{
+			closed_check = 0;
 			return_enable = 0;
 			pause_wash(&return_enable, &led_pwm_count);
 		}
@@ -513,11 +514,12 @@ void pause_wash(int *return_enable, int *led_pause_count)
 			closed_check = 0;
 		}
 		
-		if (get_button(BUTTON0, BUTTON0PIN) || closed_check == 1) // 버튼 0 누르면 이어서 시작
+		if (get_button(BUTTON0, BUTTON0PIN) && closed_check == 1) // 뚜껑을 닫고 버튼 0 누르면 이어서 시작
 		{
 			*return_enable = 1;
 			custom_wash_mode = 3;
 		}
+		
 		if (get_button(BUTTON3, BUTTON3PIN)) // 버튼 3 누르면 세탁 취소
 		{
 			*return_enable = 1;

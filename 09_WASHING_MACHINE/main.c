@@ -14,6 +14,7 @@ volatile uint32_t fnd_refreshrate=0;  // fnd의 잔상 효과를 유지 하기 �
 volatile uint32_t check_timer = 0; // 5000ms에 한번씩
 volatile uint32_t loading_clock_change = 0;
 volatile uint32_t loading_refreshrate = 0;
+volatile uint32_t closed_check_timer = 0;
 
 int led_main(void);   // 선언
 
@@ -44,6 +45,7 @@ ISR(TIMER0_OVF_vect)
 	check_timer++;
 	loading_clock_change++;
 	loading_refreshrate++;
+	closed_check_timer++;
 }
 
 int main(void)

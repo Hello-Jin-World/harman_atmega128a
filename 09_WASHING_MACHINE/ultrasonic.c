@@ -6,7 +6,7 @@
  */ 
 
 #include "ultrasonic.h"
-extern volatile uint32_t check_timer;
+extern volatile uint32_t closed_check_timer;
 
 volatile int ultrasonic_distance = 0;
 char scm[50];
@@ -61,10 +61,9 @@ void ultrasonic_trigger()
 
 void ultrasonic_distance_check()
 {
-	if (check_timer >= 1000) // 1초가 되면
+	if (closed_check_timer >= 1000) // 1초가 되면
 	{
-		check_timer = 0;
-		printf("%s", scm);
+		closed_check_timer = 0;
 		ultrasonic_trigger();
 	}
 }
