@@ -42,6 +42,10 @@ ISR(USART0_RX_vect)
 		rear++;
 		rear %= COMMAND_NUMBER;   // 0 ~ 9 if (rear >= 9) rear =0;
 		// !!!! 이곳에 queue full (rx_buff) 상태를 check하는 로직이 들어 가야 한다. !!!!!
+ 		if ((rear + 1) % 10 == front)
+		{
+ 			printf("FULL!!!!!!!!!!!!!!!!!!!!!!!!!");
+ 		}
 	}
 	else
 	{
@@ -136,4 +140,8 @@ void pc_command_processing(void)
 		 (*fp[state])();
 	 }
 	// !!!! queue full check하는 logic이 들어가야 한다.
+	if ((rear + 1) % 10 == front)
+	{
+		printf("FULL!!!!!!!!!!!!!!!!!!!!!!!!!");
+	}
 }

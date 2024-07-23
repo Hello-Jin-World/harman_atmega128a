@@ -66,8 +66,8 @@ int main(void)
     while (1) 
     {
 		pc_command_processing();
-		bt_command_processing();
-		ultrasonic_distance_check();
+		//bt_command_processing();
+		//ultrasonic_distance_check();
     }
 #endif
 }
