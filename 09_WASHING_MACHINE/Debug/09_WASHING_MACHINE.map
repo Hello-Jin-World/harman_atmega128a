@@ -948,17 +948,17 @@ END GROUP
  .debug_abbrev  0x00000f4c      0x1b4 uart1.o
  .debug_abbrev  0x00001100      0x161 ultrasonic.o
 
-.debug_line     0x00000000     0x1714
+.debug_line     0x00000000     0x1712
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x16a C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega128a/avr51/crtatmega128a.o
- .debug_line    0x0000016a      0x17f button.o
- .debug_line    0x000002e9      0xa54 fnd.o
- .debug_line    0x00000d3d      0x17e led.o
- .debug_line    0x00000ebb      0x14b main.o
- .debug_line    0x00001006      0x126 pwm.o
- .debug_line    0x0000112c      0x217 uart0.o
- .debug_line    0x00001343      0x217 uart1.o
- .debug_line    0x0000155a      0x1ba ultrasonic.o
+ .debug_line    0x0000016a      0x17d button.o
+ .debug_line    0x000002e7      0xa54 fnd.o
+ .debug_line    0x00000d3b      0x17e led.o
+ .debug_line    0x00000eb9      0x14b main.o
+ .debug_line    0x00001004      0x126 pwm.o
+ .debug_line    0x0000112a      0x217 uart0.o
+ .debug_line    0x00001341      0x217 uart1.o
+ .debug_line    0x00001558      0x1ba ultrasonic.o
 
 .debug_frame    0x00000000      0x54c
  *(.debug_frame)
@@ -971,25 +971,25 @@ END GROUP
  .debug_frame   0x000003e8       0xb4 uart1.o
  .debug_frame   0x0000049c       0xb0 ultrasonic.o
 
-.debug_str      0x00000000      0x9fc
+.debug_str      0x00000000      0x9e4
  *(.debug_str)
  .debug_str     0x00000000      0x27d C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega128a/avr51/crtatmega128a.o
- .debug_str     0x0000027d      0x1da button.o
-                                0x20e (size before relaxing)
- .debug_str     0x00000457      0x3a8 fnd.o
-                                0x549 (size before relaxing)
- .debug_str     0x000007ff       0x2f led.o
-                                0x1f1 (size before relaxing)
- .debug_str     0x0000082e       0xa8 main.o
-                                0x283 (size before relaxing)
- .debug_str     0x000008d6       0x25 pwm.o
-                                0x1eb (size before relaxing)
- .debug_str     0x000008fb       0x75 uart0.o
-                                0x208 (size before relaxing)
- .debug_str     0x00000970       0x54 uart1.o
-                                0x20b (size before relaxing)
- .debug_str     0x000009c4       0x38 ultrasonic.o
-                                0x24e (size before relaxing)
+ .debug_str     0x0000027d      0x1c2 button.o
+                                0x1f6 (size before relaxing)
+ .debug_str     0x0000043f      0x3a8 fnd.o
+                                0x531 (size before relaxing)
+ .debug_str     0x000007e7       0x2f led.o
+                                0x1d9 (size before relaxing)
+ .debug_str     0x00000816       0xa8 main.o
+                                0x26b (size before relaxing)
+ .debug_str     0x000008be       0x25 pwm.o
+                                0x1d3 (size before relaxing)
+ .debug_str     0x000008e3       0x75 uart0.o
+                                0x1f0 (size before relaxing)
+ .debug_str     0x00000958       0x54 uart1.o
+                                0x1f3 (size before relaxing)
+ .debug_str     0x000009ac       0x38 ultrasonic.o
+                                0x236 (size before relaxing)
 
 .debug_loc      0x00000000      0xead
  *(.debug_loc)

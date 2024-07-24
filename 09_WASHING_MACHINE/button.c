@@ -3,12 +3,6 @@
 void init_button(void);
 int get_button(int button_num, int button_pin);
 
-// 버튼 초기화 (방향 설정 : 입력)
-// 76543210   : PORTD
-// 11110000 현재 버튼
-// 00001111
-// DDRD &= 0x0f; // 4, 5, 6, 7을 input. PORTD.4 가독성이 떨어진다.
-
 void init_button(void)
 {
 	BUTTON_DDR &= ~(1 << BUTTON0PIN | 1 << BUTTON1PIN | 1 << BUTTON2PIN | 1 << BUTTON3PIN);

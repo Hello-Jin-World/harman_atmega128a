@@ -25,9 +25,12 @@ extern int command_type; // idle, pc, bt, btn command를 구별하기 위한 변
 extern int state;
 extern void (*fp[])();
 
+int toggle_full = 0;
+
 // PC로 부터 1 byte가 들어올때 마다 이곳으로 들어온다 (RX INT)
 // 예) led_all_on\n --> 이곳 11번이 들어온다 
 //     led_all_off\n
+
 ISR(USART0_RX_vect)
 {
 	volatile static int i=0;
@@ -44,7 +47,7 @@ ISR(USART0_RX_vect)
 		// !!!! 이곳에 queue full (rx_buff) 상태를 check하는 로직이 들어 가야 한다. !!!!!
  		if ((rear + 1) % 10 == front)
 		{
- 			printf("FULL!!!!!!!!!!!!!!!!!!!!!!!!!");
+			toggle_full = 1;
  		}
 	}
 	else
@@ -140,8 +143,16 @@ void pc_command_processing(void)
 		 (*fp[state])();
 	 }
 	// !!!! queue full check하는 logic이 들어가야 한다.
+// 	if ((rear + 1) % 10 == front)
+// 	{
+// 		printf("FULL!!!!!!!!!!!!!!!!!!!!!!!!!");
+// 	}
 	if ((rear + 1) % 10 == front)
 	{
-		printf("FULL!!!!!!!!!!!!!!!!!!!!!!!!!");
+		toggle_full = 1;
+	}
+	if (toggle_full)
+	{
+		PORTA = 0b00110011;
 	}
 }

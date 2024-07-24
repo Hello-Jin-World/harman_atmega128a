@@ -103,8 +103,6 @@ Discarded input sections
  .bss           0x00000000        0x0 led.o
  .text.led_main
                 0x00000000        0x6 led.o
- .text.led_ultrasonic
-                0x00000000       0x1e led.o
  .text.shift_left_keep_ledon
                 0x00000000       0x3c led.o
  .text.shift_right_keep_ledon
@@ -121,16 +119,16 @@ Discarded input sections
                 0x00000000       0x50 led.o
  .text.floweroff
                 0x00000000       0x50 led.o
- .debug_info    0x00000000      0x381 led.o
- .debug_abbrev  0x00000000      0x12b led.o
+ .debug_info    0x00000000      0x36c led.o
+ .debug_abbrev  0x00000000      0x115 led.o
  .debug_loc     0x00000000      0x288 led.o
  .debug_aranges
-                0x00000000       0x68 led.o
- .debug_ranges  0x00000000       0x58 led.o
- .debug_line    0x00000000      0x32d led.o
- .debug_str     0x00000000      0x240 led.o
+                0x00000000       0x60 led.o
+ .debug_ranges  0x00000000       0x50 led.o
+ .debug_line    0x00000000      0x316 led.o
+ .debug_str     0x00000000      0x231 led.o
  .comment       0x00000000       0x31 led.o
- .debug_frame   0x00000000       0xb4 led.o
+ .debug_frame   0x00000000       0xa4 led.o
  COMMON         0x00000000        0x2 led.o
  .text          0x00000000        0x0 main.o
  .data          0x00000000        0x0 main.o
