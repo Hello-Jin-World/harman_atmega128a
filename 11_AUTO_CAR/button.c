@@ -1,7 +1,15 @@
 ﻿#include "button.h"
+#include "def.h"
+#include "led.h"
 
 void init_button(void);
+void auto_mode_check(void);
 int get_button(int button_num, int button_pin);
+
+extern int func_state; // pfunction을 찾아가는 인덱스
+extern void stop();
+
+int button0_state = 0;
 
 // 버튼 초기화 (방향 설정 : 입력)
 // 76543210   : PORTD
@@ -43,4 +51,23 @@ int get_button(int button_num, int button_pin)
 	}
 	
 	return 0; // 버튼이 open 상태
+}
+
+void auto_mode_check(void)
+{
+	if (get_button(BUTTON0, BUTTON0PIN))
+	{
+		button0_state = !button0_state;
+	}
+	
+	if (button0_state)
+	{
+		AUTO_RUN_LED_PORT |= 1 << AUTO_RUN_LED_PIN; // LED ON
+	}
+	else
+	{
+		AUTO_RUN_LED_PORT &= ~(1 << AUTO_RUN_LED_PIN); // LED OFF
+		stop();
+	}
+	func_state = AUTO_MODE;
 }

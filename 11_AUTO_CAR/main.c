@@ -3,27 +3,50 @@
 #include <util/delay.h>  // _delay_ms _delay_us
 #include <avr/interrupt.h>   // for sei등
 #include <stdio.h>   // printf scanf fgets등이 정의 되어 있다.
-
 #include "def.h"
 
-volatile uint32_t msec_count=0;
-volatile uint32_t fnd_dis=0;
+volatile uint32_t msec_count = 0;
+volatile uint32_t fnd_dis = 0;
 volatile uint32_t ultrasonic_check_timer = 0;
+
+extern volatile uint8_t bt_data;
+extern int button0_state;
 
 extern void init_led(); // led 초기화
 extern void init_button(); // 버튼 초기화
 extern void init_timer1_pwm();
 extern void init_n289n();
 extern void pc_command_processing();
-
+extern void washing_machine_fan_control();
 extern void UART0_transmit();
+extern void distance_check();
+extern void forward();
+extern void backward();
+extern void turn_left();
+extern void turn_right();
+extern void stop();
+extern void auto_mode_check();
+
+void manual_mode();
+void auto_mode_check();
+void auto_mode();
+
+int func_state = 0; // pfunction을 찾아가는 인덱스값
+
+void (*pfunc[])() =
+{
+	manual_mode, // bt_command run
+	distance_check, // 초음파 거리 측정
+	auto_mode_check, // button0 체크
+	auto_mode // 자율 주행
+};
 
 // for printf
 FILE OUTPUT = FDEV_SETUP_STREAM(UART0_transmit, NULL, _FDEV_SETUP_WRITE);
 
 ISR(TIMER0_OVF_vect)
 {
-	TCNT0=6;  // 6~256 : 250(1ms) 그래서 TCNT0를 6으로 설정
+	TCNT0 = 6;  // 6~256 : 250(1ms) 그래서 TCNT0를 6으로 설정
 	msec_count++;  // 1ms마다 ms_count가 1씩 증가
 	fnd_dis++;   // fnd 잔상효과 유지 하기 위한 timer 2ms
 	ultrasonic_check_timer++;
@@ -47,8 +70,11 @@ int main(void)
 
 	while (1)
 	{
-		pc_command_processing();
-		ultrasonic_distance_check();
+// 		pc_command_processing();
+// 		ultrasonic_distance_check();
+//		washing_machine_fan_control();
+		
+		pfunc[func_state] ();
 	}
 }
 
@@ -68,4 +94,48 @@ void init_timer0()
 	// 5. TIMER0 OVERFLOW를 허용(enable)
 	TIMSK |= 1 << TOIE0;  // TIMSK |= 0x01;
 	//sei();    // 전역적(대문)으로 interrupt 허용
+}
+
+void manual_mode(void)
+{
+	switch (bt_data)
+	{
+		case 'F':
+		case 'f':
+			forward(500);
+			break;
+			
+		case 'B':
+		case 'b':
+			backward(500);
+			break;
+			
+		case 'L':
+		case 'l':
+			turn_left(700);
+			break;
+			
+		case 'R':
+		case 'r':
+			turn_right(700);
+			break;
+			
+		case 'S':
+		case 's':
+			stop();
+			break;
+			
+		default:
+			break;
+	}
+	func_state = DISTANCE_CHECK;
+}
+
+void auto_mode(void)
+{
+	if (button0_state)
+	{
+		/// 자율주행 코드
+	}
+	func_state = MANUAL_MODE;
 }

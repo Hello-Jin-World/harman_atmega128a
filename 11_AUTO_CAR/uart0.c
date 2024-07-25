@@ -85,57 +85,6 @@ void pc_command_processing(void)
 {
 	if (front != rear) // data가 rx_buff에 존재한다. front와 rear 비교
 	{
-		printf("%s\n", rx_buff[front]); // rx_buff[front] ==> &rx_buff[front][0]
-		
-		
-		if (strncmp(rx_buff[front], "led_all_on", strlen("led_all_on")) == 0)
- 		{
- 			command_type = PC_COMMAND;
-			state = LED_ALL_ON;
- 		}
-		
-		MOTER_DRIVER_DIRECTION_PORT |= 1 << 0 | 1 << 2; // 자동차를 전진모드로 
-		
-// 		if (strncmp(rx_buff[front], "led_all_on", strlen("led_all_on")) == 0)
-// 		{
-// 			command_type = PC_COMMAND;
-// 			state = LED_ALL_ON;
-// 		}
-// 		else if (strncmp(rx_buff[front], "led_all_off", strlen("led_all_off")) == 0)
-// 		{
-// 			command_type = PC_COMMAND;
-// 			state = LED_ALL_OFF;
-// 		}
-// 		else if (strncmp(rx_buff[front], "shift_left_ledon", strlen("floweron")) == 0)
-// 		{
-// 			command_type = PC_COMMAND;
-// 			state = SHIFT_LEFT_LEDON;
-// 		}
-// 		else if (strncmp(rx_buff[front], "shift_right_ledon", strlen("floweroff")) == 0)
-// 		{
-// 			command_type = PC_COMMAND;
-// 			state = SHIFT_RIGHT_LEDON;
-// 		}
-// 		else if (strncmp(rx_buff[front], "shift_left_keep_ledon", strlen("shift_left_ledon")) == 0)
-// 		{
-// 			command_type = PC_COMMAND;
-// 			state = SHIFT_LEFT_KEEP_LEDON;
-// 		}
-// 		else if (strncmp(rx_buff[front], "shift_right_keep_ledon", strlen("shift_right_ledon")) == 0)
-// 		{
-// 			command_type = PC_COMMAND;
-// 			state = SHIFT_RIGHT_KEEP_LEDON;
-// 		}
-// 		else if (strncmp(rx_buff[front], "floweron", strlen("shift_left_keep_ledon")) == 0)
-// 		{
-// 			command_type = PC_COMMAND;
-// 			state = FLOWERON;
-// 		}
-// 		else if (strncmp(rx_buff[front], "floweroff", strlen("shift_right_keep_ledon")) == 0)
-// 		{
-// 			command_type = PC_COMMAND;
-// 			state = FLOWEROFF;
-// 		}
 		front++;
 		front %= COMMAND_NUMBER;
 	}

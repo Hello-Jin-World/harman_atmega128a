@@ -6,10 +6,14 @@
  */ 
 
 #include "ultrasonic.h"
+#include "def.h"
+
 extern volatile uint32_t ultrasonic_check_timer;
 extern volatile uint32_t msec_count;
+extern int func_state; // pfunction을 찾아가는 인덱스
 
-char scm[50];
+void distance_check();
+void init_ultrasonic();
 
 // PE4 : 외부 INT4 초음파 센서 상승, 하강 edge 둘 다 이곳으로 들어온다.
 //결국은 상승edge에서 1번, 하강edge에서 1번씩 이곳으로 들어온다.
@@ -125,16 +129,13 @@ void init_ultrasonic()
 
 void ultrasonic_trigger()
 {
-	if (msec_count >= 50)
-	{
-		msec_count = 0;
 		////////// left //////////
 		TRIG_PORT_LEFT &= ~(1 << TRIG_LEFT); // 해당되는 포트만 LOW로 만듦
 		_delay_us(1);
 		TRIG_PORT_LEFT |= 1 << TRIG_LEFT; // HIGH
 		_delay_us(15); // 규격에는 10us인데 reduance
 		TRIG_PORT_LEFT &= ~(1 << TRIG_LEFT); // LOW
-		//_delay_ms(50); // delay 기다리는 시간을 timer0 변수로 체크할 수 있도록 개선
+		_delay_ms(50); // delay 기다리는 시간을 timer0 변수로 체크할 수 있도록 개선
 		// 초음파센서 echo 응답 대기시간이 최대 38ms
 		
 		////////// center //////////
@@ -143,6 +144,7 @@ void ultrasonic_trigger()
 		TRIG_PORT_CENTER |= 1 << TRIG_CENTER; // HIGH
 		_delay_us(15); // 규격에는 10us인데 reduance
 		TRIG_PORT_CENTER &= ~(1 << TRIG_CENTER); // LOW
+		_delay_ms(50); // delay 기다리는 시간을 timer0 변수로 체크할 수 있도록 개선
 		
 		////////// right //////////
 		TRIG_PORT_RIGHT &= ~(1 << TRIG_RIGHT); // 해당되는 포트만 LOW로 만듦
@@ -150,10 +152,10 @@ void ultrasonic_trigger()
 		TRIG_PORT_RIGHT |= 1 << TRIG_RIGHT; // HIGH
 		_delay_us(15); // 규격에는 10us인데 reduance
 		TRIG_PORT_RIGHT &= ~(1 << TRIG_RIGHT); // LOW
-	}
+		_delay_ms(50); // delay 기다리는 시간을 timer0 변수로 체크할 수 있도록 개선
 }
 
-void ultrasonic_distance_check()
+void distance_check(void)
 {
 	if (ultrasonic_check_timer >= 500)
 	{
@@ -163,4 +165,5 @@ void ultrasonic_distance_check()
 		printf("right  :  %5d\n", ultrasonic_right_distance);
 	}
 	ultrasonic_trigger(); // 이것도 수정해야한다.
+	func_state = AUTO_MODE_CHECK;
 }

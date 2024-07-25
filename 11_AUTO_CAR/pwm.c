@@ -9,8 +9,17 @@
 extern int get_button(int button_num, int button_pin);
 extern void init_button();
 
+volatile uint32_t msec_count;
+
 void init_timer1_pwm(void);
 void init_n289n(void);
+void washing_machine_fan_control(void);
+
+void forward(int speed);
+void backward(int speed);
+void turn_left(int speed);
+void turn_right(int speed);
+void stop(void);
 
 /*
 	16bit 1번 timer/counter를 사용
@@ -41,27 +50,75 @@ void init_n289n(void);
 
 void init_n289n(void)
 {
-	MOTER_PWM_DDR |= 1 << MOTER_LEFT_PORT_DDR | 1 << MOTER_RIGHT_PORT_DDR; // DDR설정
-	MOTER_DRIVER_DIRECTION_PORT_DDR |= 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3; // PF1234 출력으로 설정
+	MOTOR_PWM_DDR |= 1 << MOTOR_LEFT_PORT_DDR | 1 << MOTOR_RIGHT_PORT_DDR; // DDR설정
+	MOTOR_DRIVER_DIRECTION_PORT_DDR |= 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3; // PF1234 출력으로 설정
 	
-	MOTER_DRIVER_DIRECTION_PORT &= ~(1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
-	MOTER_DRIVER_DIRECTION_PORT |= 1 << 0 | 1 << 2; // 자동차를 전진모드로 
+	MOTOR_DRIVER_DIRECTION_PORT &= ~(1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
+	MOTOR_DRIVER_DIRECTION_PORT |= 1 << 0 | 1 << 2; // 자동차를 전진모드로 
 }
 
 void init_timer1_pwm(void)
 {
-	// 모드 14 : 고속 pwm 
-	TCCR1A |= 1 << WGM11; // TOP --> ICR1에 설정
-	TCCR1B |= 1 << WGM12 | 1 << WGM13;
-	// 비반전모드 top : ICR1  비교일치값(pwm)지정 : OCR1A, OCR1B
-	// TCCR1A레지스터의 COM1A1을 1로 set
+	// 분주비 : 64 16000000HZ/64 ==> 250000HZ(250kHZ)
+	// T=1/f 1/250000HZ ==> 0.000004sec (4us)
+	// 250000HZ에서 256개의 펄스를 count하면 소요시간 : 1.02ms
+	//              127                             : 0.5ms
+	//              0x3ff(1023) --> 4ms
+	TCCR1B |= 1 << CS11 | 1 << CS10;   // 분주비 64  P318 표14-1
+	
+	// 모드 14: 고속 PWM timer1사용  (P327 표14-5)
+	TCCR1A |= 1 << WGM11;   // TOP --> ICR1에 설정
+	TCCR1B |= 1 << WGM13 | 1 << WGM12;
+	
+	// 비반전모드 top: ICR1 비교일치값(PWM) 지정 : OCR1A, OCR1B P350 표15-7
 	// 비교일치 발생시 OCR1A, OCR1B의 출력 핀은 LOW로 바뀌고 BOTTOM에서 HIGH로 바뀐다.
 	TCCR1A |= 1 << COM1A1;
-	TCCR1B |= 1 << COM1B1;
-	// 분주비 : 64   16,000,000hz -> 250,000hz        
-	// 주기 : 1 / 250,000 -> 4us
+	TCCR1A |= 1 << COM1B1;
+
+	ICR1 = 0x3ff;  // 1023 ==> 4ms TOP : PWM 값
+}
+
+void forward(int speed)
+{
+	MOTOR_DRIVER_DIRECTION_PORT &= ~(1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
+	MOTOR_DRIVER_DIRECTION_PORT |= 1 << 2 | 1 << 0;  // 전진 모드로 설정
 	
-	TCCR1B |= 1 << CS10 | 1 << CS11; // 분주비 64로 세팅
+	OCR1A = speed;  // PB5 PWM 출력 port left
+	OCR1B = speed;  // PB6 PWM 출력 port right
+}
+
+void backward(int speed)
+{
+	MOTOR_DRIVER_DIRECTION_PORT &= ~(1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
+	MOTOR_DRIVER_DIRECTION_PORT |= 1 << 3 | 1 << 1;  // 1010 후진 모드
 	
-	ICR1 = 0x3ff; // 약 4ms  TOP : PWM값
+	OCR1A = speed;  // PB5 PWM 출력 port left
+	OCR1B = speed;  // PB6 PWM 출력 port right
+}
+
+void turn_left(int speed)
+{
+	MOTOR_DRIVER_DIRECTION_PORT &= ~(1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
+	MOTOR_DRIVER_DIRECTION_PORT |= 1 << 2 | 1 << 0;  // 전진 모드로 설정
+	
+	OCR1A = speed;  // PB5 PWM 출력 port left
+	OCR1B = 0;  // PB6 PWM 출력 port right
+}
+
+void turn_right(int speed)
+{
+	MOTOR_DRIVER_DIRECTION_PORT &= ~(1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
+	MOTOR_DRIVER_DIRECTION_PORT |= 1 << 2 | 1 << 0;  // 전진 모드로 설정
+	
+	OCR1A = 0;  // PB5 PWM 출력 port left
+	OCR1B = speed;  // PB6 PWM 출력 port right
+}
+
+void stop(void)
+{
+	MOTOR_DRIVER_DIRECTION_PORT &= ~(1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
+	MOTOR_DRIVER_DIRECTION_PORT |= 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3;  // stop 모드로 설정
+	
+	OCR1A = 0;  // PB5 PWM 출력 port left
+	OCR1B = 0;  // PB6 PWM 출력 port right
 }

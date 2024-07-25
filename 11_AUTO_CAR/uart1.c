@@ -26,29 +26,31 @@ extern int command_type; // idle, pc, bt, btn command를 구별하기 위한 변
 extern int state;
 extern void (*fp[])();
 
-// BT로 부터 1 byte가 들어올때 마다 이곳으로 들어온다 (RX INT)
-// 예) led_all_on\n --> 이곳 11번이 들어온다 
-//     led_all_off\n
+volatile static int i = 0;
+volatile uint8_t bt_data;
+
+extern void UART0_transmit();
+
 ISR(USART1_RX_vect)
 {
-	volatile static int i=0;
-	volatile uint8_t data;
 	
-	data = UDR1;  // uart0의 H/W register(UDR1)로 부터 1 byte를 읽어 간다. 
+	bt_data = UDR1;  // uart0의 H/W register(UDR1)로 부터 1 byte를 읽어 간다. 
 	              // data = UDR1를 실행 하면 UDR1의 내용이 빈다(empty)
-	if (data == '\r' || data == '\n')
-	{
-		rx1_buff[rear1][i] = '\0';   // \n --> \0(문장의 끝을 알리는 indicator)
-		i=0;   // 다음 string을 저장 하기 위해 index값을 0으로 만든다. 
-		rear1++;
-		rear1 %= COMMAND_NUMBER;   // 0 ~ 9 if (rear1 >= 9) rear1 =0;
-		// !!!! 이곳에 queue full (rx1_buff) 상태를 check하는 로직이 들어 가야 한다. !!!!!
-	}
-	else
-	{
-		// !!!!! COMMAND_LENGTH를 check 하는 로직 추가 !!!!
-		rx1_buff[rear1][i++] = data;
-	}
+	UART0_transmit(bt_data); // BT로 들어온 char를 확인하기 위해 comport master로 출력
+	
+// 	if (data == '\r' || data == '\n')
+// 	{
+// 		rx1_buff[rear1][i] = '\0';   // \n --> \0(문장의 끝을 알리는 indicator)
+// 		i=0;   // 다음 string을 저장 하기 위해 index값을 0으로 만든다. 
+// 		rear1++;
+// 		rear1 %= COMMAND_NUMBER;   // 0 ~ 9 if (rear1 >= 9) rear1 =0;
+// 		// !!!! 이곳에 queue full (rx1_buff) 상태를 check하는 로직이 들어 가야 한다. !!!!!
+// 	}
+// 	else
+// 	{
+// 		// !!!!! COMMAND_LENGTH를 check 하는 로직 추가 !!!!
+// 		rx1_buff[rear1][i++] = data;
+// 	}
 		  
 }
 
@@ -75,12 +77,12 @@ void init_uart1(void)
 }
 
 // UART1로 1byte를 전송 하는 함수
-void UART1_transmit(uint8_t data)
+void UART1_transmit(uint8_t bt_data)
 {
 	while( !(UCSR1A & 1 << UDRE1) )   // 데이터가 전송 중이면 전송이 끝날떄 까지 기다린다. 
 		;   // no operation NOP
 	
-	UDR1 = data;   // HW전송 register(UDR1)에 data를 쏴준다.  
+	UDR1 = bt_data;   // HW전송 register(UDR1)에 data를 쏴준다.  
 }
 
 
