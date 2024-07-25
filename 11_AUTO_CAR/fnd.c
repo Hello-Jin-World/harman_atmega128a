@@ -1,7 +1,8 @@
 ﻿#include "fnd.h"
 #include "button.h"
+#include "def.h"
 void init_fnd(void);
-void fnd_display(void);
+void fnd_display();
 int fnd_main(void);
 extern void init_button(void);
 extern int get_button(int button_num, int button_pin);
@@ -128,62 +129,40 @@ void init_fnd(void)
 
 
 
-void fnd_display(void)
+void fnd_display(int *run_state)
 {
-#if 0 // common anode
-						 // 0     1     2     3     4     5     6     7     8     9     .
-	uint8_t fnd_font[] = {0xc0, 0xf9, 0xa4, 0xb0, 0x99, 0x92, 0x82, 0xd8, 0x80, 0x90, 0x7f};
-#else // common cathod
 						  // 0      1      2      3      4      5      6      7      8      9      .
-	uint8_t fnd_font[] = {~0xc0, ~0xf9, ~0xa4, ~0xb0, ~0x99, ~0x92, ~0x82, ~0xd8, ~0x80, ~0x90, ~0x7f};
-#endif
+	uint8_t fnd_font[] = {~0xc0, ~0xf9, ~0xa4, ~0xb0, ~0x99, ~0x92, ~0x82, ~0xd8, ~0x80, ~0x90, ~0x7f
+		, ~0x82, ~0xc7, ~0xe0, ~0x83
+		};
 
 	static int digit_select = 0; // 자리수 선택 변수 0~3   static : 전역변수처럼 작동
 
 	switch(digit_select)
 	{
 		case 0 :
-#if 0 // common anode
-			FND_DIGIT_PORT = 0x80;
-#else // common cathod
+
 			FND_DIGIT_PORT = ~0x80;
-#endif
 			FND_DATA_PORT = fnd_font[sec_count % 10];   // 0~9초
 		break;
 
 		case 1 :
-#if 0 // common anode
-		FND_DIGIT_PORT = 0x40;
-#else // common cathod
 		FND_DIGIT_PORT = ~0x40;
-#endif
 		FND_DATA_PORT = fnd_font[sec_count / 10 % 6]; // 10단위 초
 		break;
 
 		case 2 :
-#if 0 // common anode
-		FND_DIGIT_PORT = 0x20;
-		if (sec_count % 2 == 1)
-			FND_DATA_PORT = fnd_font[sec_count / 60 % 10] & fnd_font[10]; // 1단위 분
-		else
-			FND_DATA_PORT = fnd_font[sec_count / 60 % 10]; // 1단위 분
-		break;
-#else // common cathod
 		FND_DIGIT_PORT = ~0x20;
 		if (sec_count % 2 == 1)
 			FND_DATA_PORT = fnd_font[sec_count / 60 % 10] | fnd_font[10]; // 1단위 분
 		else
 			FND_DATA_PORT = fnd_font[sec_count / 60 % 10]; // 1단위 분
 		break;
-#endif
 
 		case 3 :
-#if 0 // common anode
-		FND_DIGIT_PORT = 0x10;
-#else // common cathod
 		FND_DIGIT_PORT = ~0x10;
-#endif
-		FND_DATA_PORT = fnd_font[sec_count / 600 % 6]; // 10단위 분
+		
+		FND_DATA_PORT = fnd_font[*run_state+10]; // 10단위 분
 		break;
 	}
 	digit_select++;

@@ -14,6 +14,9 @@
 #define AUTO_MODE_CHECK 2 // BUTTON0 체크
 #define AUTO_MODE 3 // 자율 주행
 
-
+#define FORWARD 0
+#define BACKWARD 1
+#define TURN_LEFT 2
+#define TURN_RIGHT 3
 
 #endif /* DEFINE_H_ */

@@ -1,6 +1,7 @@
 ﻿#include "button.h"
 #include "pwm.h"
 #include "fnd.h"
+#include "def.h"
 #include <avr/interrupt.h>
 #define F_CPU 16000000UL
 #include <util/delay.h>
@@ -137,11 +138,59 @@ void stop(void)
 ///////////////////////////////////////         자동모드            //////////////////////////////////
 void auto_start(void)
 {
+	sec_count = 4;
+	while (sec_count > 0)
+	{
+		if (msec_count >= 1000)
+		{
+			msec_count = 0;
+			sec_count--;
+		} // 1초씩 감소
+		if (fnd_refreshrate >= 2)
+		{
+			fnd_refreshrate = 0;
+			fnd_display();
+		}
+	}
+
+	int run_state;	
 	sec_count = 120;
-	
 	while(sec_count > 0)
 	{
 		ultrasonic_trigger();
+		volatile int gap1 = ultrasonic_right_distance - ultrasonic_left_distance;
+		volatile int gap2 = ultrasonic_left_distance - ultrasonic_right_distance;
+
+
+////////////new//////////////////////////
+		if (msec_count >= 1000)
+		{
+			msec_count = 0;
+			sec_count--;
+		} // 1초씩 감소
+		
+		if (ultrasonic_center_distance >= 10)
+		{
+			if (ultrasonic_left_distance >= 7 && ultrasonic_right_distance >= 7)
+			{
+				run_state = FORWARD;
+				forward(400);
+			}
+		}
+		else
+		{
+			set_car_location(&run_state);
+		}
+		
+		if (fnd_refreshrate >= 2)
+		{
+			fnd_refreshrate = 0;
+			fnd_display(&run_state);
+		} // fnd 표시
+	}
+#if 0
+////////////////////////////////////////
+
 		if (msec_count >= 1000)
 		{
 			msec_count = 0;
@@ -153,27 +202,111 @@ void auto_start(void)
 			fnd_refreshrate = 0;
 			fnd_display();
 		} // fnd 표시
-		
-
-		if (ultrasonic_right_distance <= 20)
+	
+		if (ultrasonic_center_distance <= 25)
 		{
-			turn_left(600);
+			
+			if (gap1 > 3)
+			{
+				if (ultrasonic_left_distance <= 3)
+				{
+					backward(500);
+				}
+				else
+				{
+					turn_right(400);
+				}
+			}
+			else if (gap2 > 3)
+			{
+				if (ultrasonic_right_distance <= 3)
+				{
+					backward(500);
+				}
+				else
+				{
+					turn_left(400);
+				}
+			}
+			else if (ultrasonic_left_distance <= 3  || ultrasonic_right_distance <= 3)
+			{
+				backward(600);
+			}
+			else
+			{
+				forward(400);
+			}
 		}
-		else if (ultrasonic_left_distance <= 20)
-		{
-			turn_right(600);
-		}
+// 		else if (ultrasonic_center_distance <= 15 && ultrasonic_left_distance <= 10)
+// 		{
+// 			turn_right(450);
+// 		}
+// 		else if (ultrasonic_center_distance <= 15 && ultrasonic_right_distance <= 10)
+// 		{
+// 			turn_left(450);
+// 		}
 		else
 		{
-			forward(300);
+			forward(400);
+		}
+	}
+#endif
+}
+
+void set_car_location(int *run_state)
+{
+	int set_comp = 1;
+	while (set_comp)
+	{
+		if (msec_count >= 1000)
+		{
+			msec_count = 0;
+			sec_count--;
+		} // 1초씩 감소
+		
+		ultrasonic_trigger();
+		volatile int l_gap = ultrasonic_right_distance - ultrasonic_left_distance; // 왼쪽에 가까울 때
+		volatile int r_gap = ultrasonic_left_distance - ultrasonic_right_distance; // 오른쪽에 가까울 때
+		
+		if (r_gap >= 4)
+		{
+			run_state = TURN_LEFT;
+			turn_left(400);
 		}
 		
+		else if(l_gap >= 4)
+		{
+			run_state = TURN_RIGHT;
+			turn_right(400);
+		}
 		
-// 		if (ultrasonic_center_distance <= 20)
-// 		{
-// 			backward(300);
-// 		}
+		else if (l_gap < 3 && r_gap < 3)
+		{
+			set_comp = 0;
+		}
 		
+		else if (ultrasonic_left_distance < 7)
+		{
+			run_state = TURN_RIGHT;
+			backward(400);
+		}
 		
+		else if (ultrasonic_right_distance < 7)
+		{
+			run_state = TURN_LEFT;
+			backward(400);
+		}
+		
+		else
+		{
+			run_state = BACKWARD;
+			backward(400);
+		}
+		
+		if (fnd_refreshrate >= 2)
+		{
+			fnd_refreshrate = 0;
+			fnd_display(&run_state);
+		}
 	}
 }
