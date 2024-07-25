@@ -154,49 +154,64 @@ void auto_start(void)
 		if (fnd_refreshrate >= 2)
 		{
 			fnd_refreshrate = 0;
-			fnd_display();
+			fnd_display(&run_state);
 		} // fnd 표시
 
 		volatile int gap1= ultrasonic_right_distance - ultrasonic_left_distance;
 		volatile int gap2= ultrasonic_left_distance - ultrasonic_right_distance;
 
-		if(gap1<2 && gap2 <2 && ultrasonic_right_distance && ultrasonic_center_distance >= 10)
+		if(gap1<2 && gap2 <2 && ultrasonic_center_distance >= 10)
 		{
-			//run_state = FORWARD;
-			forward(400);
+			run_state = FORWARD;
+			forward(350);
 		}
-		if(ultrasonic_center_distance <= 10)
-		{
-			//run_state = FORWARD;
-			backward(400);
-		}
-		else if(gap1 <= 4 && ultrasonic_center_distance >= 7)
-		{
-
-			turn_left(400);
-		}
-		else if(gap2 <= 4 && ultrasonic_center_distance >= 7)
-		{
-
-			turn_right(400);
-		}
+		
 		else if (gap2 <= 4 && gap1 <= 4)
 		{
-
-			forward (500);
-			backward(300);
+			run_state = FORWARD;
+			forward(350);
+		}
+		else if (ultrasonic_right_distance <= 3)
+		{
+			run_state = BACKWARD;
+			backward(400);
+		}
+		else if (ultrasonic_left_distance <= 3)
+		{
+			run_state = BACKWARD;
+			backward(400);
+		}
+		else if(ultrasonic_center_distance <= 3)
+		{
+			run_state = BACKWARD;
+			backward(400);
+		}
+		
+		else if(gap1 <= 4 && ultrasonic_center_distance <= 7 && ultrasonic_right_distance > 3)
+		{
+			run_state = TURN_LEFT;
+			turn_left(400);
+		}
+		else if(gap2 <= 4 && ultrasonic_center_distance <= 7 && ultrasonic_left_distance > 3)
+		{
+			run_state = TURN_RIGHT;
+			turn_right(400);
 		}
 		else if (ultrasonic_right_distance <= 15 )
 		{
+			run_state = TURN_LEFT;
 			turn_left(400);
 		}
 		else if (ultrasonic_left_distance <= 15 )
 		{
+			run_state = TURN_RIGHT;
 			turn_right(400);
+
 		}
 		else
 		{
-			forward(400);
+			run_state = FORWARD;
+			forward(350);
 		}
 	}
 }

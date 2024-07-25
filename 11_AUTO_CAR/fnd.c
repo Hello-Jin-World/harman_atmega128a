@@ -19,6 +19,9 @@ extern volatile uint32_t msec_count;
 
 int temp1 = 0;
 
+
+
+
 void (*fp_clock[])() =
 {
 	display_clock, // 0 시계 모드
@@ -162,7 +165,7 @@ void fnd_display(int *run_state)
 		case 3 :
 		FND_DIGIT_PORT = ~0x10;
 		
-		FND_DATA_PORT = fnd_font[*run_state+10]; // 10단위 분
+		FND_DATA_PORT = fnd_font[*run_state+11]; // 10단위 분
 		break;
 	}
 	digit_select++;

@@ -15,6 +15,9 @@ extern int func_state; // pfunction을 찾아가는 인덱스
 void distance_check();
 void init_ultrasonic();
 
+extern void fnd_display();
+extern volatile uint32_t fnd_refreshrate;
+
 volatile int ultrasonic_left_distance = 0;
 volatile int ultrasonic_center_distance = 0;
 volatile int ultrasonic_right_distance = 0;
@@ -86,77 +89,85 @@ ISR(INT6_vect) // RIGHT
 
 void init_ultrasonic()
 {
-   //////////////// left ////////////////
-   TRIG_DDR_LEFT |= 1 << TRIG_LEFT; // output mode로 설정
-   ECHO_DDR_LEFT &= ~(1 << ECHO_LEFT); // input mode로 설정
+
+		   //////////////// left ////////////////
+		   TRIG_DDR_LEFT |= 1 << TRIG_LEFT; // output mode로 설정
+		   ECHO_DDR_LEFT &= ~(1 << ECHO_LEFT); // input mode로 설정
    
-   // 0 1 : 상승, 하강 edge에 둘 다 INT를 띄우도록 설정
-   // INT0~3은 EICRA, INT4~7은 EICRB 레지스터
-   EICRB |= 0 << ISC41 | 1 << ISC40; // INT4니까 EICRB에서 ISC41, 40
+		   // 0 1 : 상승, 하강 edge에 둘 다 INT를 띄우도록 설정
+		   // INT0~3은 EICRA, INT4~7은 EICRB 레지스터
+		   EICRB |= 0 << ISC41 | 1 << ISC40; // INT4니까 EICRB에서 ISC41, 40
    
-   // 16bit timer1을 설정해서 사용 16비트는 0~65535(0xffff)가 최대
-   // 16Mhz를 1024로 분주 16000000/1024 --> 15625hz --> 15.625khz
-   // 1주기 (1개의 펄스 소요시간) 1/15625 = 0.000064sec = 64us   
-   TCCR3B |=  1 << CS32 | 1 << CS30; // 1024로 분주
-   EIMSK |= 1 << INT4; // 외부 인터럽트4번 (ECHO) 사용
+		   // 16bit timer1을 설정해서 사용 16비트는 0~65535(0xffff)가 최대
+		   // 16Mhz를 1024로 분주 16000000/1024 --> 15625hz --> 15.625khz
+		   // 1주기 (1개의 펄스 소요시간) 1/15625 = 0.000064sec = 64us   
+		   TCCR3B |=  1 << CS32 | 1 << CS30; // 1024로 분주
+		   EIMSK |= 1 << INT4; // 외부 인터럽트4번 (ECHO) 사용
+
+	      //////////////// center ////////////////
+	      TRIG_DDR_CENTER |= 1 << TRIG_CENTER; // output mode로 설정
+	      ECHO_DDR_CENTER &= ~(1 << ECHO_CENTER); // input mode로 설정
+	      
+	      // 0 1 : 상승, 하강 edge에 둘 다 INT를 띄우도록 설정
+	      // INT0~3은 EICRA, INT4~7은 EICRB 레지스터
+	      EICRB |= 0 << ISC51 | 1 << ISC50; // INT5니까 EICRB에서 ISC51, 50
+	      
+	      // 16bit timer1을 설정해서 사용 16비트는 0~65535(0xffff)가 최대
+	      // 16Mhz를 1024로 분주 16000000/1024 --> 15625hz --> 15.625khz
+	      // 1주기 (1개의 펄스 소요시간) 1/15625 = 0.000064sec = 64us
+	      TCCR3B |=  1 << CS32 | 1 << CS30; // 1024로 분주
+	      EIMSK |= 1 << INT5; // 외부 인터럽트4번 (ECHO) 사용
+		  
+			//////////////// right ////////////////
+		   TRIG_DDR_RIGHT |= 1 << TRIG_RIGHT; // output mode로 설정
+		   ECHO_DDR_RIGHT &= ~(1 << ECHO_RIGHT); // input mode로 설정
    
+		   // 0 1 : 상승, 하강 edge에 둘 다 INT를 띄우도록 설정
+		   // INT0~3은 EICRA, INT4~7은 EICRB 레지스터
+		   EICRB |= 0 << ISC61 | 1 << ISC60; // INT6니까 EICRB에서 ISC61, 60
    
-   //////////////// center ////////////////
-   TRIG_DDR_CENTER |= 1 << TRIG_CENTER; // output mode로 설정
-   ECHO_DDR_CENTER &= ~(1 << ECHO_CENTER); // input mode로 설정
+		   // 16bit timer1을 설정해서 사용 16비트는 0~65535(0xffff)가 최대
+		   // 16Mhz를 1024로 분주 16000000/1024 --> 15625hz --> 15.625khz
+		   // 1주기 (1개의 펄스 소요시간) 1/15625 = 0.000064sec = 64us
+		   TCCR3B |=  1 << CS32 | 1 << CS30; // 1024로 분주
+		   EIMSK |= 1 << INT6; // 외부 인터럽트4번 (ECHO) 사용
    
-   // 0 1 : 상승, 하강 edge에 둘 다 INT를 띄우도록 설정
-   // INT0~3은 EICRA, INT4~7은 EICRB 레지스터
-   EICRB |= 0 << ISC51 | 1 << ISC50; // INT5니까 EICRB에서 ISC51, 50
-   
-   // 16bit timer1을 설정해서 사용 16비트는 0~65535(0xffff)가 최대
-   // 16Mhz를 1024로 분주 16000000/1024 --> 15625hz --> 15.625khz
-   // 1주기 (1개의 펄스 소요시간) 1/15625 = 0.000064sec = 64us
-   TCCR3B |=  1 << CS32 | 1 << CS30; // 1024로 분주
-   EIMSK |= 1 << INT5; // 외부 인터럽트4번 (ECHO) 사용
-   
-   
-   //////////////// right ////////////////
-   TRIG_DDR_RIGHT |= 1 << TRIG_RIGHT; // output mode로 설정
-   ECHO_DDR_RIGHT &= ~(1 << ECHO_RIGHT); // input mode로 설정
-   
-   // 0 1 : 상승, 하강 edge에 둘 다 INT를 띄우도록 설정
-   // INT0~3은 EICRA, INT4~7은 EICRB 레지스터
-   EICRB |= 0 << ISC61 | 1 << ISC60; // INT6니까 EICRB에서 ISC61, 60
-   
-   // 16bit timer1을 설정해서 사용 16비트는 0~65535(0xffff)가 최대
-   // 16Mhz를 1024로 분주 16000000/1024 --> 15625hz --> 15.625khz
-   // 1주기 (1개의 펄스 소요시간) 1/15625 = 0.000064sec = 64us
-   TCCR3B |=  1 << CS32 | 1 << CS30; // 1024로 분주
-   EIMSK |= 1 << INT6; // 외부 인터럽트4번 (ECHO) 사용
 }
 
 void ultrasonic_trigger()
 {
-      ////////// left //////////
-      TRIG_PORT_LEFT &= ~(1 << TRIG_LEFT); // 해당되는 포트만 LOW로 만듦
-      _delay_us(1);
-      TRIG_PORT_LEFT |= 1 << TRIG_LEFT; // HIGH
-      _delay_us(15); // 규격에는 10us인데 reduance
-      TRIG_PORT_LEFT &= ~(1 << TRIG_LEFT); // LOW
-      _delay_ms(50); // delay 기다리는 시간을 timer0 변수로 체크할 수 있도록 개선
-      // 초음파센서 echo 응답 대기시간이 최대 38ms
-      
-      ////////// center //////////
-      TRIG_PORT_CENTER &= ~(1 << TRIG_CENTER); // 해당되는 포트만 LOW로 만듦
-      _delay_us(1);
-      TRIG_PORT_CENTER |= 1 << TRIG_CENTER; // HIGH
-      _delay_us(15); // 규격에는 10us인데 reduance
-      TRIG_PORT_CENTER &= ~(1 << TRIG_CENTER); // LOW
-      _delay_ms(50); // delay 기다리는 시간을 timer0 변수로 체크할 수 있도록 개선
-      
-      ////////// right //////////
-      TRIG_PORT_RIGHT &= ~(1 << TRIG_RIGHT); // 해당되는 포트만 LOW로 만듦
-      _delay_us(1);
-      TRIG_PORT_RIGHT |= 1 << TRIG_RIGHT; // HIGH
-      _delay_us(15); // 규격에는 10us인데 reduance
-      TRIG_PORT_RIGHT &= ~(1 << TRIG_RIGHT); // LOW
-      _delay_ms(50); // delay 기다리는 시간을 timer0 변수로 체크할 수 있도록 개선
+	if(ultrasonic_check_timer <= 100)
+	{
+		////////// left //////////
+		TRIG_PORT_LEFT &= ~(1 << TRIG_LEFT); // 해당되는 포트만 LOW로 만듦
+		_delay_us(1);
+		TRIG_PORT_LEFT |= 1 << TRIG_LEFT; // HIGH
+		_delay_us(15); // 규격에는 10us인데 reduance
+		TRIG_PORT_LEFT &= ~(1 << TRIG_LEFT); // LOW
+		// 초음파센서 echo 응답 대기시간이 최대 38ms
+	}
+	
+	if (ultrasonic_check_timer > 100 && ultrasonic_check_timer <= 200)
+	{
+		////////// center //////////
+		TRIG_PORT_CENTER &= ~(1 << TRIG_CENTER); // 해당되는 포트만 LOW로 만듦
+		_delay_us(1);
+		TRIG_PORT_CENTER |= 1 << TRIG_CENTER; // HIGH
+		_delay_us(15); // 규격에는 10us인데 reduance
+		TRIG_PORT_CENTER &= ~(1 << TRIG_CENTER); // LOW
+	}
+	
+	if (ultrasonic_check_timer > 200 && ultrasonic_check_timer <= 300)
+	{
+		////////// right //////////
+		TRIG_PORT_RIGHT &= ~(1 << TRIG_RIGHT); // 해당되는 포트만 LOW로 만듦
+		_delay_us(1);
+		TRIG_PORT_RIGHT |= 1 << TRIG_RIGHT; // HIGH
+		_delay_us(15); // 규격에는 10us인데 reduance
+		TRIG_PORT_RIGHT &= ~(1 << TRIG_RIGHT); // LOW
+	}
+	
+	ultrasonic_check_timer %= 310;
 }
 
 void distance_check(void)
