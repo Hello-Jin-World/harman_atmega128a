@@ -6,7 +6,7 @@
 #include "def.h"
 
 volatile uint32_t msec_count = 0;
-volatile uint32_t fnd_dis = 0;
+volatile uint32_t fnd_refreshrate = 0;
 volatile uint32_t ultrasonic_check_timer = 0;
 
 extern volatile uint8_t bt_data;
@@ -48,7 +48,7 @@ ISR(TIMER0_OVF_vect)
 {
 	TCNT0 = 6;  // 6~256 : 250(1ms) 그래서 TCNT0를 6으로 설정
 	msec_count++;  // 1ms마다 ms_count가 1씩 증가
-	fnd_dis++;   // fnd 잔상효과 유지 하기 위한 timer 2ms
+	fnd_refreshrate++;   // fnd 잔상효과 유지 하기 위한 timer 2ms
 	ultrasonic_check_timer++;
 }
 
@@ -70,10 +70,6 @@ int main(void)
 
 	while (1)
 	{
-// 		pc_command_processing();
-// 		ultrasonic_distance_check();
-//		washing_machine_fan_control();
-		
 		pfunc[func_state] ();
 	}
 }

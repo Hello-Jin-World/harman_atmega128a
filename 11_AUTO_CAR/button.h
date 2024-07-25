@@ -15,10 +15,10 @@
 // #define LED_DDR DDRA  // 이렇게 하는 이유는 LED PORT가 변경되면 이 #define만 바꿔주면 compiler가 이후의 logic을 찾아서 쉽게 변경을 해주기 위함이다.
 // #define LED_PORT PORTA
 
-#define BUTTON_DDR DDRC
-#define BUTTON_PIN PINC // PORTC를 읽는 register 5v:1, 0v:0
+#define BUTTON_DDR DDRA
+#define BUTTON_PIN PINA // PORTC를 읽는 register 5v:1, 0v:0
 
-#define BUTTON0PIN 7 // PORCD의 4번이다.
+#define BUTTON0PIN 6 // PORCD의 4번이다.
 // #define BUTTON1PIN 5 // PORTD의 5번이다.
 // #define BUTTON2PIN 6 // PORTD의 6번이다.
 // #define BUTTON3PIN 7 // PORTD의 7번이다.

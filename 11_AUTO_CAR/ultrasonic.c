@@ -15,6 +15,10 @@ extern int func_state; // pfunction을 찾아가는 인덱스
 void distance_check();
 void init_ultrasonic();
 
+volatile int ultrasonic_left_distance = 0;
+volatile int ultrasonic_center_distance = 0;
+volatile int ultrasonic_right_distance = 0;
+
 // PE4 : 외부 INT4 초음파 센서 상승, 하강 edge 둘 다 이곳으로 들어온다.
 //결국은 상승edge에서 1번, 하강edge에서 1번씩 이곳으로 들어온다.
 ISR(INT4_vect) // LEFT
@@ -157,13 +161,10 @@ void ultrasonic_trigger()
 
 void distance_check(void)
 {
-	if (ultrasonic_check_timer >= 500)
-	{
-		ultrasonic_check_timer = 0;
 		printf("left   :  %5d\n", ultrasonic_left_distance); // printf 찍으면 delay생김
 		printf("center :  %5d\n", ultrasonic_center_distance);
 		printf("right  :  %5d\n", ultrasonic_right_distance);
-	}
+
 	ultrasonic_trigger(); // 이것도 수정해야한다.
 	func_state = AUTO_MODE_CHECK;
 }

@@ -1,6 +1,6 @@
 ﻿#include "button.h"
 #include "pwm.h"
-
+#include "fnd.h"
 #include <avr/interrupt.h>
 #define F_CPU 16000000UL
 #include <util/delay.h>
@@ -9,7 +9,13 @@
 extern int get_button(int button_num, int button_pin);
 extern void init_button();
 
-volatile uint32_t msec_count;
+extern volatile uint32_t msec_count;
+extern uint32_t sec_count;
+extern volatile uint32_t fnd_refreshrate;
+
+extern volatile int ultrasonic_left_distance;
+extern volatile int ultrasonic_center_distance;
+extern volatile int ultrasonic_right_distance;
 
 void init_timer1_pwm(void);
 void init_n289n(void);
@@ -78,6 +84,7 @@ void init_timer1_pwm(void)
 	ICR1 = 0x3ff;  // 1023 ==> 4ms TOP : PWM 값
 }
 
+///////////////////////////////           수동모드          //////////////////////////////////////
 void forward(int speed)
 {
 	MOTOR_DRIVER_DIRECTION_PORT &= ~(1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
@@ -121,4 +128,45 @@ void stop(void)
 	
 	OCR1A = 0;  // PB5 PWM 출력 port left
 	OCR1B = 0;  // PB6 PWM 출력 port right
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////         자동모드            //////////////////////////////////
+void auto_start(void)
+{
+	sec_count = 120;
+	
+	while(sec_count > 0)
+	{
+		ultrasonic_trigger();
+		if (msec_count >= 1000)
+		{
+			msec_count = 0;
+			sec_count--;
+		} // 1초씩 감소
+		
+		if (fnd_refreshrate >= 2)
+		{
+			fnd_refreshrate = 0;
+			fnd_display();
+		} // fnd 표시
+		
+		if (ultrasonic_right_distance <= 20)
+		{
+			turn_left(500);
+		}
+		if (ultrasonic_left_distance <= 20)
+		{
+			turn_right(500);
+		}
+		if (ultrasonic_center_distance <= 20)
+		{
+			backward(300);
+		}
+		
+		else
+		{
+			forward(300);
+		}
+	}
 }

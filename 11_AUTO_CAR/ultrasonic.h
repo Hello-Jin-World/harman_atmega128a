@@ -48,8 +48,4 @@ void init_ultrasonic();
 void ultrasonic_trigger();
 void ultrasonic_distance_check();
 
-volatile int ultrasonic_left_distance = 0;
-volatile int ultrasonic_center_distance = 0;
-volatile int ultrasonic_right_distance = 0;
-
 #endif /* ULTRASONIC_H_ */

@@ -60,31 +60,6 @@ int fnd_main(void)
 			}
 		}
 		
-		if (get_button(BUTTON1, BUTTON1PIN))
-		{
-			button1_state = !button1_state;
-			
-			if (button1_state) // 버튼 1을 처음 누르면 일시정지 모드로 진입하고 리셋을 할 수 있도록 토글 활성화
-			{
-				state_mod = 2;
-				reset_active = 1;
-			}
-			if (button1_state == 0 || restart_stopwatch == 1) // 다음 버튼 1을 누르면 스톱워치 재시작 후 리셋 토글 비활성화.
-			{
-				state_mod = 1;
-				reset_active = 0;
-				restart_stopwatch = 0;
-			}
-		}
-		if (get_button(BUTTON2, BUTTON2PIN)) // 버튼 2를 누르면 리셋 토글이 활성화가 되었는지 확인 후 리셋
-		{
-			if (reset_active)
-			{
-				clear_stopwatch();
-				restart_stopwatch = 1; // 재시작이 가능하도록 재시작 토글 활성화
-			}
-		}
-		
 		fp_clock[state_mod]();
 	}
 }
@@ -139,7 +114,7 @@ void clear_stopwatch(void)
 
 void init_fnd(void)
 {
-	FND_DATA_DDR = 0xff; // 출력모드로 설정
+	FND_DATA_DDR = 0xff;
 	//FND_DIGIT_DDR |= 0xf0; //자리 수 선택 핀 4 5 6 7
 	FND_DIGIT_DDR |= 1 << FND_DIGIT_D1 | 1 << FND_DIGIT_D2 |
 					 1 << FND_DIGIT_D3 | 1 << FND_DIGIT_D4;

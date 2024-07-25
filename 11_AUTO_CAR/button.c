@@ -8,24 +8,14 @@ int get_button(int button_num, int button_pin);
 
 extern int func_state; // pfunction을 찾아가는 인덱스
 extern void stop();
+extern void auto_start(); // 자율주행 시작
 
 int button0_state = 0;
-
-// 버튼 초기화 (방향 설정 : 입력)
-// 76543210   : PORTD
-// 11110000 현재 버튼
-// 00001111
-// DDRD &= 0x0f; // 4, 5, 6, 7을 input. PORTD.4 가독성이 떨어진다.
 
 void init_button(void)
 {
 	BUTTON_DDR &= ~(1 << BUTTON0PIN /*| 1 << BUTTON1PIN | 1 << BUTTON2PIN | 1 << BUTTON3PIN*/);
 }
-
-// 예) BUTTON 4
-// 버튼을 눌렀다 떼면 : 1을 리턴
-//		idle 상태    : 0을 리턴
- 
 
 int get_button(int button_num, int button_pin)
 {
@@ -63,6 +53,7 @@ void auto_mode_check(void)
 	if (button0_state)
 	{
 		AUTO_RUN_LED_PORT |= 1 << AUTO_RUN_LED_PIN; // LED ON
+		auto_start();
 	}
 	else
 	{
