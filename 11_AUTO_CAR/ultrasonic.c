@@ -19,6 +19,8 @@ volatile int ultrasonic_left_distance = 0;
 volatile int ultrasonic_center_distance = 0;
 volatile int ultrasonic_right_distance = 0;
 
+int get_distance = 0;
+
 // PE4 : 외부 INT4 초음파 센서 상승, 하강 edge 둘 다 이곳으로 들어온다.
 //결국은 상승edge에서 1번, 하강edge에서 1번씩 이곳으로 들어온다.
 ISR(INT4_vect) // LEFT
@@ -133,30 +135,42 @@ void init_ultrasonic()
 
 void ultrasonic_trigger()
 {
+	if (ultrasonic_check_timer >= 50)
+	{
+		ultrasonic_check_timer = 0;
+		get_distance++;
+		get_distance %= 3;
+	}
+	if (get_distance == 0)
+	{
 		////////// left //////////
-		TRIG_PORT_LEFT &= ~(1 << TRIG_LEFT); // 해당되는 포트만 LOW로 만듦
-		_delay_us(1);
-		TRIG_PORT_LEFT |= 1 << TRIG_LEFT; // HIGH
-		_delay_us(15); // 규격에는 10us인데 reduance
-		TRIG_PORT_LEFT &= ~(1 << TRIG_LEFT); // LOW
-		_delay_ms(50); // delay 기다리는 시간을 timer0 변수로 체크할 수 있도록 개선
-		// 초음파센서 echo 응답 대기시간이 최대 38ms
-		
+	TRIG_PORT_LEFT &= ~(1 << TRIG_LEFT); // 해당되는 포트만 LOW로 만듦
+	_delay_us(1);
+	TRIG_PORT_LEFT |= 1 << TRIG_LEFT; // HIGH
+	_delay_us(15); // 규격에는 10us인데 reduance
+	TRIG_PORT_LEFT &= ~(1 << TRIG_LEFT); // LOW
+	// 초음파센서 echo 응답 대기시간이 최대 38ms
+	}
+	
+	else if (get_distance == 1)
+	{
 		////////// center //////////
-		TRIG_PORT_CENTER &= ~(1 << TRIG_CENTER); // 해당되는 포트만 LOW로 만듦
-		_delay_us(1);
-		TRIG_PORT_CENTER |= 1 << TRIG_CENTER; // HIGH
-		_delay_us(15); // 규격에는 10us인데 reduance
-		TRIG_PORT_CENTER &= ~(1 << TRIG_CENTER); // LOW
-		_delay_ms(50); // delay 기다리는 시간을 timer0 변수로 체크할 수 있도록 개선
+	TRIG_PORT_CENTER &= ~(1 << TRIG_CENTER); // 해당되는 포트만 LOW로 만듦
+	_delay_us(1);
+	TRIG_PORT_CENTER |= 1 << TRIG_CENTER; // HIGH
+	_delay_us(15); // 규격에는 10us인데 reduance
+	TRIG_PORT_CENTER &= ~(1 << TRIG_CENTER); // LOW
+	}
 		
+	else if (get_distance == 2)
+	{
 		////////// right //////////
-		TRIG_PORT_RIGHT &= ~(1 << TRIG_RIGHT); // 해당되는 포트만 LOW로 만듦
-		_delay_us(1);
-		TRIG_PORT_RIGHT |= 1 << TRIG_RIGHT; // HIGH
-		_delay_us(15); // 규격에는 10us인데 reduance
-		TRIG_PORT_RIGHT &= ~(1 << TRIG_RIGHT); // LOW
-		_delay_ms(50); // delay 기다리는 시간을 timer0 변수로 체크할 수 있도록 개선
+	TRIG_PORT_RIGHT &= ~(1 << TRIG_RIGHT); // 해당되는 포트만 LOW로 만듦
+	_delay_us(1);
+	TRIG_PORT_RIGHT |= 1 << TRIG_RIGHT; // HIGH
+	_delay_us(15); // 규격에는 10us인데 reduance
+	TRIG_PORT_RIGHT &= ~(1 << TRIG_RIGHT); // LOW
+	}
 }
 
 void distance_check(void)

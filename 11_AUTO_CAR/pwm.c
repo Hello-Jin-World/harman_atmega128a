@@ -9,9 +9,12 @@
 extern int get_button(int button_num, int button_pin);
 extern void init_button();
 
+extern void fnd_display();
+
 extern volatile uint32_t msec_count;
 extern uint32_t sec_count;
 extern volatile uint32_t fnd_refreshrate;
+extern volatile uint32_t read_distance;
 
 extern volatile int ultrasonic_left_distance;
 extern volatile int ultrasonic_center_distance;
@@ -108,8 +111,8 @@ void turn_left(int speed)
 	MOTOR_DRIVER_DIRECTION_PORT &= ~(1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
 	MOTOR_DRIVER_DIRECTION_PORT |= 1 << 2 | 1 << 0;  // 전진 모드로 설정
 	
-	OCR1A = speed;  // PB5 PWM 출력 port left
-	OCR1B = 0;  // PB6 PWM 출력 port right
+	OCR1A = 0;  // PB5 PWM 출력 port left
+	OCR1B = speed;  // PB6 PWM 출력 port right
 }
 
 void turn_right(int speed)
@@ -117,8 +120,8 @@ void turn_right(int speed)
 	MOTOR_DRIVER_DIRECTION_PORT &= ~(1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
 	MOTOR_DRIVER_DIRECTION_PORT |= 1 << 2 | 1 << 0;  // 전진 모드로 설정
 	
-	OCR1A = 0;  // PB5 PWM 출력 port left
-	OCR1B = speed;  // PB6 PWM 출력 port right
+	OCR1A = speed;  // PB5 PWM 출력 port left
+	OCR1B = 0;  // PB6 PWM 출력 port right
 }
 
 void stop(void)
@@ -151,22 +154,26 @@ void auto_start(void)
 			fnd_display();
 		} // fnd 표시
 		
+
 		if (ultrasonic_right_distance <= 20)
 		{
-			turn_left(500);
+			turn_left(600);
 		}
-		if (ultrasonic_left_distance <= 20)
+		else if (ultrasonic_left_distance <= 20)
 		{
-			turn_right(500);
+			turn_right(600);
 		}
-		if (ultrasonic_center_distance <= 20)
-		{
-			backward(300);
-		}
-		
 		else
 		{
 			forward(300);
 		}
+		
+		
+// 		if (ultrasonic_center_distance <= 20)
+// 		{
+// 			backward(300);
+// 		}
+		
+		
 	}
 }
