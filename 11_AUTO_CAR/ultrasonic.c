@@ -136,6 +136,7 @@ void init_ultrasonic()
 
 void ultrasonic_trigger()
 {
+	
 	if(ultrasonic_check_timer <= 4)
 	{
 		////////// left //////////
