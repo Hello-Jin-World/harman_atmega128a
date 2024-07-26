@@ -12,6 +12,7 @@ extern void auto_start(); // 자율주행 시작
 
 int button0_state = 0;
 
+
 void init_button(void)
 {
 	BUTTON_DDR &= ~(1 << BUTTON0PIN /*| 1 << BUTTON1PIN | 1 << BUTTON2PIN | 1 << BUTTON3PIN*/);
@@ -53,12 +54,11 @@ void auto_mode_check(void)
 	if (button0_state)
 	{
 		AUTO_RUN_LED_PORT |= 1 << AUTO_RUN_LED_PIN; // LED ON
-		auto_start();
+		func_state = AUTO_MODE;
 	}
 	else
 	{
 		AUTO_RUN_LED_PORT &= ~(1 << AUTO_RUN_LED_PIN); // LED OFF
 		stop();
 	}
-	func_state = AUTO_MODE;
 }

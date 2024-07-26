@@ -13,27 +13,20 @@
 extern volatile uint32_t msec_count;
 extern void I2C_LCD_clear(void);
 extern void I2C_write_byte(uint8_t address, uint8_t data);
+
 #define SLA_W (0x27<<1) //I2C LCD주소는 0x27 인데, <<1로 하는 이유는 wirite 모드를 유지하기 위함.
 
 extern volatile uint32_t lcd_refreshrate;
 
-void I2C_LCD_Test()
+
+void I2C_LCD_Test(int *current_speed)
 {
 	char sbuf[20];
-	while(1)
-	{
-		if(msec_count>=1000)
-		{
-			msec_count = 0;
-			I2C_LCD_clear();	
-		}
-		
-	//	sprintf(sbuf,"%3d", );
-		
-		I2C_LCD_write_string_XY(0,0,"Hello!");
-		I2C_LCD_write_string_XY(1,0,sbuf);
-// 		_delay_ms(100); //프로토콜에 의해 실행되므로, 데이터를 다 받을때까지 기다려야한다.
-	}
+
+	sprintf(sbuf,"%3d",*current_speed);
+	
+	I2C_LCD_write_string_XY(1,0,sbuf);
+
 }
 // 1byte를 write
 void I2C_LCD_write_data(uint8_t data)

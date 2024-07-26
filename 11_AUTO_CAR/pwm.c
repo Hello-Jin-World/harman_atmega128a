@@ -31,12 +31,21 @@ extern volatile int ultrasonic_right_distance;
 void init_timer1_pwm(void);
 void init_n289n(void);
 
-void forward(int speed);
-void backward(int speed);
-void turn_left(int speed);
-void turn_right(int speed);
+void forward();
+void backward();
+void turn_left();
+void turn_right();
 void stop(void);
 
+int current_speed = 0; // 속도
+
+void (*current_location[])() =
+{
+	forward,
+	backward,
+	turn_left,
+	turn_right
+};
 /*
 	16bit 1번 timer/counter를 사용
 	
@@ -95,39 +104,39 @@ void init_timer1_pwm(void)
 }
 
 ///////////////////////////////           수동모드          //////////////////////////////////////
-void forward(int speed)
+void forward(int *speed)
 {
 	MOTOR_DRIVER_DIRECTION_PORT &= ~(1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
 	MOTOR_DRIVER_DIRECTION_PORT |= 1 << 2 | 1 << 0;  // 전진 모드로 설정
 	
-	OCR1A = speed;  // PB5 PWM 출력 port left
-	OCR1B = speed;  // PB6 PWM 출력 port right
+	OCR1A = *speed;  // PB5 PWM 출력 port left
+	OCR1B = *speed;  // PB6 PWM 출력 port right
 }
 
-void backward(int speed)
+void backward(int *speed)
 {
 	MOTOR_DRIVER_DIRECTION_PORT &= ~(1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
 	MOTOR_DRIVER_DIRECTION_PORT |= 1 << 3 | 1 << 1;  // 1010 후진 모드
 	
-	OCR1A = speed;  // PB5 PWM 출력 port left
-	OCR1B = speed;  // PB6 PWM 출력 port right
+	OCR1A = *speed;  // PB5 PWM 출력 port left
+	OCR1B = *speed;  // PB6 PWM 출력 port right
 }
 
-void turn_left(int speed)
+void turn_left(int *speed)
 {
 	MOTOR_DRIVER_DIRECTION_PORT &= ~(1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
 	MOTOR_DRIVER_DIRECTION_PORT |= 1 << 2 | 1 << 0;  // 전진 모드로 설정
 	
 	OCR1A = 0;  // PB5 PWM 출력 port left
-	OCR1B = speed;  // PB6 PWM 출력 port right
+	OCR1B = *speed;  // PB6 PWM 출력 port right
 }
 
-void turn_right(int speed)
+void turn_right(int *speed)
 {
 	MOTOR_DRIVER_DIRECTION_PORT &= ~(1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
 	MOTOR_DRIVER_DIRECTION_PORT |= 1 << 2 | 1 << 0;  // 전진 모드로 설정
 	
-	OCR1A = speed;  // PB5 PWM 출력 port left
+	OCR1A = *speed;  // PB5 PWM 출력 port left
 	OCR1B = 0;  // PB6 PWM 출력 port right
 }
 
@@ -145,18 +154,15 @@ void stop(void)
 void auto_start(void)
 {
 	int run_state;
-	int temp_run_state;
 	sec_count = 120;
 	char sbuf[20];
 
 	while(sec_count > 0)
 	{
 		ultrasonic_trigger();
-		temp_run_state = run_state;
 		if (msec_count >= 1000)
 		{
 			msec_count = 0;
-			I2C_LCD_clear();
 			sec_count--;
 		} // 1초씩 감소
 
@@ -174,70 +180,81 @@ void auto_start(void)
 		 if (ultrasonic_right_distance <= 3 && ultrasonic_center_distance <= 3)
 		{
 			run_state = BACKWARD;
-			backward(600);
-			sbuf[20] = "BACKWARD";
+			//backward(600);
+			current_speed = 600;
+			//sbuf[20] = "BACKWARD";
 		}
 		else if (ultrasonic_left_distance <= 3 && ultrasonic_center_distance <= 3)
 		{
 			run_state = BACKWARD;
-			backward(600);
-			sbuf[20] = "BACKWARD";
+			//backward(600);
+			current_speed = 600;
+			//sbuf[20] = "BACKWARD";
 		}
 		else if (ultrasonic_left_distance <= 3 && ultrasonic_right_distance <= 3)
 		{
 			run_state = BACKWARD;
-			backward(600);
-			sbuf[20] = "BACKWARD";
+			//backward(600);
+			current_speed = 600;
+			//sbuf[20] = "BACKWARD";
 		}
 		else if(ultrasonic_center_distance <= 4)
 		{
 			run_state = BACKWARD;
-			backward(600);
-			sbuf[20] = "BACKWARD";
+			//backward(600);
+			current_speed = 600;
+			//sbuf[20] = "BACKWARD";
 		}
 		else if (ultrasonic_right_distance <= 4)
 		{
-			run_state = BACKWARD;
-			turn_left(400);
-			sbuf[20] = "BACKWARD";
+			run_state = TURN_LEFT;
+			//turn_left(500);
+			current_speed = 500;
+			//sbuf[20] = "BACKWARD";
 		}
 		else if (ultrasonic_left_distance <= 4)
 		{
-			run_state = BACKWARD;
-			turn_right(400);
-			sbuf[20] = "BACKWARD";
+			run_state = TURN_RIGHT;
+			//turn_right(500);
+			current_speed = 500;
+			//sbuf[20] = "BACKWARD";
 		}
 		else if (ultrasonic_left_distance <= 3 && ultrasonic_center_distance <= 3 && ultrasonic_right_distance <= 3)
 		{
 			run_state = BACKWARD;
-			backward(600);
-			sbuf[20] = "BACKWARD";
+			//backward(600);
+			current_speed = 600;
+			//sbuf[20] = "BACKWARD";
 		}
 		else if(ultrasonic_right_distance - ultrasonic_left_distance < 4 && ultrasonic_left_distance - ultrasonic_right_distance < 4 && ultrasonic_center_distance >= 10)
 		{
 			run_state = FORWARD;
-			forward(300);
-			sbuf[20] = "FORWARD";
+			//forward(300);
+			current_speed = 300;
+			//sbuf[20] = "FORWARD";
 		}
 		else if (ultrasonic_center_distance >= 800 || ultrasonic_left_distance >= 800 || ultrasonic_right_distance >= 800)
 		{
 			run_state = BACKWARD;
-			backward(400);
-			sbuf[20] = "BACKWARD";
+			//backward(400);
+			current_speed = 400;
+			//sbuf[20] = "BACKWARD";
 		}
  		
 		 ///좁은 길
 		else if (ultrasonic_right_distance <= 7 && ultrasonic_center_distance <= 15 && ultrasonic_right_distance > 3 && ultrasonic_center_distance > 3)
 		{
 			run_state = TURN_LEFT;
-			turn_left(400);
-			sbuf[20] = "TRUN LEFT";
+			//turn_left(400);
+			current_speed = 400;
+			//sbuf[20] = "TRUN LEFT";
 		}
 		else if (ultrasonic_left_distance <= 7 && ultrasonic_center_distance <= 15 && ultrasonic_left_distance > 3 && ultrasonic_center_distance > 3)
 		{
 			run_state = TURN_RIGHT;
-			turn_right(400);
-			sbuf[20] = "TRUN RIGHT";
+			//turn_right(400);
+			current_speed = 400;
+			//sbuf[20] = "TRUN RIGHT";
 		}		
 		
 		 ///
@@ -246,58 +263,57 @@ void auto_start(void)
 		 else if (ultrasonic_right_distance <= 20 && ultrasonic_center_distance <= 30 && ultrasonic_right_distance > 3 && ultrasonic_center_distance > 3)
 		 {
 			 run_state = TURN_LEFT;
-			 turn_left(400);
-			 sbuf[20] = "TRUN LEFT";
+			 //turn_left(500);
+			 current_speed = 500;
+			 //sbuf[20] = "TRUN LEFT";
 		 }
 		 else if (ultrasonic_left_distance <= 20 && ultrasonic_center_distance <= 30 && ultrasonic_left_distance > 3 && ultrasonic_center_distance > 3)
 		 {
 			 run_state = TURN_RIGHT;
-			 turn_right(400);
-			 sbuf[20] = "TRUN RIGHT";
+			 //turn_right(500);
+			 current_speed = 500;
+			 //sbuf[20] = "TRUN RIGHT";
 		 }
 		 ///
 		 else if (ultrasonic_right_distance <= 20)
 		 {
 			 run_state = TURN_LEFT;
-			 turn_left(400);
-			 sbuf[20] = "TRUN LEFT";
+			 //turn_left(500);
+			 current_speed = 500;
+			 //sbuf[20] = "TRUN LEFT";
 		 }
 		 else if (ultrasonic_left_distance <= 20)
 		 {
 			 run_state = TURN_RIGHT;
-			 turn_right(400);
-			 sbuf[20] = "TRUN RIGHT";
+			 //turn_right(500);
+			 current_speed = 500;
+			 //sbuf[20] = "TRUN RIGHT";
 		 }
 		 
 		
 		else if ((ultrasonic_left_distance - ultrasonic_right_distance <= 2 && ultrasonic_right_distance - ultrasonic_left_distance <= 2) || ultrasonic_center_distance >= 20 && ultrasonic_center_distance <= 200)
 		{
 			run_state = FORWARD;
-			forward(350);
-			sbuf[20] = "FORWARD";
+			//forward(350);
+			current_speed = 350;
+			//sbuf[20] = "FORWARD";
 		}
 		else if(ultrasonic_right_distance - ultrasonic_left_distance <= 4 && ultrasonic_center_distance <= 7 && ultrasonic_right_distance > 5)
 		{
 			run_state = TURN_LEFT;
-			turn_left(400);
-			sbuf[20] = "TRUN LEFT";
+			//turn_left(500);
+			current_speed = 500;
+			//sbuf[20] = "TRUN LEFT";
 		}
 		else if(ultrasonic_left_distance - ultrasonic_right_distance <= 4 && ultrasonic_center_distance <= 7 && ultrasonic_left_distance > 5)
 		{
 			run_state = TURN_RIGHT;
-			turn_right(400);
-			sbuf[20] = "TRUN RIGHT";
+			//turn_right(500);
+			current_speed = 500;
+			//sbuf[20] = "TRUN RIGHT";
 		}
 		
-// 		if (temp_run_state != run_state)
-// 		{
-// 			I2C_LCD_write_string_XY(1,0,run_state);
-// 		}
-		
-// 		else
-// 		{
-// 			run_state = BACKWARD;
-// 			forward(350);
-// 		}
+		current_location[run_state](&current_speed);
+
 	}
 }

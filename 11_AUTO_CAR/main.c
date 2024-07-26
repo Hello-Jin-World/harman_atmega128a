@@ -8,7 +8,6 @@
 volatile uint32_t msec_count = 0;
 volatile uint32_t fnd_refreshrate = 0;
 volatile uint32_t ultrasonic_check_timer = 0;
-volatile uint32_t lcd_refreshrate = 0;
 
 extern volatile uint8_t bt_data;
 extern int button0_state;
@@ -28,20 +27,21 @@ extern void turn_right();
 extern void stop();
 extern void auto_mode_check();
 extern void I2C_LCD_init();
-
+extern void auto_start();
 
 void manual_mode();
 void auto_mode_check();
 void auto_mode();
 
 int func_state = 0; // pfunction을 찾아가는 인덱스값
+extern int current_speed;
 
 void (*pfunc[])() =
 {
 	manual_mode, // bt_command run
 	distance_check, // 초음파 거리 측정
 	auto_mode_check, // button0 체크
-	auto_mode // 자율 주행
+	auto_start // 자율 주행
 };
 
 // for printf
@@ -53,7 +53,6 @@ ISR(TIMER0_OVF_vect)
 	msec_count++;  // 1ms마다 ms_count가 1씩 증가
 	fnd_refreshrate++;   // fnd 잔상효과 유지 하기 위한 timer 2ms
 	ultrasonic_check_timer++;
-	lcd_refreshrate++;
 }
 
 int main(void)
@@ -69,13 +68,13 @@ int main(void)
 	init_timer1_pwm();
 	init_ultrasonic(); // timer 3
 	
-
 	stdout = &OUTPUT;  // printf가 동작 될 수 있도록 stdout에 OUTPUT화일 포인터 assign
 	
 	sei();     // 전역적으로 interrupt 허용
 
 	while (1)
 	{
+		I2C_LCD_Test(&current_speed);
 		pfunc[func_state] ();
 	}
 }
@@ -131,13 +130,4 @@ void manual_mode(void)
 			break;
 	}
 	func_state = DISTANCE_CHECK;
-}
-
-void auto_mode(void)
-{
-	if (button0_state)
-	{
-		/// 자율주행 코드
-	}
-	func_state = MANUAL_MODE;
 }
