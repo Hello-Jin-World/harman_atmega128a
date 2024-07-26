@@ -15,19 +15,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   5 .debug_aranges 00000260  00000000  00000000  00001d20  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00001f7d  00000000  00000000  00001f80  2**0
+  6 .debug_info   00001f62  00000000  00000000  00001f80  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 000012c1  00000000  00000000  00003efd  2**0
+  7 .debug_abbrev 000012c3  00000000  00000000  00003ee2  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000014c9  00000000  00000000  000051be  2**0
+  8 .debug_line   000014c5  00000000  00000000  000051a5  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  000005fc  00000000  00000000  00006688  2**2
+  9 .debug_frame  000005fc  00000000  00000000  0000666c  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    0000087d  00000000  00000000  00006c84  2**0
+ 10 .debug_str    0000087d  00000000  00000000  00006c68  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00000f8f  00000000  00000000  00007501  2**0
+ 11 .debug_loc    00000f8f  00000000  00000000  000074e5  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 000001c0  00000000  00000000  00008490  2**0
+ 12 .debug_ranges 000001c0  00000000  00000000  00008474  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -360,7 +360,7 @@ void auto_mode_check(void)
      212:	87 7f       	andi	r24, 0xF7	; 247
 		stop();
      214:	80 83       	st	Z, r24
-     216:	d6 c2       	rjmp	.+1452   	; 0x7c4 <stop>
+     216:	d3 c2       	rjmp	.+1446   	; 0x7be <stop>
      218:	08 95       	ret
 
 0000021a <init_fnd>:
@@ -906,7 +906,7 @@ void I2C_LCD_write_string_XY(uint8_t row, uint8_t col, char *string)
 extern volatile uint32_t lcd_refreshrate;
 
 
-void I2C_LCD_Test(int *current_speed)
+void I2C_LCD_Test(int *speed)
 {
      548:	0f 93       	push	r16
      54a:	1f 93       	push	r17
@@ -922,7 +922,7 @@ void I2C_LCD_Test(int *current_speed)
      55e:	cd bf       	out	0x3d, r28	; 61
 	char sbuf[20];
 
-	sprintf(sbuf,"%3d",*current_speed);
+	sprintf(sbuf,"%3d",*speed);
      560:	fc 01       	movw	r30, r24
      562:	21 81       	ldd	r18, Z+1	; 0x01
      564:	2f 93       	push	r18
@@ -1003,7 +1003,7 @@ void manual_mode(void)
 			forward(500);
      5d0:	84 ef       	ldi	r24, 0xF4	; 244
      5d2:	91 e0       	ldi	r25, 0x01	; 1
-     5d4:	8c d0       	rcall	.+280    	; 0x6ee <forward>
+     5d4:	89 d0       	rcall	.+274    	; 0x6e8 <forward>
 			break;
      5d6:	0d c0       	rjmp	.+26     	; 0x5f2 <manual_mode+0x3c>
 			
@@ -1012,7 +1012,7 @@ void manual_mode(void)
 			backward(500);
      5d8:	84 ef       	ldi	r24, 0xF4	; 244
      5da:	91 e0       	ldi	r25, 0x01	; 1
-     5dc:	9b d0       	rcall	.+310    	; 0x714 <backward>
+     5dc:	98 d0       	rcall	.+304    	; 0x70e <backward>
 			break;
      5de:	09 c0       	rjmp	.+18     	; 0x5f2 <manual_mode+0x3c>
 			
@@ -1021,7 +1021,7 @@ void manual_mode(void)
 			turn_left(700);
      5e0:	8c eb       	ldi	r24, 0xBC	; 188
      5e2:	92 e0       	ldi	r25, 0x02	; 2
-     5e4:	aa d0       	rcall	.+340    	; 0x73a <turn_left>
+     5e4:	a7 d0       	rcall	.+334    	; 0x734 <turn_left>
 			break;
 			
 		case 'R':
@@ -1031,13 +1031,13 @@ void manual_mode(void)
      5e8:	8c eb       	ldi	r24, 0xBC	; 188
      5ea:	92 e0       	ldi	r25, 0x02	; 2
 			break;
-     5ec:	b6 d0       	rcall	.+364    	; 0x75a <turn_right>
+     5ec:	b3 d0       	rcall	.+358    	; 0x754 <turn_right>
 			
 		case 'S':
 		case 's':
 			stop();
      5ee:	01 c0       	rjmp	.+2      	; 0x5f2 <manual_mode+0x3c>
-     5f0:	e9 d0       	rcall	.+466    	; 0x7c4 <stop>
+     5f0:	e6 d0       	rcall	.+460    	; 0x7be <stop>
 			break;
 			
 		default:
@@ -1159,8 +1159,8 @@ int main(void)
      6b6:	7e d3       	rcall	.+1788   	; 0xdb4 <init_uart0>
      6b8:	bf d3       	rcall	.+1918   	; 0xe38 <init_uart1>
 	init_uart1();
-     6ba:	5f d0       	rcall	.+190    	; 0x77a <init_n289n>
-     6bc:	6f d0       	rcall	.+222    	; 0x79c <init_timer1_pwm>
+     6ba:	5c d0       	rcall	.+184    	; 0x774 <init_n289n>
+     6bc:	6c d0       	rcall	.+216    	; 0x796 <init_timer1_pwm>
 	init_n289n();
      6be:	b8 d4       	rcall	.+2416   	; 0x1030 <init_ultrasonic>
      6c0:	80 e0       	ldi	r24, 0x00	; 0
@@ -1168,841 +1168,842 @@ int main(void)
      6c2:	91 e0       	ldi	r25, 0x01	; 1
      6c4:	90 93 c8 07 	sts	0x07C8, r25	; 0x8007c8 <__iob+0x3>
 	init_ultrasonic(); // timer 3
+     6c8:	80 93 c7 07 	sts	0x07C7, r24	; 0x8007c7 <__iob+0x2>
 	
 	stdout = &OUTPUT;  // printf가 동작 될 수 있도록 stdout에 OUTPUT화일 포인터 assign
-     6c8:	80 93 c7 07 	sts	0x07C7, r24	; 0x8007c7 <__iob+0x2>
      6cc:	78 94       	sei
-     6ce:	88 e7       	ldi	r24, 0x78	; 120
-     6d0:	91 e0       	ldi	r25, 0x01	; 1
-     6d2:	3a df       	rcall	.-396    	; 0x548 <I2C_LCD_Test>
+     6ce:	e0 91 6a 01 	lds	r30, 0x016A	; 0x80016a <func_state>
+     6d2:	f0 91 6b 01 	lds	r31, 0x016B	; 0x80016b <func_state+0x1>
 	
 	sei();     // 전역적으로 interrupt 허용
-     6d4:	e0 91 6a 01 	lds	r30, 0x016A	; 0x80016a <func_state>
+     6d6:	ee 0f       	add	r30, r30
 
 	while (1)
 	{
-		I2C_LCD_Test(&current_speed);
-     6d8:	f0 91 6b 01 	lds	r31, 0x016B	; 0x80016b <func_state+0x1>
-     6dc:	ee 0f       	add	r30, r30
+		//I2C_LCD_Test(&current_speed);
 		pfunc[func_state] ();
-     6de:	ff 1f       	adc	r31, r31
-     6e0:	e2 5f       	subi	r30, 0xF2	; 242
-     6e2:	fe 4f       	sbci	r31, 0xFE	; 254
-     6e4:	01 90       	ld	r0, Z+
-     6e6:	f0 81       	ld	r31, Z
-     6e8:	e0 2d       	mov	r30, r0
-     6ea:	09 95       	icall
-     6ec:	f0 cf       	rjmp	.-32     	; 0x6ce <main+0x22>
+     6d8:	ff 1f       	adc	r31, r31
+     6da:	e2 5f       	subi	r30, 0xF2	; 242
+     6dc:	fe 4f       	sbci	r31, 0xFE	; 254
+     6de:	01 90       	ld	r0, Z+
+     6e0:	f0 81       	ld	r31, Z
+     6e2:	e0 2d       	mov	r30, r0
+     6e4:	09 95       	icall
+     6e6:	f3 cf       	rjmp	.-26     	; 0x6ce <main+0x22>
 
-000006ee <forward>:
+000006e8 <forward>:
 	ICR1 = 0x3ff;  // 1023 ==> 4ms TOP : PWM 값
 }
 
 ///////////////////////////////           수동모드          //////////////////////////////////////
 void forward(int *speed)
 {
-     6ee:	dc 01       	movw	r26, r24
+     6e8:	dc 01       	movw	r26, r24
 	MOTOR_DRIVER_DIRECTION_PORT &= ~(1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
-     6f0:	e2 e6       	ldi	r30, 0x62	; 98
-     6f2:	f0 e0       	ldi	r31, 0x00	; 0
-     6f4:	90 81       	ld	r25, Z
-     6f6:	90 7f       	andi	r25, 0xF0	; 240
-     6f8:	90 83       	st	Z, r25
+     6ea:	e2 e6       	ldi	r30, 0x62	; 98
+     6ec:	f0 e0       	ldi	r31, 0x00	; 0
+     6ee:	90 81       	ld	r25, Z
+     6f0:	90 7f       	andi	r25, 0xF0	; 240
+     6f2:	90 83       	st	Z, r25
 	MOTOR_DRIVER_DIRECTION_PORT |= 1 << 2 | 1 << 0;  // 전진 모드로 설정
-     6fa:	90 81       	ld	r25, Z
-     6fc:	95 60       	ori	r25, 0x05	; 5
-     6fe:	90 83       	st	Z, r25
+     6f4:	90 81       	ld	r25, Z
+     6f6:	95 60       	ori	r25, 0x05	; 5
+     6f8:	90 83       	st	Z, r25
 	
 	OCR1A = *speed;  // PB5 PWM 출력 port left
-     700:	8d 91       	ld	r24, X+
-     702:	9c 91       	ld	r25, X
-     704:	11 97       	sbiw	r26, 0x01	; 1
-     706:	9b bd       	out	0x2b, r25	; 43
-     708:	8a bd       	out	0x2a, r24	; 42
+     6fa:	8d 91       	ld	r24, X+
+     6fc:	9c 91       	ld	r25, X
+     6fe:	11 97       	sbiw	r26, 0x01	; 1
+     700:	9b bd       	out	0x2b, r25	; 43
+     702:	8a bd       	out	0x2a, r24	; 42
 	OCR1B = *speed;  // PB6 PWM 출력 port right
-     70a:	8d 91       	ld	r24, X+
-     70c:	9c 91       	ld	r25, X
-     70e:	99 bd       	out	0x29, r25	; 41
-     710:	88 bd       	out	0x28, r24	; 40
-     712:	08 95       	ret
+     704:	8d 91       	ld	r24, X+
+     706:	9c 91       	ld	r25, X
+     708:	99 bd       	out	0x29, r25	; 41
+     70a:	88 bd       	out	0x28, r24	; 40
+     70c:	08 95       	ret
 
-00000714 <backward>:
+0000070e <backward>:
 }
 
 void backward(int *speed)
 {
-     714:	dc 01       	movw	r26, r24
+     70e:	dc 01       	movw	r26, r24
 	MOTOR_DRIVER_DIRECTION_PORT &= ~(1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
-     716:	e2 e6       	ldi	r30, 0x62	; 98
-     718:	f0 e0       	ldi	r31, 0x00	; 0
-     71a:	90 81       	ld	r25, Z
-     71c:	90 7f       	andi	r25, 0xF0	; 240
-     71e:	90 83       	st	Z, r25
+     710:	e2 e6       	ldi	r30, 0x62	; 98
+     712:	f0 e0       	ldi	r31, 0x00	; 0
+     714:	90 81       	ld	r25, Z
+     716:	90 7f       	andi	r25, 0xF0	; 240
+     718:	90 83       	st	Z, r25
 	MOTOR_DRIVER_DIRECTION_PORT |= 1 << 3 | 1 << 1;  // 1010 후진 모드
-     720:	90 81       	ld	r25, Z
-     722:	9a 60       	ori	r25, 0x0A	; 10
-     724:	90 83       	st	Z, r25
+     71a:	90 81       	ld	r25, Z
+     71c:	9a 60       	ori	r25, 0x0A	; 10
+     71e:	90 83       	st	Z, r25
 	
 	OCR1A = *speed;  // PB5 PWM 출력 port left
-     726:	8d 91       	ld	r24, X+
-     728:	9c 91       	ld	r25, X
-     72a:	11 97       	sbiw	r26, 0x01	; 1
-     72c:	9b bd       	out	0x2b, r25	; 43
-     72e:	8a bd       	out	0x2a, r24	; 42
+     720:	8d 91       	ld	r24, X+
+     722:	9c 91       	ld	r25, X
+     724:	11 97       	sbiw	r26, 0x01	; 1
+     726:	9b bd       	out	0x2b, r25	; 43
+     728:	8a bd       	out	0x2a, r24	; 42
 	OCR1B = *speed;  // PB6 PWM 출력 port right
-     730:	8d 91       	ld	r24, X+
-     732:	9c 91       	ld	r25, X
-     734:	99 bd       	out	0x29, r25	; 41
-     736:	88 bd       	out	0x28, r24	; 40
-     738:	08 95       	ret
+     72a:	8d 91       	ld	r24, X+
+     72c:	9c 91       	ld	r25, X
+     72e:	99 bd       	out	0x29, r25	; 41
+     730:	88 bd       	out	0x28, r24	; 40
+     732:	08 95       	ret
 
-0000073a <turn_left>:
+00000734 <turn_left>:
 }
 
 void turn_left(int *speed)
 {
-     73a:	dc 01       	movw	r26, r24
+     734:	dc 01       	movw	r26, r24
 	MOTOR_DRIVER_DIRECTION_PORT &= ~(1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
-     73c:	e2 e6       	ldi	r30, 0x62	; 98
-     73e:	f0 e0       	ldi	r31, 0x00	; 0
-     740:	90 81       	ld	r25, Z
-     742:	90 7f       	andi	r25, 0xF0	; 240
-     744:	90 83       	st	Z, r25
+     736:	e2 e6       	ldi	r30, 0x62	; 98
+     738:	f0 e0       	ldi	r31, 0x00	; 0
+     73a:	90 81       	ld	r25, Z
+     73c:	90 7f       	andi	r25, 0xF0	; 240
+     73e:	90 83       	st	Z, r25
 	MOTOR_DRIVER_DIRECTION_PORT |= 1 << 2 | 1 << 0;  // 전진 모드로 설정
-     746:	90 81       	ld	r25, Z
-     748:	95 60       	ori	r25, 0x05	; 5
-     74a:	90 83       	st	Z, r25
+     740:	90 81       	ld	r25, Z
+     742:	95 60       	ori	r25, 0x05	; 5
+     744:	90 83       	st	Z, r25
 	
 	OCR1A = 0;  // PB5 PWM 출력 port left
-     74c:	1b bc       	out	0x2b, r1	; 43
-     74e:	1a bc       	out	0x2a, r1	; 42
+     746:	1b bc       	out	0x2b, r1	; 43
+     748:	1a bc       	out	0x2a, r1	; 42
 	OCR1B = *speed;  // PB6 PWM 출력 port right
-     750:	8d 91       	ld	r24, X+
-     752:	9c 91       	ld	r25, X
-     754:	99 bd       	out	0x29, r25	; 41
-     756:	88 bd       	out	0x28, r24	; 40
-     758:	08 95       	ret
+     74a:	8d 91       	ld	r24, X+
+     74c:	9c 91       	ld	r25, X
+     74e:	99 bd       	out	0x29, r25	; 41
+     750:	88 bd       	out	0x28, r24	; 40
+     752:	08 95       	ret
 
-0000075a <turn_right>:
+00000754 <turn_right>:
 }
 
 void turn_right(int *speed)
 {
-     75a:	dc 01       	movw	r26, r24
+     754:	dc 01       	movw	r26, r24
 	MOTOR_DRIVER_DIRECTION_PORT &= ~(1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
-     75c:	e2 e6       	ldi	r30, 0x62	; 98
-     75e:	f0 e0       	ldi	r31, 0x00	; 0
-     760:	90 81       	ld	r25, Z
-     762:	90 7f       	andi	r25, 0xF0	; 240
-     764:	90 83       	st	Z, r25
+     756:	e2 e6       	ldi	r30, 0x62	; 98
+     758:	f0 e0       	ldi	r31, 0x00	; 0
+     75a:	90 81       	ld	r25, Z
+     75c:	90 7f       	andi	r25, 0xF0	; 240
+     75e:	90 83       	st	Z, r25
 	MOTOR_DRIVER_DIRECTION_PORT |= 1 << 2 | 1 << 0;  // 전진 모드로 설정
-     766:	90 81       	ld	r25, Z
-     768:	95 60       	ori	r25, 0x05	; 5
-     76a:	90 83       	st	Z, r25
+     760:	90 81       	ld	r25, Z
+     762:	95 60       	ori	r25, 0x05	; 5
+     764:	90 83       	st	Z, r25
 	
 	OCR1A = *speed;  // PB5 PWM 출력 port left
-     76c:	8d 91       	ld	r24, X+
-     76e:	9c 91       	ld	r25, X
-     770:	9b bd       	out	0x2b, r25	; 43
-     772:	8a bd       	out	0x2a, r24	; 42
+     766:	8d 91       	ld	r24, X+
+     768:	9c 91       	ld	r25, X
+     76a:	9b bd       	out	0x2b, r25	; 43
+     76c:	8a bd       	out	0x2a, r24	; 42
 	OCR1B = 0;  // PB6 PWM 출력 port right
-     774:	19 bc       	out	0x29, r1	; 41
-     776:	18 bc       	out	0x28, r1	; 40
-     778:	08 95       	ret
+     76e:	19 bc       	out	0x29, r1	; 41
+     770:	18 bc       	out	0x28, r1	; 40
+     772:	08 95       	ret
 
-0000077a <init_n289n>:
+00000774 <init_n289n>:
 	   1         1   : STOP
 */
 
 void init_n289n(void)
 {
 	MOTOR_PWM_DDR |= 1 << MOTOR_LEFT_PORT_DDR | 1 << MOTOR_RIGHT_PORT_DDR; // DDR설정
-     77a:	87 b3       	in	r24, 0x17	; 23
-     77c:	80 66       	ori	r24, 0x60	; 96
-     77e:	87 bb       	out	0x17, r24	; 23
+     774:	87 b3       	in	r24, 0x17	; 23
+     776:	80 66       	ori	r24, 0x60	; 96
+     778:	87 bb       	out	0x17, r24	; 23
 	MOTOR_DRIVER_DIRECTION_PORT_DDR |= 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3; // PF1234 출력으로 설정
-     780:	e1 e6       	ldi	r30, 0x61	; 97
-     782:	f0 e0       	ldi	r31, 0x00	; 0
-     784:	80 81       	ld	r24, Z
-     786:	8f 60       	ori	r24, 0x0F	; 15
-     788:	80 83       	st	Z, r24
+     77a:	e1 e6       	ldi	r30, 0x61	; 97
+     77c:	f0 e0       	ldi	r31, 0x00	; 0
+     77e:	80 81       	ld	r24, Z
+     780:	8f 60       	ori	r24, 0x0F	; 15
+     782:	80 83       	st	Z, r24
 	
 	MOTOR_DRIVER_DIRECTION_PORT &= ~(1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
-     78a:	e2 e6       	ldi	r30, 0x62	; 98
-     78c:	f0 e0       	ldi	r31, 0x00	; 0
-     78e:	80 81       	ld	r24, Z
-     790:	80 7f       	andi	r24, 0xF0	; 240
-     792:	80 83       	st	Z, r24
+     784:	e2 e6       	ldi	r30, 0x62	; 98
+     786:	f0 e0       	ldi	r31, 0x00	; 0
+     788:	80 81       	ld	r24, Z
+     78a:	80 7f       	andi	r24, 0xF0	; 240
+     78c:	80 83       	st	Z, r24
 	MOTOR_DRIVER_DIRECTION_PORT |= 1 << 0 | 1 << 2; // 자동차를 전진모드로 
-     794:	80 81       	ld	r24, Z
-     796:	85 60       	ori	r24, 0x05	; 5
-     798:	80 83       	st	Z, r24
-     79a:	08 95       	ret
+     78e:	80 81       	ld	r24, Z
+     790:	85 60       	ori	r24, 0x05	; 5
+     792:	80 83       	st	Z, r24
+     794:	08 95       	ret
 
-0000079c <init_timer1_pwm>:
+00000796 <init_timer1_pwm>:
 	// 분주비 : 64 16000000HZ/64 ==> 250000HZ(250kHZ)
 	// T=1/f 1/250000HZ ==> 0.000004sec (4us)
 	// 250000HZ에서 256개의 펄스를 count하면 소요시간 : 1.02ms
 	//              127                             : 0.5ms
 	//              0x3ff(1023) --> 4ms
 	TCCR1B |= 1 << CS11 | 1 << CS10;   // 분주비 64  P318 표14-1
-     79c:	8e b5       	in	r24, 0x2e	; 46
-     79e:	83 60       	ori	r24, 0x03	; 3
-     7a0:	8e bd       	out	0x2e, r24	; 46
+     796:	8e b5       	in	r24, 0x2e	; 46
+     798:	83 60       	ori	r24, 0x03	; 3
+     79a:	8e bd       	out	0x2e, r24	; 46
 	
 	// 모드 14: 고속 PWM timer1사용  (P327 표14-5)
 	TCCR1A |= 1 << WGM11;   // TOP --> ICR1에 설정
-     7a2:	8f b5       	in	r24, 0x2f	; 47
-     7a4:	82 60       	ori	r24, 0x02	; 2
-     7a6:	8f bd       	out	0x2f, r24	; 47
+     79c:	8f b5       	in	r24, 0x2f	; 47
+     79e:	82 60       	ori	r24, 0x02	; 2
+     7a0:	8f bd       	out	0x2f, r24	; 47
 	TCCR1B |= 1 << WGM13 | 1 << WGM12;
-     7a8:	8e b5       	in	r24, 0x2e	; 46
-     7aa:	88 61       	ori	r24, 0x18	; 24
-     7ac:	8e bd       	out	0x2e, r24	; 46
+     7a2:	8e b5       	in	r24, 0x2e	; 46
+     7a4:	88 61       	ori	r24, 0x18	; 24
+     7a6:	8e bd       	out	0x2e, r24	; 46
 	
 	// 비반전모드 top: ICR1 비교일치값(PWM) 지정 : OCR1A, OCR1B P350 표15-7
 	// 비교일치 발생시 OCR1A, OCR1B의 출력 핀은 LOW로 바뀌고 BOTTOM에서 HIGH로 바뀐다.
 	TCCR1A |= 1 << COM1A1;
-     7ae:	8f b5       	in	r24, 0x2f	; 47
-     7b0:	80 68       	ori	r24, 0x80	; 128
-     7b2:	8f bd       	out	0x2f, r24	; 47
+     7a8:	8f b5       	in	r24, 0x2f	; 47
+     7aa:	80 68       	ori	r24, 0x80	; 128
+     7ac:	8f bd       	out	0x2f, r24	; 47
 	TCCR1A |= 1 << COM1B1;
-     7b4:	8f b5       	in	r24, 0x2f	; 47
-     7b6:	80 62       	ori	r24, 0x20	; 32
-     7b8:	8f bd       	out	0x2f, r24	; 47
+     7ae:	8f b5       	in	r24, 0x2f	; 47
+     7b0:	80 62       	ori	r24, 0x20	; 32
+     7b2:	8f bd       	out	0x2f, r24	; 47
 
 	ICR1 = 0x3ff;  // 1023 ==> 4ms TOP : PWM 값
-     7ba:	8f ef       	ldi	r24, 0xFF	; 255
-     7bc:	93 e0       	ldi	r25, 0x03	; 3
-     7be:	97 bd       	out	0x27, r25	; 39
-     7c0:	86 bd       	out	0x26, r24	; 38
-     7c2:	08 95       	ret
+     7b4:	8f ef       	ldi	r24, 0xFF	; 255
+     7b6:	93 e0       	ldi	r25, 0x03	; 3
+     7b8:	97 bd       	out	0x27, r25	; 39
+     7ba:	86 bd       	out	0x26, r24	; 38
+     7bc:	08 95       	ret
 
-000007c4 <stop>:
+000007be <stop>:
 	OCR1B = 0;  // PB6 PWM 출력 port right
 }
 
 void stop(void)
 {
 	MOTOR_DRIVER_DIRECTION_PORT &= ~(1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
-     7c4:	e2 e6       	ldi	r30, 0x62	; 98
-     7c6:	f0 e0       	ldi	r31, 0x00	; 0
-     7c8:	80 81       	ld	r24, Z
-     7ca:	80 7f       	andi	r24, 0xF0	; 240
-     7cc:	80 83       	st	Z, r24
+     7be:	e2 e6       	ldi	r30, 0x62	; 98
+     7c0:	f0 e0       	ldi	r31, 0x00	; 0
+     7c2:	80 81       	ld	r24, Z
+     7c4:	80 7f       	andi	r24, 0xF0	; 240
+     7c6:	80 83       	st	Z, r24
 	MOTOR_DRIVER_DIRECTION_PORT |= 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3;  // stop 모드로 설정
-     7ce:	80 81       	ld	r24, Z
-     7d0:	8f 60       	ori	r24, 0x0F	; 15
-     7d2:	80 83       	st	Z, r24
+     7c8:	80 81       	ld	r24, Z
+     7ca:	8f 60       	ori	r24, 0x0F	; 15
+     7cc:	80 83       	st	Z, r24
 	
 	OCR1A = 0;  // PB5 PWM 출력 port left
-     7d4:	1b bc       	out	0x2b, r1	; 43
-     7d6:	1a bc       	out	0x2a, r1	; 42
+     7ce:	1b bc       	out	0x2b, r1	; 43
+     7d0:	1a bc       	out	0x2a, r1	; 42
 	OCR1B = 0;  // PB6 PWM 출력 port right
-     7d8:	19 bc       	out	0x29, r1	; 41
-     7da:	18 bc       	out	0x28, r1	; 40
-     7dc:	08 95       	ret
+     7d2:	19 bc       	out	0x29, r1	; 41
+     7d4:	18 bc       	out	0x28, r1	; 40
+     7d6:	08 95       	ret
 
-000007de <auto_start>:
+000007d8 <auto_start>:
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////         자동모드            //////////////////////////////////
 void auto_start(void)
 {
-     7de:	cf 93       	push	r28
-     7e0:	df 93       	push	r29
-     7e2:	00 d0       	rcall	.+0      	; 0x7e4 <auto_start+0x6>
-     7e4:	cd b7       	in	r28, 0x3d	; 61
-     7e6:	de b7       	in	r29, 0x3e	; 62
+     7d8:	cf 93       	push	r28
+     7da:	df 93       	push	r29
+     7dc:	00 d0       	rcall	.+0      	; 0x7de <auto_start+0x6>
+     7de:	cd b7       	in	r28, 0x3d	; 61
+     7e0:	de b7       	in	r29, 0x3e	; 62
 	int run_state;
 	sec_count = 120;
-     7e8:	88 e7       	ldi	r24, 0x78	; 120
-     7ea:	90 e0       	ldi	r25, 0x00	; 0
-     7ec:	a0 e0       	ldi	r26, 0x00	; 0
-     7ee:	b0 e0       	ldi	r27, 0x00	; 0
-     7f0:	80 93 66 01 	sts	0x0166, r24	; 0x800166 <sec_count>
-     7f4:	90 93 67 01 	sts	0x0167, r25	; 0x800167 <sec_count+0x1>
-     7f8:	a0 93 68 01 	sts	0x0168, r26	; 0x800168 <sec_count+0x2>
-     7fc:	b0 93 69 01 	sts	0x0169, r27	; 0x800169 <sec_count+0x3>
+     7e2:	88 e7       	ldi	r24, 0x78	; 120
+     7e4:	90 e0       	ldi	r25, 0x00	; 0
+     7e6:	a0 e0       	ldi	r26, 0x00	; 0
+     7e8:	b0 e0       	ldi	r27, 0x00	; 0
+     7ea:	80 93 66 01 	sts	0x0166, r24	; 0x800166 <sec_count>
+     7ee:	90 93 67 01 	sts	0x0167, r25	; 0x800167 <sec_count+0x1>
+     7f2:	a0 93 68 01 	sts	0x0168, r26	; 0x800168 <sec_count+0x2>
+     7f6:	b0 93 69 01 	sts	0x0169, r27	; 0x800169 <sec_count+0x3>
 	char sbuf[20];
 
 	while(sec_count > 0)
-     800:	49 c2       	rjmp	.+1170   	; 0xc94 <auto_start+0x4b6>
+     7fa:	4c c2       	rjmp	.+1176   	; 0xc94 <auto_start+0x4bc>
 	{
 		ultrasonic_trigger();
-     802:	46 d4       	rcall	.+2188   	; 0x1090 <ultrasonic_trigger>
+     7fc:	49 d4       	rcall	.+2194   	; 0x1090 <ultrasonic_trigger>
 		if (msec_count >= 1000)
-     804:	80 91 74 01 	lds	r24, 0x0174	; 0x800174 <msec_count>
-     808:	90 91 75 01 	lds	r25, 0x0175	; 0x800175 <msec_count+0x1>
-     80c:	a0 91 76 01 	lds	r26, 0x0176	; 0x800176 <msec_count+0x2>
-     810:	b0 91 77 01 	lds	r27, 0x0177	; 0x800177 <msec_count+0x3>
-     814:	88 3e       	cpi	r24, 0xE8	; 232
-     816:	93 40       	sbci	r25, 0x03	; 3
-     818:	a1 05       	cpc	r26, r1
-     81a:	b1 05       	cpc	r27, r1
-     81c:	d8 f0       	brcs	.+54     	; 0x854 <auto_start+0x76>
+     7fe:	80 91 74 01 	lds	r24, 0x0174	; 0x800174 <msec_count>
+     802:	90 91 75 01 	lds	r25, 0x0175	; 0x800175 <msec_count+0x1>
+     806:	a0 91 76 01 	lds	r26, 0x0176	; 0x800176 <msec_count+0x2>
+     80a:	b0 91 77 01 	lds	r27, 0x0177	; 0x800177 <msec_count+0x3>
+     80e:	88 3e       	cpi	r24, 0xE8	; 232
+     810:	93 40       	sbci	r25, 0x03	; 3
+     812:	a1 05       	cpc	r26, r1
+     814:	b1 05       	cpc	r27, r1
+     816:	d8 f0       	brcs	.+54     	; 0x84e <auto_start+0x76>
 		{
 			msec_count = 0;
-     81e:	10 92 74 01 	sts	0x0174, r1	; 0x800174 <msec_count>
-     822:	10 92 75 01 	sts	0x0175, r1	; 0x800175 <msec_count+0x1>
-     826:	10 92 76 01 	sts	0x0176, r1	; 0x800176 <msec_count+0x2>
-     82a:	10 92 77 01 	sts	0x0177, r1	; 0x800177 <msec_count+0x3>
+     818:	10 92 74 01 	sts	0x0174, r1	; 0x800174 <msec_count>
+     81c:	10 92 75 01 	sts	0x0175, r1	; 0x800175 <msec_count+0x1>
+     820:	10 92 76 01 	sts	0x0176, r1	; 0x800176 <msec_count+0x2>
+     824:	10 92 77 01 	sts	0x0177, r1	; 0x800177 <msec_count+0x3>
 			sec_count--;
-     82e:	80 91 66 01 	lds	r24, 0x0166	; 0x800166 <sec_count>
-     832:	90 91 67 01 	lds	r25, 0x0167	; 0x800167 <sec_count+0x1>
-     836:	a0 91 68 01 	lds	r26, 0x0168	; 0x800168 <sec_count+0x2>
-     83a:	b0 91 69 01 	lds	r27, 0x0169	; 0x800169 <sec_count+0x3>
-     83e:	01 97       	sbiw	r24, 0x01	; 1
-     840:	a1 09       	sbc	r26, r1
-     842:	b1 09       	sbc	r27, r1
-     844:	80 93 66 01 	sts	0x0166, r24	; 0x800166 <sec_count>
-     848:	90 93 67 01 	sts	0x0167, r25	; 0x800167 <sec_count+0x1>
-     84c:	a0 93 68 01 	sts	0x0168, r26	; 0x800168 <sec_count+0x2>
-     850:	b0 93 69 01 	sts	0x0169, r27	; 0x800169 <sec_count+0x3>
+     828:	80 91 66 01 	lds	r24, 0x0166	; 0x800166 <sec_count>
+     82c:	90 91 67 01 	lds	r25, 0x0167	; 0x800167 <sec_count+0x1>
+     830:	a0 91 68 01 	lds	r26, 0x0168	; 0x800168 <sec_count+0x2>
+     834:	b0 91 69 01 	lds	r27, 0x0169	; 0x800169 <sec_count+0x3>
+     838:	01 97       	sbiw	r24, 0x01	; 1
+     83a:	a1 09       	sbc	r26, r1
+     83c:	b1 09       	sbc	r27, r1
+     83e:	80 93 66 01 	sts	0x0166, r24	; 0x800166 <sec_count>
+     842:	90 93 67 01 	sts	0x0167, r25	; 0x800167 <sec_count+0x1>
+     846:	a0 93 68 01 	sts	0x0168, r26	; 0x800168 <sec_count+0x2>
+     84a:	b0 93 69 01 	sts	0x0169, r27	; 0x800169 <sec_count+0x3>
 		} // 1초씩 감소
 
 		if (fnd_refreshrate >= 2)
-     854:	80 91 70 01 	lds	r24, 0x0170	; 0x800170 <fnd_refreshrate>
-     858:	90 91 71 01 	lds	r25, 0x0171	; 0x800171 <fnd_refreshrate+0x1>
-     85c:	a0 91 72 01 	lds	r26, 0x0172	; 0x800172 <fnd_refreshrate+0x2>
-     860:	b0 91 73 01 	lds	r27, 0x0173	; 0x800173 <fnd_refreshrate+0x3>
-     864:	02 97       	sbiw	r24, 0x02	; 2
-     866:	a1 05       	cpc	r26, r1
-     868:	b1 05       	cpc	r27, r1
-     86a:	58 f0       	brcs	.+22     	; 0x882 <auto_start+0xa4>
+     84e:	80 91 70 01 	lds	r24, 0x0170	; 0x800170 <fnd_refreshrate>
+     852:	90 91 71 01 	lds	r25, 0x0171	; 0x800171 <fnd_refreshrate+0x1>
+     856:	a0 91 72 01 	lds	r26, 0x0172	; 0x800172 <fnd_refreshrate+0x2>
+     85a:	b0 91 73 01 	lds	r27, 0x0173	; 0x800173 <fnd_refreshrate+0x3>
+     85e:	02 97       	sbiw	r24, 0x02	; 2
+     860:	a1 05       	cpc	r26, r1
+     862:	b1 05       	cpc	r27, r1
+     864:	58 f0       	brcs	.+22     	; 0x87c <auto_start+0xa4>
 		{
 			fnd_refreshrate = 0;
-     86c:	10 92 70 01 	sts	0x0170, r1	; 0x800170 <fnd_refreshrate>
-     870:	10 92 71 01 	sts	0x0171, r1	; 0x800171 <fnd_refreshrate+0x1>
-     874:	10 92 72 01 	sts	0x0172, r1	; 0x800172 <fnd_refreshrate+0x2>
-     878:	10 92 73 01 	sts	0x0173, r1	; 0x800173 <fnd_refreshrate+0x3>
+     866:	10 92 70 01 	sts	0x0170, r1	; 0x800170 <fnd_refreshrate>
+     86a:	10 92 71 01 	sts	0x0171, r1	; 0x800171 <fnd_refreshrate+0x1>
+     86e:	10 92 72 01 	sts	0x0172, r1	; 0x800172 <fnd_refreshrate+0x2>
+     872:	10 92 73 01 	sts	0x0173, r1	; 0x800173 <fnd_refreshrate+0x3>
 			fnd_display(&run_state);
-     87c:	ce 01       	movw	r24, r28
-     87e:	01 96       	adiw	r24, 0x01	; 1
-     880:	d5 dc       	rcall	.-1622   	; 0x22c <fnd_display>
+     876:	ce 01       	movw	r24, r28
+     878:	01 96       	adiw	r24, 0x01	; 1
+     87a:	d8 dc       	rcall	.-1616   	; 0x22c <fnd_display>
 // 		volatile int gap1= ultrasonic_right_distance - ultrasonic_left_distance;
 // 		volatile int gap2= ultrasonic_left_distance - ultrasonic_right_distance;
 
 		//sprintf(sbuf,"%3d", run_state);
 		
 		 if (ultrasonic_right_distance <= 3 && ultrasonic_center_distance <= 3)
-     882:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
-     886:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
-     88a:	04 97       	sbiw	r24, 0x04	; 4
-     88c:	8c f4       	brge	.+34     	; 0x8b0 <auto_start+0xd2>
-     88e:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
-     892:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
-     896:	04 97       	sbiw	r24, 0x04	; 4
-     898:	5c f4       	brge	.+22     	; 0x8b0 <auto_start+0xd2>
+     87c:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
+     880:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
+     884:	04 97       	sbiw	r24, 0x04	; 4
+     886:	8c f4       	brge	.+34     	; 0x8aa <auto_start+0xd2>
+     888:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
+     88c:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
+     890:	04 97       	sbiw	r24, 0x04	; 4
+     892:	5c f4       	brge	.+22     	; 0x8aa <auto_start+0xd2>
 		{
 			run_state = BACKWARD;
-     89a:	81 e0       	ldi	r24, 0x01	; 1
-     89c:	90 e0       	ldi	r25, 0x00	; 0
-     89e:	9a 83       	std	Y+2, r25	; 0x02
-     8a0:	89 83       	std	Y+1, r24	; 0x01
+     894:	81 e0       	ldi	r24, 0x01	; 1
+     896:	90 e0       	ldi	r25, 0x00	; 0
+     898:	9a 83       	std	Y+2, r25	; 0x02
+     89a:	89 83       	std	Y+1, r24	; 0x01
 			//backward(600);
 			current_speed = 600;
-     8a2:	88 e5       	ldi	r24, 0x58	; 88
-     8a4:	92 e0       	ldi	r25, 0x02	; 2
-     8a6:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
-     8aa:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
-     8ae:	e6 c1       	rjmp	.+972    	; 0xc7c <auto_start+0x49e>
+     89c:	88 e5       	ldi	r24, 0x58	; 88
+     89e:	92 e0       	ldi	r25, 0x02	; 2
+     8a0:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
+     8a4:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
+     8a8:	e6 c1       	rjmp	.+972    	; 0xc76 <auto_start+0x49e>
 			//sbuf[20] = "BACKWARD";
 		}
 		else if (ultrasonic_left_distance <= 3 && ultrasonic_center_distance <= 3)
-     8b0:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
-     8b4:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
-     8b8:	04 97       	sbiw	r24, 0x04	; 4
-     8ba:	8c f4       	brge	.+34     	; 0x8de <auto_start+0x100>
-     8bc:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
-     8c0:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
-     8c4:	04 97       	sbiw	r24, 0x04	; 4
-     8c6:	5c f4       	brge	.+22     	; 0x8de <auto_start+0x100>
+     8aa:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
+     8ae:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
+     8b2:	04 97       	sbiw	r24, 0x04	; 4
+     8b4:	8c f4       	brge	.+34     	; 0x8d8 <auto_start+0x100>
+     8b6:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
+     8ba:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
+     8be:	04 97       	sbiw	r24, 0x04	; 4
+     8c0:	5c f4       	brge	.+22     	; 0x8d8 <auto_start+0x100>
 		{
 			run_state = BACKWARD;
-     8c8:	81 e0       	ldi	r24, 0x01	; 1
-     8ca:	90 e0       	ldi	r25, 0x00	; 0
-     8cc:	9a 83       	std	Y+2, r25	; 0x02
-     8ce:	89 83       	std	Y+1, r24	; 0x01
+     8c2:	81 e0       	ldi	r24, 0x01	; 1
+     8c4:	90 e0       	ldi	r25, 0x00	; 0
+     8c6:	9a 83       	std	Y+2, r25	; 0x02
+     8c8:	89 83       	std	Y+1, r24	; 0x01
 			//backward(600);
 			current_speed = 600;
-     8d0:	88 e5       	ldi	r24, 0x58	; 88
-     8d2:	92 e0       	ldi	r25, 0x02	; 2
-     8d4:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
-     8d8:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
-     8dc:	cf c1       	rjmp	.+926    	; 0xc7c <auto_start+0x49e>
+     8ca:	88 e5       	ldi	r24, 0x58	; 88
+     8cc:	92 e0       	ldi	r25, 0x02	; 2
+     8ce:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
+     8d2:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
+     8d6:	cf c1       	rjmp	.+926    	; 0xc76 <auto_start+0x49e>
 			//sbuf[20] = "BACKWARD";
 		}
 		else if (ultrasonic_left_distance <= 3 && ultrasonic_right_distance <= 3)
-     8de:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
-     8e2:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
-     8e6:	04 97       	sbiw	r24, 0x04	; 4
-     8e8:	8c f4       	brge	.+34     	; 0x90c <auto_start+0x12e>
-     8ea:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
-     8ee:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
-     8f2:	04 97       	sbiw	r24, 0x04	; 4
-     8f4:	5c f4       	brge	.+22     	; 0x90c <auto_start+0x12e>
+     8d8:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
+     8dc:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
+     8e0:	04 97       	sbiw	r24, 0x04	; 4
+     8e2:	8c f4       	brge	.+34     	; 0x906 <auto_start+0x12e>
+     8e4:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
+     8e8:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
+     8ec:	04 97       	sbiw	r24, 0x04	; 4
+     8ee:	5c f4       	brge	.+22     	; 0x906 <auto_start+0x12e>
 		{
 			run_state = BACKWARD;
-     8f6:	81 e0       	ldi	r24, 0x01	; 1
-     8f8:	90 e0       	ldi	r25, 0x00	; 0
-     8fa:	9a 83       	std	Y+2, r25	; 0x02
-     8fc:	89 83       	std	Y+1, r24	; 0x01
+     8f0:	81 e0       	ldi	r24, 0x01	; 1
+     8f2:	90 e0       	ldi	r25, 0x00	; 0
+     8f4:	9a 83       	std	Y+2, r25	; 0x02
+     8f6:	89 83       	std	Y+1, r24	; 0x01
 			//backward(600);
 			current_speed = 600;
-     8fe:	88 e5       	ldi	r24, 0x58	; 88
-     900:	92 e0       	ldi	r25, 0x02	; 2
-     902:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
-     906:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
-     90a:	b8 c1       	rjmp	.+880    	; 0xc7c <auto_start+0x49e>
+     8f8:	88 e5       	ldi	r24, 0x58	; 88
+     8fa:	92 e0       	ldi	r25, 0x02	; 2
+     8fc:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
+     900:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
+     904:	b8 c1       	rjmp	.+880    	; 0xc76 <auto_start+0x49e>
 			//sbuf[20] = "BACKWARD";
 		}
 		else if(ultrasonic_center_distance <= 4)
-     90c:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
-     910:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
-     914:	05 97       	sbiw	r24, 0x05	; 5
-     916:	5c f4       	brge	.+22     	; 0x92e <auto_start+0x150>
+     906:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
+     90a:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
+     90e:	05 97       	sbiw	r24, 0x05	; 5
+     910:	5c f4       	brge	.+22     	; 0x928 <auto_start+0x150>
 		{
 			run_state = BACKWARD;
-     918:	81 e0       	ldi	r24, 0x01	; 1
-     91a:	90 e0       	ldi	r25, 0x00	; 0
-     91c:	9a 83       	std	Y+2, r25	; 0x02
-     91e:	89 83       	std	Y+1, r24	; 0x01
+     912:	81 e0       	ldi	r24, 0x01	; 1
+     914:	90 e0       	ldi	r25, 0x00	; 0
+     916:	9a 83       	std	Y+2, r25	; 0x02
+     918:	89 83       	std	Y+1, r24	; 0x01
 			//backward(600);
 			current_speed = 600;
-     920:	88 e5       	ldi	r24, 0x58	; 88
-     922:	92 e0       	ldi	r25, 0x02	; 2
-     924:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
-     928:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
-     92c:	a7 c1       	rjmp	.+846    	; 0xc7c <auto_start+0x49e>
+     91a:	88 e5       	ldi	r24, 0x58	; 88
+     91c:	92 e0       	ldi	r25, 0x02	; 2
+     91e:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
+     922:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
+     926:	a7 c1       	rjmp	.+846    	; 0xc76 <auto_start+0x49e>
 			//sbuf[20] = "BACKWARD";
 		}
 		else if (ultrasonic_right_distance <= 4)
-     92e:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
-     932:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
-     936:	05 97       	sbiw	r24, 0x05	; 5
-     938:	5c f4       	brge	.+22     	; 0x950 <auto_start+0x172>
+     928:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
+     92c:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
+     930:	05 97       	sbiw	r24, 0x05	; 5
+     932:	5c f4       	brge	.+22     	; 0x94a <auto_start+0x172>
 		{
 			run_state = TURN_LEFT;
-     93a:	82 e0       	ldi	r24, 0x02	; 2
-     93c:	90 e0       	ldi	r25, 0x00	; 0
-     93e:	9a 83       	std	Y+2, r25	; 0x02
-     940:	89 83       	std	Y+1, r24	; 0x01
+     934:	82 e0       	ldi	r24, 0x02	; 2
+     936:	90 e0       	ldi	r25, 0x00	; 0
+     938:	9a 83       	std	Y+2, r25	; 0x02
+     93a:	89 83       	std	Y+1, r24	; 0x01
 			//turn_left(500);
 			current_speed = 500;
-     942:	84 ef       	ldi	r24, 0xF4	; 244
-     944:	91 e0       	ldi	r25, 0x01	; 1
-     946:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
-     94a:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
-     94e:	96 c1       	rjmp	.+812    	; 0xc7c <auto_start+0x49e>
+     93c:	84 ef       	ldi	r24, 0xF4	; 244
+     93e:	91 e0       	ldi	r25, 0x01	; 1
+     940:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
+     944:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
+     948:	96 c1       	rjmp	.+812    	; 0xc76 <auto_start+0x49e>
 			//sbuf[20] = "BACKWARD";
 		}
 		else if (ultrasonic_left_distance <= 4)
-     950:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
-     954:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
-     958:	05 97       	sbiw	r24, 0x05	; 5
-     95a:	5c f4       	brge	.+22     	; 0x972 <auto_start+0x194>
+     94a:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
+     94e:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
+     952:	05 97       	sbiw	r24, 0x05	; 5
+     954:	5c f4       	brge	.+22     	; 0x96c <auto_start+0x194>
 		{
 			run_state = TURN_RIGHT;
-     95c:	83 e0       	ldi	r24, 0x03	; 3
-     95e:	90 e0       	ldi	r25, 0x00	; 0
-     960:	9a 83       	std	Y+2, r25	; 0x02
-     962:	89 83       	std	Y+1, r24	; 0x01
+     956:	83 e0       	ldi	r24, 0x03	; 3
+     958:	90 e0       	ldi	r25, 0x00	; 0
+     95a:	9a 83       	std	Y+2, r25	; 0x02
+     95c:	89 83       	std	Y+1, r24	; 0x01
 			//turn_right(500);
 			current_speed = 500;
-     964:	84 ef       	ldi	r24, 0xF4	; 244
-     966:	91 e0       	ldi	r25, 0x01	; 1
-     968:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
-     96c:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
-     970:	85 c1       	rjmp	.+778    	; 0xc7c <auto_start+0x49e>
+     95e:	84 ef       	ldi	r24, 0xF4	; 244
+     960:	91 e0       	ldi	r25, 0x01	; 1
+     962:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
+     966:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
+     96a:	85 c1       	rjmp	.+778    	; 0xc76 <auto_start+0x49e>
 			//sbuf[20] = "BACKWARD";
 		}
 		else if (ultrasonic_left_distance <= 3 && ultrasonic_center_distance <= 3 && ultrasonic_right_distance <= 3)
-     972:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
-     976:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
-     97a:	04 97       	sbiw	r24, 0x04	; 4
-     97c:	bc f4       	brge	.+46     	; 0x9ac <auto_start+0x1ce>
-     97e:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
-     982:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
-     986:	04 97       	sbiw	r24, 0x04	; 4
-     988:	8c f4       	brge	.+34     	; 0x9ac <auto_start+0x1ce>
-     98a:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
-     98e:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
-     992:	04 97       	sbiw	r24, 0x04	; 4
-     994:	5c f4       	brge	.+22     	; 0x9ac <auto_start+0x1ce>
+     96c:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
+     970:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
+     974:	04 97       	sbiw	r24, 0x04	; 4
+     976:	bc f4       	brge	.+46     	; 0x9a6 <auto_start+0x1ce>
+     978:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
+     97c:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
+     980:	04 97       	sbiw	r24, 0x04	; 4
+     982:	8c f4       	brge	.+34     	; 0x9a6 <auto_start+0x1ce>
+     984:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
+     988:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
+     98c:	04 97       	sbiw	r24, 0x04	; 4
+     98e:	5c f4       	brge	.+22     	; 0x9a6 <auto_start+0x1ce>
 		{
 			run_state = BACKWARD;
-     996:	81 e0       	ldi	r24, 0x01	; 1
-     998:	90 e0       	ldi	r25, 0x00	; 0
-     99a:	9a 83       	std	Y+2, r25	; 0x02
-     99c:	89 83       	std	Y+1, r24	; 0x01
+     990:	81 e0       	ldi	r24, 0x01	; 1
+     992:	90 e0       	ldi	r25, 0x00	; 0
+     994:	9a 83       	std	Y+2, r25	; 0x02
+     996:	89 83       	std	Y+1, r24	; 0x01
 			//backward(600);
 			current_speed = 600;
-     99e:	88 e5       	ldi	r24, 0x58	; 88
-     9a0:	92 e0       	ldi	r25, 0x02	; 2
-     9a2:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
-     9a6:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
-     9aa:	68 c1       	rjmp	.+720    	; 0xc7c <auto_start+0x49e>
+     998:	88 e5       	ldi	r24, 0x58	; 88
+     99a:	92 e0       	ldi	r25, 0x02	; 2
+     99c:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
+     9a0:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
+     9a4:	68 c1       	rjmp	.+720    	; 0xc76 <auto_start+0x49e>
 			//sbuf[20] = "BACKWARD";
 		}
 		else if(ultrasonic_right_distance - ultrasonic_left_distance < 4 && ultrasonic_left_distance - ultrasonic_right_distance < 4 && ultrasonic_center_distance >= 10)
-     9ac:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
-     9b0:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
-     9b4:	20 91 82 01 	lds	r18, 0x0182	; 0x800182 <ultrasonic_left_distance>
-     9b8:	30 91 83 01 	lds	r19, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
-     9bc:	82 1b       	sub	r24, r18
-     9be:	93 0b       	sbc	r25, r19
-     9c0:	04 97       	sbiw	r24, 0x04	; 4
-     9c2:	dc f4       	brge	.+54     	; 0x9fa <auto_start+0x21c>
-     9c4:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
-     9c8:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
-     9cc:	20 91 7e 01 	lds	r18, 0x017E	; 0x80017e <ultrasonic_right_distance>
-     9d0:	30 91 7f 01 	lds	r19, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
-     9d4:	82 1b       	sub	r24, r18
-     9d6:	93 0b       	sbc	r25, r19
-     9d8:	04 97       	sbiw	r24, 0x04	; 4
-     9da:	7c f4       	brge	.+30     	; 0x9fa <auto_start+0x21c>
-     9dc:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
-     9e0:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
-     9e4:	0a 97       	sbiw	r24, 0x0a	; 10
-     9e6:	4c f0       	brlt	.+18     	; 0x9fa <auto_start+0x21c>
+     9a6:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
+     9aa:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
+     9ae:	20 91 82 01 	lds	r18, 0x0182	; 0x800182 <ultrasonic_left_distance>
+     9b2:	30 91 83 01 	lds	r19, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
+     9b6:	82 1b       	sub	r24, r18
+     9b8:	93 0b       	sbc	r25, r19
+     9ba:	04 97       	sbiw	r24, 0x04	; 4
+     9bc:	dc f4       	brge	.+54     	; 0x9f4 <auto_start+0x21c>
+     9be:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
+     9c2:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
+     9c6:	20 91 7e 01 	lds	r18, 0x017E	; 0x80017e <ultrasonic_right_distance>
+     9ca:	30 91 7f 01 	lds	r19, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
+     9ce:	82 1b       	sub	r24, r18
+     9d0:	93 0b       	sbc	r25, r19
+     9d2:	04 97       	sbiw	r24, 0x04	; 4
+     9d4:	7c f4       	brge	.+30     	; 0x9f4 <auto_start+0x21c>
+     9d6:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
+     9da:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
+     9de:	0a 97       	sbiw	r24, 0x0a	; 10
+     9e0:	4c f0       	brlt	.+18     	; 0x9f4 <auto_start+0x21c>
 		{
 			run_state = FORWARD;
-     9e8:	1a 82       	std	Y+2, r1	; 0x02
-     9ea:	19 82       	std	Y+1, r1	; 0x01
+     9e2:	1a 82       	std	Y+2, r1	; 0x02
+     9e4:	19 82       	std	Y+1, r1	; 0x01
 			//forward(300);
 			current_speed = 300;
-     9ec:	8c e2       	ldi	r24, 0x2C	; 44
-     9ee:	91 e0       	ldi	r25, 0x01	; 1
-     9f0:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
-     9f4:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
-     9f8:	41 c1       	rjmp	.+642    	; 0xc7c <auto_start+0x49e>
+     9e6:	8c e2       	ldi	r24, 0x2C	; 44
+     9e8:	91 e0       	ldi	r25, 0x01	; 1
+     9ea:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
+     9ee:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
+     9f2:	41 c1       	rjmp	.+642    	; 0xc76 <auto_start+0x49e>
 			//sbuf[20] = "FORWARD";
 		}
 		else if (ultrasonic_center_distance >= 800 || ultrasonic_left_distance >= 800 || ultrasonic_right_distance >= 800)
-     9fa:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
-     9fe:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
-     a02:	80 32       	cpi	r24, 0x20	; 32
-     a04:	93 40       	sbci	r25, 0x03	; 3
-     a06:	74 f4       	brge	.+28     	; 0xa24 <auto_start+0x246>
-     a08:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
-     a0c:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
-     a10:	80 32       	cpi	r24, 0x20	; 32
-     a12:	93 40       	sbci	r25, 0x03	; 3
-     a14:	3c f4       	brge	.+14     	; 0xa24 <auto_start+0x246>
-     a16:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
-     a1a:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
-     a1e:	80 32       	cpi	r24, 0x20	; 32
-     a20:	93 40       	sbci	r25, 0x03	; 3
-     a22:	5c f0       	brlt	.+22     	; 0xa3a <auto_start+0x25c>
+     9f4:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
+     9f8:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
+     9fc:	80 32       	cpi	r24, 0x20	; 32
+     9fe:	93 40       	sbci	r25, 0x03	; 3
+     a00:	74 f4       	brge	.+28     	; 0xa1e <auto_start+0x246>
+     a02:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
+     a06:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
+     a0a:	80 32       	cpi	r24, 0x20	; 32
+     a0c:	93 40       	sbci	r25, 0x03	; 3
+     a0e:	3c f4       	brge	.+14     	; 0xa1e <auto_start+0x246>
+     a10:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
+     a14:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
+     a18:	80 32       	cpi	r24, 0x20	; 32
+     a1a:	93 40       	sbci	r25, 0x03	; 3
+     a1c:	5c f0       	brlt	.+22     	; 0xa34 <auto_start+0x25c>
 		{
 			run_state = BACKWARD;
-     a24:	81 e0       	ldi	r24, 0x01	; 1
-     a26:	90 e0       	ldi	r25, 0x00	; 0
-     a28:	9a 83       	std	Y+2, r25	; 0x02
-     a2a:	89 83       	std	Y+1, r24	; 0x01
+     a1e:	81 e0       	ldi	r24, 0x01	; 1
+     a20:	90 e0       	ldi	r25, 0x00	; 0
+     a22:	9a 83       	std	Y+2, r25	; 0x02
+     a24:	89 83       	std	Y+1, r24	; 0x01
 			//backward(400);
 			current_speed = 400;
-     a2c:	80 e9       	ldi	r24, 0x90	; 144
-     a2e:	91 e0       	ldi	r25, 0x01	; 1
-     a30:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
-     a34:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
-     a38:	21 c1       	rjmp	.+578    	; 0xc7c <auto_start+0x49e>
+     a26:	80 e9       	ldi	r24, 0x90	; 144
+     a28:	91 e0       	ldi	r25, 0x01	; 1
+     a2a:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
+     a2e:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
+     a32:	21 c1       	rjmp	.+578    	; 0xc76 <auto_start+0x49e>
 			//sbuf[20] = "BACKWARD";
 		}
  		
 		 ///좁은 길
 		else if (ultrasonic_right_distance <= 7 && ultrasonic_center_distance <= 15 && ultrasonic_right_distance > 3 && ultrasonic_center_distance > 3)
-     a3a:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
-     a3e:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
-     a42:	08 97       	sbiw	r24, 0x08	; 8
-     a44:	ec f4       	brge	.+58     	; 0xa80 <auto_start+0x2a2>
-     a46:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
-     a4a:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
-     a4e:	40 97       	sbiw	r24, 0x10	; 16
-     a50:	bc f4       	brge	.+46     	; 0xa80 <auto_start+0x2a2>
-     a52:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
-     a56:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
-     a5a:	04 97       	sbiw	r24, 0x04	; 4
-     a5c:	8c f0       	brlt	.+34     	; 0xa80 <auto_start+0x2a2>
-     a5e:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
-     a62:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
-     a66:	04 97       	sbiw	r24, 0x04	; 4
-     a68:	5c f0       	brlt	.+22     	; 0xa80 <auto_start+0x2a2>
+     a34:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
+     a38:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
+     a3c:	08 97       	sbiw	r24, 0x08	; 8
+     a3e:	ec f4       	brge	.+58     	; 0xa7a <auto_start+0x2a2>
+     a40:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
+     a44:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
+     a48:	40 97       	sbiw	r24, 0x10	; 16
+     a4a:	bc f4       	brge	.+46     	; 0xa7a <auto_start+0x2a2>
+     a4c:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
+     a50:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
+     a54:	04 97       	sbiw	r24, 0x04	; 4
+     a56:	8c f0       	brlt	.+34     	; 0xa7a <auto_start+0x2a2>
+     a58:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
+     a5c:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
+     a60:	04 97       	sbiw	r24, 0x04	; 4
+     a62:	5c f0       	brlt	.+22     	; 0xa7a <auto_start+0x2a2>
 		{
 			run_state = TURN_LEFT;
-     a6a:	82 e0       	ldi	r24, 0x02	; 2
-     a6c:	90 e0       	ldi	r25, 0x00	; 0
-     a6e:	9a 83       	std	Y+2, r25	; 0x02
-     a70:	89 83       	std	Y+1, r24	; 0x01
+     a64:	82 e0       	ldi	r24, 0x02	; 2
+     a66:	90 e0       	ldi	r25, 0x00	; 0
+     a68:	9a 83       	std	Y+2, r25	; 0x02
+     a6a:	89 83       	std	Y+1, r24	; 0x01
 			//turn_left(400);
 			current_speed = 400;
-     a72:	80 e9       	ldi	r24, 0x90	; 144
-     a74:	91 e0       	ldi	r25, 0x01	; 1
-     a76:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
-     a7a:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
-     a7e:	fe c0       	rjmp	.+508    	; 0xc7c <auto_start+0x49e>
+     a6c:	80 e9       	ldi	r24, 0x90	; 144
+     a6e:	91 e0       	ldi	r25, 0x01	; 1
+     a70:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
+     a74:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
+     a78:	fe c0       	rjmp	.+508    	; 0xc76 <auto_start+0x49e>
 			//sbuf[20] = "TRUN LEFT";
 		}
 		else if (ultrasonic_left_distance <= 7 && ultrasonic_center_distance <= 15 && ultrasonic_left_distance > 3 && ultrasonic_center_distance > 3)
-     a80:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
-     a84:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
-     a88:	08 97       	sbiw	r24, 0x08	; 8
-     a8a:	ec f4       	brge	.+58     	; 0xac6 <auto_start+0x2e8>
-     a8c:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
-     a90:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
-     a94:	40 97       	sbiw	r24, 0x10	; 16
-     a96:	bc f4       	brge	.+46     	; 0xac6 <auto_start+0x2e8>
-     a98:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
-     a9c:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
-     aa0:	04 97       	sbiw	r24, 0x04	; 4
-     aa2:	8c f0       	brlt	.+34     	; 0xac6 <auto_start+0x2e8>
-     aa4:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
-     aa8:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
-     aac:	04 97       	sbiw	r24, 0x04	; 4
-     aae:	5c f0       	brlt	.+22     	; 0xac6 <auto_start+0x2e8>
+     a7a:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
+     a7e:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
+     a82:	08 97       	sbiw	r24, 0x08	; 8
+     a84:	ec f4       	brge	.+58     	; 0xac0 <auto_start+0x2e8>
+     a86:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
+     a8a:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
+     a8e:	40 97       	sbiw	r24, 0x10	; 16
+     a90:	bc f4       	brge	.+46     	; 0xac0 <auto_start+0x2e8>
+     a92:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
+     a96:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
+     a9a:	04 97       	sbiw	r24, 0x04	; 4
+     a9c:	8c f0       	brlt	.+34     	; 0xac0 <auto_start+0x2e8>
+     a9e:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
+     aa2:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
+     aa6:	04 97       	sbiw	r24, 0x04	; 4
+     aa8:	5c f0       	brlt	.+22     	; 0xac0 <auto_start+0x2e8>
 		{
 			run_state = TURN_RIGHT;
-     ab0:	83 e0       	ldi	r24, 0x03	; 3
-     ab2:	90 e0       	ldi	r25, 0x00	; 0
-     ab4:	9a 83       	std	Y+2, r25	; 0x02
-     ab6:	89 83       	std	Y+1, r24	; 0x01
+     aaa:	83 e0       	ldi	r24, 0x03	; 3
+     aac:	90 e0       	ldi	r25, 0x00	; 0
+     aae:	9a 83       	std	Y+2, r25	; 0x02
+     ab0:	89 83       	std	Y+1, r24	; 0x01
 			//turn_right(400);
 			current_speed = 400;
-     ab8:	80 e9       	ldi	r24, 0x90	; 144
-     aba:	91 e0       	ldi	r25, 0x01	; 1
-     abc:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
-     ac0:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
-     ac4:	db c0       	rjmp	.+438    	; 0xc7c <auto_start+0x49e>
+     ab2:	80 e9       	ldi	r24, 0x90	; 144
+     ab4:	91 e0       	ldi	r25, 0x01	; 1
+     ab6:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
+     aba:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
+     abe:	db c0       	rjmp	.+438    	; 0xc76 <auto_start+0x49e>
 		}		
 		
 		 ///
 		 
 		 /// 넓은 길
 		 else if (ultrasonic_right_distance <= 20 && ultrasonic_center_distance <= 30 && ultrasonic_right_distance > 3 && ultrasonic_center_distance > 3)
-     ac6:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
-     aca:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
-     ace:	45 97       	sbiw	r24, 0x15	; 21
-     ad0:	ec f4       	brge	.+58     	; 0xb0c <auto_start+0x32e>
-     ad2:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
-     ad6:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
-     ada:	4f 97       	sbiw	r24, 0x1f	; 31
-     adc:	bc f4       	brge	.+46     	; 0xb0c <auto_start+0x32e>
-     ade:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
-     ae2:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
-     ae6:	04 97       	sbiw	r24, 0x04	; 4
-     ae8:	8c f0       	brlt	.+34     	; 0xb0c <auto_start+0x32e>
-     aea:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
-     aee:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
-     af2:	04 97       	sbiw	r24, 0x04	; 4
-     af4:	5c f0       	brlt	.+22     	; 0xb0c <auto_start+0x32e>
+     ac0:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
+     ac4:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
+     ac8:	45 97       	sbiw	r24, 0x15	; 21
+     aca:	ec f4       	brge	.+58     	; 0xb06 <auto_start+0x32e>
+     acc:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
+     ad0:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
+     ad4:	4f 97       	sbiw	r24, 0x1f	; 31
+     ad6:	bc f4       	brge	.+46     	; 0xb06 <auto_start+0x32e>
+     ad8:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
+     adc:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
+     ae0:	04 97       	sbiw	r24, 0x04	; 4
+     ae2:	8c f0       	brlt	.+34     	; 0xb06 <auto_start+0x32e>
+     ae4:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
+     ae8:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
+     aec:	04 97       	sbiw	r24, 0x04	; 4
+     aee:	5c f0       	brlt	.+22     	; 0xb06 <auto_start+0x32e>
 		 {
 			 run_state = TURN_LEFT;
-     af6:	82 e0       	ldi	r24, 0x02	; 2
-     af8:	90 e0       	ldi	r25, 0x00	; 0
-     afa:	9a 83       	std	Y+2, r25	; 0x02
-     afc:	89 83       	std	Y+1, r24	; 0x01
+     af0:	82 e0       	ldi	r24, 0x02	; 2
+     af2:	90 e0       	ldi	r25, 0x00	; 0
+     af4:	9a 83       	std	Y+2, r25	; 0x02
+     af6:	89 83       	std	Y+1, r24	; 0x01
 			 //turn_left(500);
 			 current_speed = 500;
-     afe:	84 ef       	ldi	r24, 0xF4	; 244
-     b00:	91 e0       	ldi	r25, 0x01	; 1
-     b02:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
-     b06:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
-     b0a:	b8 c0       	rjmp	.+368    	; 0xc7c <auto_start+0x49e>
+     af8:	84 ef       	ldi	r24, 0xF4	; 244
+     afa:	91 e0       	ldi	r25, 0x01	; 1
+     afc:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
+     b00:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
+     b04:	b8 c0       	rjmp	.+368    	; 0xc76 <auto_start+0x49e>
 			 //sbuf[20] = "TRUN LEFT";
 		 }
 		 else if (ultrasonic_left_distance <= 20 && ultrasonic_center_distance <= 30 && ultrasonic_left_distance > 3 && ultrasonic_center_distance > 3)
-     b0c:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
-     b10:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
-     b14:	45 97       	sbiw	r24, 0x15	; 21
-     b16:	ec f4       	brge	.+58     	; 0xb52 <auto_start+0x374>
-     b18:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
-     b1c:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
-     b20:	4f 97       	sbiw	r24, 0x1f	; 31
-     b22:	bc f4       	brge	.+46     	; 0xb52 <auto_start+0x374>
-     b24:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
-     b28:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
-     b2c:	04 97       	sbiw	r24, 0x04	; 4
-     b2e:	8c f0       	brlt	.+34     	; 0xb52 <auto_start+0x374>
-     b30:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
-     b34:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
-     b38:	04 97       	sbiw	r24, 0x04	; 4
-     b3a:	5c f0       	brlt	.+22     	; 0xb52 <auto_start+0x374>
+     b06:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
+     b0a:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
+     b0e:	45 97       	sbiw	r24, 0x15	; 21
+     b10:	ec f4       	brge	.+58     	; 0xb4c <auto_start+0x374>
+     b12:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
+     b16:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
+     b1a:	4f 97       	sbiw	r24, 0x1f	; 31
+     b1c:	bc f4       	brge	.+46     	; 0xb4c <auto_start+0x374>
+     b1e:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
+     b22:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
+     b26:	04 97       	sbiw	r24, 0x04	; 4
+     b28:	8c f0       	brlt	.+34     	; 0xb4c <auto_start+0x374>
+     b2a:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
+     b2e:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
+     b32:	04 97       	sbiw	r24, 0x04	; 4
+     b34:	5c f0       	brlt	.+22     	; 0xb4c <auto_start+0x374>
 		 {
 			 run_state = TURN_RIGHT;
-     b3c:	83 e0       	ldi	r24, 0x03	; 3
-     b3e:	90 e0       	ldi	r25, 0x00	; 0
-     b40:	9a 83       	std	Y+2, r25	; 0x02
-     b42:	89 83       	std	Y+1, r24	; 0x01
+     b36:	83 e0       	ldi	r24, 0x03	; 3
+     b38:	90 e0       	ldi	r25, 0x00	; 0
+     b3a:	9a 83       	std	Y+2, r25	; 0x02
+     b3c:	89 83       	std	Y+1, r24	; 0x01
 			 //turn_right(500);
 			 current_speed = 500;
-     b44:	84 ef       	ldi	r24, 0xF4	; 244
-     b46:	91 e0       	ldi	r25, 0x01	; 1
-     b48:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
-     b4c:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
-     b50:	95 c0       	rjmp	.+298    	; 0xc7c <auto_start+0x49e>
+     b3e:	84 ef       	ldi	r24, 0xF4	; 244
+     b40:	91 e0       	ldi	r25, 0x01	; 1
+     b42:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
+     b46:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
+     b4a:	95 c0       	rjmp	.+298    	; 0xc76 <auto_start+0x49e>
 			 //sbuf[20] = "TRUN RIGHT";
 		 }
 		 ///
 		 else if (ultrasonic_right_distance <= 20)
-     b52:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
-     b56:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
-     b5a:	45 97       	sbiw	r24, 0x15	; 21
-     b5c:	5c f4       	brge	.+22     	; 0xb74 <auto_start+0x396>
+     b4c:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
+     b50:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
+     b54:	45 97       	sbiw	r24, 0x15	; 21
+     b56:	5c f4       	brge	.+22     	; 0xb6e <auto_start+0x396>
 		 {
 			 run_state = TURN_LEFT;
-     b5e:	82 e0       	ldi	r24, 0x02	; 2
-     b60:	90 e0       	ldi	r25, 0x00	; 0
-     b62:	9a 83       	std	Y+2, r25	; 0x02
-     b64:	89 83       	std	Y+1, r24	; 0x01
+     b58:	82 e0       	ldi	r24, 0x02	; 2
+     b5a:	90 e0       	ldi	r25, 0x00	; 0
+     b5c:	9a 83       	std	Y+2, r25	; 0x02
+     b5e:	89 83       	std	Y+1, r24	; 0x01
 			 //turn_left(500);
 			 current_speed = 500;
-     b66:	84 ef       	ldi	r24, 0xF4	; 244
-     b68:	91 e0       	ldi	r25, 0x01	; 1
-     b6a:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
-     b6e:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
-     b72:	84 c0       	rjmp	.+264    	; 0xc7c <auto_start+0x49e>
+     b60:	84 ef       	ldi	r24, 0xF4	; 244
+     b62:	91 e0       	ldi	r25, 0x01	; 1
+     b64:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
+     b68:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
+     b6c:	84 c0       	rjmp	.+264    	; 0xc76 <auto_start+0x49e>
 			 //sbuf[20] = "TRUN LEFT";
 		 }
 		 else if (ultrasonic_left_distance <= 20)
-     b74:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
-     b78:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
-     b7c:	45 97       	sbiw	r24, 0x15	; 21
-     b7e:	5c f4       	brge	.+22     	; 0xb96 <auto_start+0x3b8>
+     b6e:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
+     b72:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
+     b76:	45 97       	sbiw	r24, 0x15	; 21
+     b78:	5c f4       	brge	.+22     	; 0xb90 <auto_start+0x3b8>
 		 {
 			 run_state = TURN_RIGHT;
-     b80:	83 e0       	ldi	r24, 0x03	; 3
-     b82:	90 e0       	ldi	r25, 0x00	; 0
-     b84:	9a 83       	std	Y+2, r25	; 0x02
-     b86:	89 83       	std	Y+1, r24	; 0x01
+     b7a:	83 e0       	ldi	r24, 0x03	; 3
+     b7c:	90 e0       	ldi	r25, 0x00	; 0
+     b7e:	9a 83       	std	Y+2, r25	; 0x02
+     b80:	89 83       	std	Y+1, r24	; 0x01
 			 //turn_right(500);
 			 current_speed = 500;
-     b88:	84 ef       	ldi	r24, 0xF4	; 244
-     b8a:	91 e0       	ldi	r25, 0x01	; 1
-     b8c:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
-     b90:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
-     b94:	73 c0       	rjmp	.+230    	; 0xc7c <auto_start+0x49e>
+     b82:	84 ef       	ldi	r24, 0xF4	; 244
+     b84:	91 e0       	ldi	r25, 0x01	; 1
+     b86:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
+     b8a:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
+     b8e:	73 c0       	rjmp	.+230    	; 0xc76 <auto_start+0x49e>
 			 //sbuf[20] = "TRUN RIGHT";
 		 }
 		 
 		
 		else if ((ultrasonic_left_distance - ultrasonic_right_distance <= 2 && ultrasonic_right_distance - ultrasonic_left_distance <= 2) || ultrasonic_center_distance >= 20 && ultrasonic_center_distance <= 200)
-     b96:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
-     b9a:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
-     b9e:	20 91 7e 01 	lds	r18, 0x017E	; 0x80017e <ultrasonic_right_distance>
-     ba2:	30 91 7f 01 	lds	r19, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
-     ba6:	82 1b       	sub	r24, r18
-     ba8:	93 0b       	sbc	r25, r19
-     baa:	03 97       	sbiw	r24, 0x03	; 3
-     bac:	64 f4       	brge	.+24     	; 0xbc6 <auto_start+0x3e8>
-     bae:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
-     bb2:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
-     bb6:	20 91 82 01 	lds	r18, 0x0182	; 0x800182 <ultrasonic_left_distance>
-     bba:	30 91 83 01 	lds	r19, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
-     bbe:	82 1b       	sub	r24, r18
-     bc0:	93 0b       	sbc	r25, r19
-     bc2:	03 97       	sbiw	r24, 0x03	; 3
-     bc4:	6c f0       	brlt	.+26     	; 0xbe0 <auto_start+0x402>
-     bc6:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
-     bca:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
-     bce:	44 97       	sbiw	r24, 0x14	; 20
-     bd0:	84 f0       	brlt	.+32     	; 0xbf2 <auto_start+0x414>
-     bd2:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
-     bd6:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
-     bda:	89 3c       	cpi	r24, 0xC9	; 201
-     bdc:	91 05       	cpc	r25, r1
-     bde:	4c f4       	brge	.+18     	; 0xbf2 <auto_start+0x414>
+     b90:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
+     b94:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
+     b98:	20 91 7e 01 	lds	r18, 0x017E	; 0x80017e <ultrasonic_right_distance>
+     b9c:	30 91 7f 01 	lds	r19, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
+     ba0:	82 1b       	sub	r24, r18
+     ba2:	93 0b       	sbc	r25, r19
+     ba4:	03 97       	sbiw	r24, 0x03	; 3
+     ba6:	64 f4       	brge	.+24     	; 0xbc0 <auto_start+0x3e8>
+     ba8:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
+     bac:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
+     bb0:	20 91 82 01 	lds	r18, 0x0182	; 0x800182 <ultrasonic_left_distance>
+     bb4:	30 91 83 01 	lds	r19, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
+     bb8:	82 1b       	sub	r24, r18
+     bba:	93 0b       	sbc	r25, r19
+     bbc:	03 97       	sbiw	r24, 0x03	; 3
+     bbe:	6c f0       	brlt	.+26     	; 0xbda <auto_start+0x402>
+     bc0:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
+     bc4:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
+     bc8:	44 97       	sbiw	r24, 0x14	; 20
+     bca:	84 f0       	brlt	.+32     	; 0xbec <auto_start+0x414>
+     bcc:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
+     bd0:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
+     bd4:	89 3c       	cpi	r24, 0xC9	; 201
+     bd6:	91 05       	cpc	r25, r1
+     bd8:	4c f4       	brge	.+18     	; 0xbec <auto_start+0x414>
 		{
 			run_state = FORWARD;
-     be0:	1a 82       	std	Y+2, r1	; 0x02
-     be2:	19 82       	std	Y+1, r1	; 0x01
+     bda:	1a 82       	std	Y+2, r1	; 0x02
+     bdc:	19 82       	std	Y+1, r1	; 0x01
 			//forward(350);
 			current_speed = 350;
-     be4:	8e e5       	ldi	r24, 0x5E	; 94
-     be6:	91 e0       	ldi	r25, 0x01	; 1
-     be8:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
-     bec:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
-     bf0:	45 c0       	rjmp	.+138    	; 0xc7c <auto_start+0x49e>
+     bde:	8e e5       	ldi	r24, 0x5E	; 94
+     be0:	91 e0       	ldi	r25, 0x01	; 1
+     be2:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
+     be6:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
+     bea:	45 c0       	rjmp	.+138    	; 0xc76 <auto_start+0x49e>
 			//sbuf[20] = "FORWARD";
 		}
 		else if(ultrasonic_right_distance - ultrasonic_left_distance <= 4 && ultrasonic_center_distance <= 7 && ultrasonic_right_distance > 5)
-     bf2:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
-     bf6:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
-     bfa:	20 91 82 01 	lds	r18, 0x0182	; 0x800182 <ultrasonic_left_distance>
-     bfe:	30 91 83 01 	lds	r19, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
-     c02:	82 1b       	sub	r24, r18
-     c04:	93 0b       	sbc	r25, r19
-     c06:	05 97       	sbiw	r24, 0x05	; 5
-     c08:	bc f4       	brge	.+46     	; 0xc38 <auto_start+0x45a>
-     c0a:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
-     c0e:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
-     c12:	08 97       	sbiw	r24, 0x08	; 8
-     c14:	8c f4       	brge	.+34     	; 0xc38 <auto_start+0x45a>
-     c16:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
-     c1a:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
-     c1e:	06 97       	sbiw	r24, 0x06	; 6
-     c20:	5c f0       	brlt	.+22     	; 0xc38 <auto_start+0x45a>
+     bec:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
+     bf0:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
+     bf4:	20 91 82 01 	lds	r18, 0x0182	; 0x800182 <ultrasonic_left_distance>
+     bf8:	30 91 83 01 	lds	r19, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
+     bfc:	82 1b       	sub	r24, r18
+     bfe:	93 0b       	sbc	r25, r19
+     c00:	05 97       	sbiw	r24, 0x05	; 5
+     c02:	bc f4       	brge	.+46     	; 0xc32 <auto_start+0x45a>
+     c04:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
+     c08:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
+     c0c:	08 97       	sbiw	r24, 0x08	; 8
+     c0e:	8c f4       	brge	.+34     	; 0xc32 <auto_start+0x45a>
+     c10:	80 91 7e 01 	lds	r24, 0x017E	; 0x80017e <ultrasonic_right_distance>
+     c14:	90 91 7f 01 	lds	r25, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
+     c18:	06 97       	sbiw	r24, 0x06	; 6
+     c1a:	5c f0       	brlt	.+22     	; 0xc32 <auto_start+0x45a>
 		{
 			run_state = TURN_LEFT;
-     c22:	82 e0       	ldi	r24, 0x02	; 2
-     c24:	90 e0       	ldi	r25, 0x00	; 0
-     c26:	9a 83       	std	Y+2, r25	; 0x02
-     c28:	89 83       	std	Y+1, r24	; 0x01
+     c1c:	82 e0       	ldi	r24, 0x02	; 2
+     c1e:	90 e0       	ldi	r25, 0x00	; 0
+     c20:	9a 83       	std	Y+2, r25	; 0x02
+     c22:	89 83       	std	Y+1, r24	; 0x01
 			//turn_left(500);
 			current_speed = 500;
-     c2a:	84 ef       	ldi	r24, 0xF4	; 244
-     c2c:	91 e0       	ldi	r25, 0x01	; 1
-     c2e:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
-     c32:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
-     c36:	22 c0       	rjmp	.+68     	; 0xc7c <auto_start+0x49e>
+     c24:	84 ef       	ldi	r24, 0xF4	; 244
+     c26:	91 e0       	ldi	r25, 0x01	; 1
+     c28:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
+     c2c:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
+     c30:	22 c0       	rjmp	.+68     	; 0xc76 <auto_start+0x49e>
 			//sbuf[20] = "TRUN LEFT";
 		}
 		else if(ultrasonic_left_distance - ultrasonic_right_distance <= 4 && ultrasonic_center_distance <= 7 && ultrasonic_left_distance > 5)
-     c38:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
-     c3c:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
-     c40:	20 91 7e 01 	lds	r18, 0x017E	; 0x80017e <ultrasonic_right_distance>
-     c44:	30 91 7f 01 	lds	r19, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
-     c48:	82 1b       	sub	r24, r18
-     c4a:	93 0b       	sbc	r25, r19
-     c4c:	05 97       	sbiw	r24, 0x05	; 5
-     c4e:	b4 f4       	brge	.+44     	; 0xc7c <auto_start+0x49e>
-     c50:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
-     c54:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
-     c58:	08 97       	sbiw	r24, 0x08	; 8
-     c5a:	84 f4       	brge	.+32     	; 0xc7c <auto_start+0x49e>
-     c5c:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
-     c60:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
-     c64:	06 97       	sbiw	r24, 0x06	; 6
-     c66:	54 f0       	brlt	.+20     	; 0xc7c <auto_start+0x49e>
+     c32:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
+     c36:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
+     c3a:	20 91 7e 01 	lds	r18, 0x017E	; 0x80017e <ultrasonic_right_distance>
+     c3e:	30 91 7f 01 	lds	r19, 0x017F	; 0x80017f <ultrasonic_right_distance+0x1>
+     c42:	82 1b       	sub	r24, r18
+     c44:	93 0b       	sbc	r25, r19
+     c46:	05 97       	sbiw	r24, 0x05	; 5
+     c48:	b4 f4       	brge	.+44     	; 0xc76 <auto_start+0x49e>
+     c4a:	80 91 80 01 	lds	r24, 0x0180	; 0x800180 <ultrasonic_center_distance>
+     c4e:	90 91 81 01 	lds	r25, 0x0181	; 0x800181 <ultrasonic_center_distance+0x1>
+     c52:	08 97       	sbiw	r24, 0x08	; 8
+     c54:	84 f4       	brge	.+32     	; 0xc76 <auto_start+0x49e>
+     c56:	80 91 82 01 	lds	r24, 0x0182	; 0x800182 <ultrasonic_left_distance>
+     c5a:	90 91 83 01 	lds	r25, 0x0183	; 0x800183 <ultrasonic_left_distance+0x1>
+     c5e:	06 97       	sbiw	r24, 0x06	; 6
+     c60:	54 f0       	brlt	.+20     	; 0xc76 <auto_start+0x49e>
 		{
 			run_state = TURN_RIGHT;
-     c68:	83 e0       	ldi	r24, 0x03	; 3
-     c6a:	90 e0       	ldi	r25, 0x00	; 0
-     c6c:	9a 83       	std	Y+2, r25	; 0x02
-     c6e:	89 83       	std	Y+1, r24	; 0x01
+     c62:	83 e0       	ldi	r24, 0x03	; 3
+     c64:	90 e0       	ldi	r25, 0x00	; 0
+     c66:	9a 83       	std	Y+2, r25	; 0x02
+     c68:	89 83       	std	Y+1, r24	; 0x01
 			//turn_right(500);
 			current_speed = 500;
-     c70:	84 ef       	ldi	r24, 0xF4	; 244
-     c72:	91 e0       	ldi	r25, 0x01	; 1
-     c74:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
-     c78:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
+     c6a:	84 ef       	ldi	r24, 0xF4	; 244
+     c6c:	91 e0       	ldi	r25, 0x01	; 1
+     c6e:	90 93 79 01 	sts	0x0179, r25	; 0x800179 <current_speed+0x1>
+     c72:	80 93 78 01 	sts	0x0178, r24	; 0x800178 <current_speed>
 			//sbuf[20] = "TRUN RIGHT";
 		}
 		
 		current_location[run_state](&current_speed);
-     c7c:	e9 81       	ldd	r30, Y+1	; 0x01
-     c7e:	fa 81       	ldd	r31, Y+2	; 0x02
-     c80:	ee 0f       	add	r30, r30
-     c82:	ff 1f       	adc	r31, r31
-     c84:	ea 5e       	subi	r30, 0xEA	; 234
-     c86:	fe 4f       	sbci	r31, 0xFE	; 254
-     c88:	01 90       	ld	r0, Z+
-     c8a:	f0 81       	ld	r31, Z
-     c8c:	e0 2d       	mov	r30, r0
+     c76:	e9 81       	ldd	r30, Y+1	; 0x01
+     c78:	fa 81       	ldd	r31, Y+2	; 0x02
+     c7a:	ee 0f       	add	r30, r30
+     c7c:	ff 1f       	adc	r31, r31
+     c7e:	ea 5e       	subi	r30, 0xEA	; 234
+     c80:	fe 4f       	sbci	r31, 0xFE	; 254
+     c82:	01 90       	ld	r0, Z+
+     c84:	f0 81       	ld	r31, Z
+     c86:	e0 2d       	mov	r30, r0
+     c88:	88 e7       	ldi	r24, 0x78	; 120
+     c8a:	91 e0       	ldi	r25, 0x01	; 1
+     c8c:	09 95       	icall
+		I2C_LCD_Test(&current_speed);
      c8e:	88 e7       	ldi	r24, 0x78	; 120
      c90:	91 e0       	ldi	r25, 0x01	; 1
-     c92:	09 95       	icall
+     c92:	5a dc       	rcall	.-1868   	; 0x548 <I2C_LCD_Test>
 {
 	int run_state;
 	sec_count = 120;
@@ -2016,12 +2017,12 @@ void auto_start(void)
      ca4:	89 2b       	or	r24, r25
      ca6:	8a 2b       	or	r24, r26
      ca8:	8b 2b       	or	r24, r27
-     caa:	09 f0       	breq	.+2      	; 0xcae <auto_start+0x4d0>
-     cac:	aa cd       	rjmp	.-1196   	; 0x802 <auto_start+0x24>
+     caa:	09 f0       	breq	.+2      	; 0xcae <auto_start+0x4d6>
+     cac:	a7 cd       	rjmp	.-1202   	; 0x7fc <auto_start+0x24>
 		}
 		
 		current_location[run_state](&current_speed);
-
+		I2C_LCD_Test(&current_speed);
 	}
      cae:	0f 90       	pop	r0
      cb0:	0f 90       	pop	r0

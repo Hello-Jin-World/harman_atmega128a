@@ -74,7 +74,7 @@ int main(void)
 
 	while (1)
 	{
-		I2C_LCD_Test(&current_speed);
+		//I2C_LCD_Test(&current_speed);
 		pfunc[func_state] ();
 	}
 }

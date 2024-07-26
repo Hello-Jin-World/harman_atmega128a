@@ -19,11 +19,11 @@ extern void I2C_write_byte(uint8_t address, uint8_t data);
 extern volatile uint32_t lcd_refreshrate;
 
 
-void I2C_LCD_Test(int *current_speed)
+void I2C_LCD_Test(int *speed)
 {
 	char sbuf[20];
 
-	sprintf(sbuf,"%3d",*current_speed);
+	sprintf(sbuf,"%3d",*speed);
 	
 	I2C_LCD_write_string_XY(1,0,sbuf);
 

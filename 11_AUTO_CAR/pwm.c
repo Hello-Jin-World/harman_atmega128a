@@ -9,6 +9,8 @@
 #include <util/delay.h>
 #include <avr/io.h>
 
+extern void I2C_LCD_Test();
+
 extern int get_button(int button_num, int button_pin);
 extern void init_button();
 
@@ -314,6 +316,6 @@ void auto_start(void)
 		}
 		
 		current_location[run_state](&current_speed);
-
+		I2C_LCD_Test(&current_speed);
 	}
 }

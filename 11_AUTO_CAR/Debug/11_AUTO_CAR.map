@@ -577,30 +577,30 @@ END GROUP
  .text.init_timer0
                 0x0000069a       0x12 main.o
                 0x0000069a                init_timer0
- .text.main     0x000006ac       0x42 main.o
+ .text.main     0x000006ac       0x3c main.o
                 0x000006ac                main
- .text.forward  0x000006ee       0x26 pwm.o
-                0x000006ee                forward
+ .text.forward  0x000006e8       0x26 pwm.o
+                0x000006e8                forward
  .text.backward
-                0x00000714       0x26 pwm.o
-                0x00000714                backward
+                0x0000070e       0x26 pwm.o
+                0x0000070e                backward
  .text.turn_left
-                0x0000073a       0x20 pwm.o
-                0x0000073a                turn_left
+                0x00000734       0x20 pwm.o
+                0x00000734                turn_left
  .text.turn_right
-                0x0000075a       0x20 pwm.o
-                0x0000075a                turn_right
+                0x00000754       0x20 pwm.o
+                0x00000754                turn_right
  .text.init_n289n
-                0x0000077a       0x22 pwm.o
-                0x0000077a                init_n289n
+                0x00000774       0x22 pwm.o
+                0x00000774                init_n289n
  .text.init_timer1_pwm
-                0x0000079c       0x28 pwm.o
-                0x0000079c                init_timer1_pwm
- .text.stop     0x000007c4       0x1a pwm.o
-                0x000007c4                stop
+                0x00000796       0x28 pwm.o
+                0x00000796                init_timer1_pwm
+ .text.stop     0x000007be       0x1a pwm.o
+                0x000007be                stop
  .text.auto_start
-                0x000007de      0x4da pwm.o
-                0x000007de                auto_start
+                0x000007d8      0x4e0 pwm.o
+                0x000007d8                auto_start
  .text.__vector_18
                 0x00000cb8       0xfc uart0.o
                 0x00000cb8                __vector_18
@@ -928,7 +928,7 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x1f7d
+.debug_info     0x00000000     0x1f62
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x780 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega128a/avr51/crtatmega128a.o
  .debug_info    0x00000780      0x225 button.o
@@ -936,13 +936,13 @@ END GROUP
  .debug_info    0x00000aab      0x197 I2C.o
  .debug_info    0x00000c42      0x545 I2C_LCD.o
  .debug_info    0x00001187       0x83 led.o
- .debug_info    0x0000120a      0x496 main.o
- .debug_info    0x000016a0      0x2ae pwm.o
- .debug_info    0x0000194e      0x199 uart0.o
- .debug_info    0x00001ae7      0x15f uart1.o
- .debug_info    0x00001c46      0x337 ultrasonic.o
+ .debug_info    0x0000120a      0x452 main.o
+ .debug_info    0x0000165c      0x2d7 pwm.o
+ .debug_info    0x00001933      0x199 uart0.o
+ .debug_info    0x00001acc      0x15f uart1.o
+ .debug_info    0x00001c2b      0x337 ultrasonic.o
 
-.debug_abbrev   0x00000000     0x12c1
+.debug_abbrev   0x00000000     0x12c3
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x718 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega128a/avr51/crtatmega128a.o
  .debug_abbrev  0x00000718      0x1a4 button.o
@@ -950,13 +950,13 @@ END GROUP
  .debug_abbrev  0x00000971       0xe1 I2C.o
  .debug_abbrev  0x00000a52      0x1a4 I2C_LCD.o
  .debug_abbrev  0x00000bf6       0x51 led.o
- .debug_abbrev  0x00000c47      0x1cb main.o
- .debug_abbrev  0x00000e12      0x13f pwm.o
- .debug_abbrev  0x00000f51      0x130 uart0.o
- .debug_abbrev  0x00001081       0xea uart1.o
- .debug_abbrev  0x0000116b      0x156 ultrasonic.o
+ .debug_abbrev  0x00000c47      0x1c0 main.o
+ .debug_abbrev  0x00000e07      0x14c pwm.o
+ .debug_abbrev  0x00000f53      0x130 uart0.o
+ .debug_abbrev  0x00001083       0xea uart1.o
+ .debug_abbrev  0x0000116d      0x156 ultrasonic.o
 
-.debug_line     0x00000000     0x14c9
+.debug_line     0x00000000     0x14c5
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x16a C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega128a/avr51/crtatmega128a.o
  .debug_line    0x0000016a      0x1b9 button.o
@@ -964,11 +964,11 @@ END GROUP
  .debug_line    0x00000445      0x18e I2C.o
  .debug_line    0x000005d3      0x2e6 I2C_LCD.o
  .debug_line    0x000008b9       0xa0 led.o
- .debug_line    0x00000959      0x1a6 main.o
- .debug_line    0x00000aff      0x486 pwm.o
- .debug_line    0x00000f85      0x161 uart0.o
- .debug_line    0x000010e6      0x109 uart1.o
- .debug_line    0x000011ef      0x2da ultrasonic.o
+ .debug_line    0x00000959      0x19c main.o
+ .debug_line    0x00000af5      0x48c pwm.o
+ .debug_line    0x00000f81      0x161 uart0.o
+ .debug_line    0x000010e2      0x109 uart1.o
+ .debug_line    0x000011eb      0x2da ultrasonic.o
 
 .debug_frame    0x00000000      0x5fc
  *(.debug_frame)
@@ -992,14 +992,14 @@ END GROUP
                                 0x1a0 (size before relaxing)
  .debug_str     0x000004a1       0x71 I2C.o
                                 0x1ba (size before relaxing)
- .debug_str     0x00000512       0xcd I2C_LCD.o
-                                0x29e (size before relaxing)
- .debug_str     0x000005df       0x14 led.o
+ .debug_str     0x00000512       0xbf I2C_LCD.o
+                                0x296 (size before relaxing)
+ .debug_str     0x000005d1       0x14 led.o
                                 0x158 (size before relaxing)
- .debug_str     0x000005f3      0x10c main.o
-                                0x2bd (size before relaxing)
- .debug_str     0x000006ff       0x91 pwm.o
-                                0x286 (size before relaxing)
+ .debug_str     0x000005e5      0x10c main.o
+                                0x2a2 (size before relaxing)
+ .debug_str     0x000006f1       0x9f pwm.o
+                                0x293 (size before relaxing)
  .debug_str     0x00000790       0x5e uart0.o
                                 0x1c1 (size before relaxing)
  .debug_str     0x000007ee       0x3e uart1.o
