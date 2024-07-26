@@ -8,7 +8,7 @@
 volatile uint32_t msec_count = 0;
 volatile uint32_t fnd_refreshrate = 0;
 volatile uint32_t ultrasonic_check_timer = 0;
-volatile uint32_t read_distance = 0;
+volatile uint32_t lcd_refreshrate = 0;
 
 extern volatile uint8_t bt_data;
 extern int button0_state;
@@ -27,6 +27,8 @@ extern void turn_left();
 extern void turn_right();
 extern void stop();
 extern void auto_mode_check();
+extern void I2C_LCD_init();
+
 
 void manual_mode();
 void auto_mode_check();
@@ -51,11 +53,12 @@ ISR(TIMER0_OVF_vect)
 	msec_count++;  // 1ms마다 ms_count가 1씩 증가
 	fnd_refreshrate++;   // fnd 잔상효과 유지 하기 위한 timer 2ms
 	ultrasonic_check_timer++;
-	read_distance++;
+	lcd_refreshrate++;
 }
 
 int main(void)
 {
+	I2C_LCD_init();
 	init_led();
 	init_fnd();
 	init_button();

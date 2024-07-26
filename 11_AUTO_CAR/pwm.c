@@ -2,6 +2,8 @@
 #include "pwm.h"
 #include "fnd.h"
 #include "def.h"
+#include "I2C.h"
+#include "I2C_LCD.h"
 #include <avr/interrupt.h>
 #define F_CPU 16000000UL
 #include <util/delay.h>
@@ -9,6 +11,9 @@
 
 extern int get_button(int button_num, int button_pin);
 extern void init_button();
+
+extern void I2C_LCD_clear(void);
+extern void I2C_write_byte(uint8_t address, uint8_t data);
 
 extern void ultrasonic_trigger();
 
@@ -141,6 +146,7 @@ void auto_start(void)
 {
 	int run_state;
 	sec_count = 120;
+	char sbuf[20];
 
 	while(sec_count > 0)
 	{
@@ -153,65 +159,119 @@ void auto_start(void)
 
 		if (fnd_refreshrate >= 2)
 		{
+			I2C_LCD_clear();
 			fnd_refreshrate = 0;
 			fnd_display(&run_state);
-		} // fnd 표시
+		} // fnd와 lcd 표시
 
-		volatile int gap1= ultrasonic_right_distance - ultrasonic_left_distance;
-		volatile int gap2= ultrasonic_left_distance - ultrasonic_right_distance;
+// 		volatile int gap1= ultrasonic_right_distance - ultrasonic_left_distance;
+// 		volatile int gap2= ultrasonic_left_distance - ultrasonic_right_distance;
 
-		if(gap1<2 && gap2 <2 && ultrasonic_center_distance >= 10)
+		sprintf(sbuf,"%3d", run_state);
+		
+		 if (ultrasonic_right_distance <= 3 && ultrasonic_center_distance <= 3)
+		{
+			run_state = BACKWARD;
+			backward(600);
+		}
+		else if (ultrasonic_left_distance <= 3 && ultrasonic_center_distance <= 3)
+		{
+			run_state = BACKWARD;
+			backward(600);
+		}
+		else if (ultrasonic_left_distance <= 3 && ultrasonic_right_distance <= 3)
+		{
+			run_state = BACKWARD;
+			backward(600);
+		}
+		else if (ultrasonic_left_distance <= 3 && ultrasonic_center_distance <= 3 && ultrasonic_right_distance <= 3)
+		{
+			run_state = BACKWARD;
+			backward(600);
+		}
+		else if(ultrasonic_right_distance - ultrasonic_left_distance < 4 && ultrasonic_left_distance - ultrasonic_right_distance < 4 && ultrasonic_center_distance >= 10)
 		{
 			run_state = FORWARD;
-			forward(350);
+			forward(300);
 		}
-		
-		else if (gap2 <= 4 && gap1 <= 4)
-		{
-			run_state = FORWARD;
-			forward(350);
-		}
-		else if (ultrasonic_right_distance <= 3)
+		else if (ultrasonic_center_distance >= 800 || ultrasonic_left_distance >= 800 || ultrasonic_right_distance >= 800)
 		{
 			run_state = BACKWARD;
 			backward(400);
 		}
-		else if (ultrasonic_left_distance <= 3)
-		{
-			run_state = BACKWARD;
-			backward(400);
-		}
-		else if(ultrasonic_center_distance <= 3)
-		{
-			run_state = BACKWARD;
-			backward(400);
-		}
-		
-		else if(gap1 <= 4 && ultrasonic_center_distance <= 7 && ultrasonic_right_distance > 3)
+ 		else if(ultrasonic_center_distance <= 4)
+ 		{
+ 			run_state = BACKWARD;
+ 			backward(600);
+ 		}
+ 		else if (ultrasonic_right_distance <= 4)
+ 		{
+ 			run_state = BACKWARD;
+ 			turn_left(400);
+ 		}
+ 		else if (ultrasonic_left_distance <= 4)
+ 		{
+ 			run_state = BACKWARD;
+ 			turn_right(400);
+ 		}
+		 ///좁은 길
+		else if (ultrasonic_right_distance <= 7 && ultrasonic_center_distance <= 15 && ultrasonic_right_distance > 3 && ultrasonic_center_distance > 3)
 		{
 			run_state = TURN_LEFT;
 			turn_left(400);
 		}
-		else if(gap2 <= 4 && ultrasonic_center_distance <= 7 && ultrasonic_left_distance > 3)
+		else if (ultrasonic_left_distance <= 7 && ultrasonic_center_distance <= 15 && ultrasonic_left_distance > 3 && ultrasonic_center_distance > 3)
 		{
 			run_state = TURN_RIGHT;
 			turn_right(400);
-		}
-		else if (ultrasonic_right_distance <= 15 )
-		{
-			run_state = TURN_LEFT;
-			turn_left(400);
-		}
-		else if (ultrasonic_left_distance <= 15 )
-		{
-			run_state = TURN_RIGHT;
-			turn_right(400);
-
-		}
-		else
+		}		
+		
+		 ///
+		 
+		 /// 넓은 길
+		 else if (ultrasonic_right_distance <= 20 && ultrasonic_center_distance <= 30 && ultrasonic_right_distance > 3 && ultrasonic_center_distance > 3)
+		 {
+			 run_state = TURN_LEFT;
+			 turn_left(400);
+		 }
+		 else if (ultrasonic_left_distance <= 20 && ultrasonic_center_distance <= 30 && ultrasonic_left_distance > 3 && ultrasonic_center_distance > 3)
+		 {
+			 run_state = TURN_RIGHT;
+			 turn_right(400);
+		 }
+		 ///
+		 else if (ultrasonic_right_distance <= 20)
+		 {
+			 run_state = TURN_LEFT;
+			 turn_left(400);
+		 }
+		 else if (ultrasonic_left_distance <= 20)
+		 {
+			 run_state = TURN_RIGHT;
+			 turn_right(400);
+		 }
+		 
+		
+		else if ((ultrasonic_left_distance - ultrasonic_right_distance <= 2 && ultrasonic_right_distance - ultrasonic_left_distance <= 2) || ultrasonic_center_distance >= 20 && ultrasonic_center_distance <= 200)
 		{
 			run_state = FORWARD;
 			forward(350);
 		}
+		else if(ultrasonic_right_distance - ultrasonic_left_distance <= 4 && ultrasonic_center_distance <= 7 && ultrasonic_right_distance > 5)
+		{
+			run_state = TURN_LEFT;
+			turn_left(400);
+		}
+		else if(ultrasonic_left_distance - ultrasonic_right_distance <= 4 && ultrasonic_center_distance <= 7 && ultrasonic_left_distance > 5)
+		{
+			run_state = TURN_RIGHT;
+			turn_right(400);
+		}
+		I2C_LCD_write_string_XY(1,0,sbuf);
+// 		else
+// 		{
+// 			run_state = BACKWARD;
+// 			forward(350);
+// 		}
 	}
 }

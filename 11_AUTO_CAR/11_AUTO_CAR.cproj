@@ -137,6 +137,18 @@
     <Compile Include="fnd.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="I2C.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="I2C.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="I2C_LCD.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="I2C_LCD.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="led.c">
       <SubType>compile</SubType>
     </Compile>

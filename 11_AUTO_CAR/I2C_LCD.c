@@ -15,41 +15,24 @@ extern void I2C_LCD_clear(void);
 extern void I2C_write_byte(uint8_t address, uint8_t data);
 #define SLA_W (0x27<<1) //I2C LCD주소는 0x27 인데, <<1로 하는 이유는 wirite 모드를 유지하기 위함.
 
+extern volatile uint32_t lcd_refreshrate;
+
 void I2C_LCD_Test()
 {
 	char sbuf[20];
-	int i = 0;
-	uint8_t char_toggle = 0;
 	while(1)
 	{
-#if 0
-		I2C_write_byte(SLA_W, "AB"); // _delay_ms를 안하고 그냥 while문안에 출력만 놓으면 먹통된다. 무조건 딜레이 넣기!!!!!!!!!!!!!!!!!!!!!
-		_delay_ms(100);
-#else
 		if(msec_count>=1000)
 		{
 			msec_count = 0;
-			I2C_LCD_clear();
-			char_toggle = !char_toggle;
-			i++;
-			i %= 100;
-			
+			I2C_LCD_clear();	
 		}
 		
-		sprintf(sbuf,"%3d", i);
+	//	sprintf(sbuf,"%3d", );
 		
-		if (char_toggle)
-		{
-			I2C_LCD_write_string_XY(0,0,"Hello!");
-			I2C_LCD_write_string_XY(1,0,sbuf);
-		}
-		else
-		{
-			I2C_LCD_write_string_XY(0,0,"SEONGJIN");
-			I2C_LCD_write_string_XY(1,0, sbuf);
-		}
+		I2C_LCD_write_string_XY(0,0,"Hello!");
+		I2C_LCD_write_string_XY(1,0,sbuf);
 // 		_delay_ms(100); //프로토콜에 의해 실행되므로, 데이터를 다 받을때까지 기다려야한다.
-#endif	
 	}
 }
 // 1byte를 write

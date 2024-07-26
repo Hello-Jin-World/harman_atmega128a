@@ -17,105 +17,6 @@ uint32_t sec_count = 0; // 초를 재는 count 변수 unsigned int = uint32_t
 extern volatile uint32_t fnd_refreshrate; // fnd 잔상효과를 유지하기 위한 변수 2ms
 extern volatile uint32_t msec_count;
 
-int temp1 = 0;
-
-
-
-
-void (*fp_clock[])() =
-{
-	display_clock, // 0 시계 모드
-	stopwatch, // 1 스톱워치 모드
-	pause_stopwatch, // 2 스톱워치 일시정지
-	clear_stopwatch // 3 스톱워치 리셋
-};
-
-int fnd_main(void)
-{
-	int temp = 0;
-	int state_mod = 0; // 모드 선택 변수
-	
-	DDRA = 0xff;
-	int button0_state = 0; // 버튼0번 상태 변수
-	int button1_state = 0; // 버튼1번 상태 변수
-	int reset_active = 0; // 리셋이 가능한지 알려주는 토글
-	int restart_stopwatch = 0; // 재시작이 가능한지 알려주는 토글
-	
-	init_fnd(); // fnd 초기화
-	init_button(); // button 초기화
-	
-	while(1)
-	{
-		if (get_button(BUTTON0, BUTTON0PIN))
-		{
-			button0_state = !button0_state;
-			
-			if (button0_state) // 버튼 0을 처음 누르면 지나간 시간을 임시 변수에 저장하고 시간 리셋 후 스톱워치로 진입
-			{
-				button1_state = 0;
-				temp = sec_count;
-				sec_count = 0;
-				state_mod = 1;
-			}
-			else // 다시 버튼0을 누르면 임시 변수에 저장된 시간을 가져오고 시계로 진입
-			{
-				sec_count = temp;
-				state_mod = 0;
-			}
-		}
-		
-		fp_clock[state_mod]();
-	}
-}
-
-void display_clock(void)
-{
-	if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
-	{
-		fnd_refreshrate = 0;
-		fnd_display();
-	}
-	if (msec_count >= 1000)
-	{
-		msec_count = 0;
-		sec_count++;
-	}
-}
-
-void stopwatch(void)
-{
-	if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
-	{
-		fnd_refreshrate = 0;
-		fnd_display();
-	}
-	if (msec_count >= 16)
-	{
-		msec_count = 0;
-		sec_count++;
-	}
-}
-
-void pause_stopwatch(void)
-{
-	if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
-	{
-		fnd_refreshrate = 0;
-		fnd_display();
-	}
-	temp1 = sec_count;	
-}
-
-void clear_stopwatch(void)
-{
-	sec_count = 0;
-	if (fnd_refreshrate >= 2) // 2ms 주기로 fnd를 display
-	{
-		fnd_refreshrate = 0;
-		fnd_display();
-	}
-}
-
 void init_fnd(void)
 {
 	FND_DATA_DDR = 0xff;
@@ -123,11 +24,8 @@ void init_fnd(void)
 	FND_DIGIT_DDR |= 1 << FND_DIGIT_D1 | 1 << FND_DIGIT_D2 |
 					 1 << FND_DIGIT_D3 | 1 << FND_DIGIT_D4;
 
-#if 0 // comm 애노우드
-	FND_DATA_PORT = ~0x00; // FND를 all off  ~0x00 = 0xff
-#else // comm 캐소우드
+
 	FND_DATA_PORT = 0x00; // FND를 all off
-#endif
 }
 
 
@@ -136,7 +34,7 @@ void fnd_display(int *run_state)
 {
 						  // 0      1      2      3      4      5      6      7      8      9      .
 	uint8_t fnd_font[] = {~0xc0, ~0xf9, ~0xa4, ~0xb0, ~0x99, ~0x92, ~0x82, ~0xd8, ~0x80, ~0x90, ~0x7f
-		, ~0x82, ~0xc7, ~0xe0, ~0x83
+		, ~0x8e, ~0x83, ~0xc7, ~0xaf
 		};
 
 	static int digit_select = 0; // 자리수 선택 변수 0~3   static : 전역변수처럼 작동
