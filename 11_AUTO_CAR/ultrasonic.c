@@ -1,4 +1,4 @@
-﻿/*
+/*
  * ultrasonic.c
  *
  * Created: 2024-07-17 오전 9:33:26
@@ -136,7 +136,7 @@ void init_ultrasonic()
 
 void ultrasonic_trigger()
 {
-	if(ultrasonic_check_timer <= 100)
+	if(ultrasonic_check_timer <= 4)
 	{
 		////////// left //////////
 		TRIG_PORT_LEFT &= ~(1 << TRIG_LEFT); // 해당되는 포트만 LOW로 만듦
@@ -147,7 +147,7 @@ void ultrasonic_trigger()
 		// 초음파센서 echo 응답 대기시간이 최대 38ms
 	}
 	
-	if (ultrasonic_check_timer > 100 && ultrasonic_check_timer <= 200)
+	if (ultrasonic_check_timer >= 44 && ultrasonic_check_timer <= 48)
 	{
 		////////// center //////////
 		TRIG_PORT_CENTER &= ~(1 << TRIG_CENTER); // 해당되는 포트만 LOW로 만듦
@@ -157,7 +157,7 @@ void ultrasonic_trigger()
 		TRIG_PORT_CENTER &= ~(1 << TRIG_CENTER); // LOW
 	}
 	
-	if (ultrasonic_check_timer > 200 && ultrasonic_check_timer <= 300)
+	if (ultrasonic_check_timer >= 88 && ultrasonic_check_timer <= 92)
 	{
 		////////// right //////////
 		TRIG_PORT_RIGHT &= ~(1 << TRIG_RIGHT); // 해당되는 포트만 LOW로 만듦
@@ -167,7 +167,7 @@ void ultrasonic_trigger()
 		TRIG_PORT_RIGHT &= ~(1 << TRIG_RIGHT); // LOW
 	}
 	
-	ultrasonic_check_timer %= 310;
+	ultrasonic_check_timer %= 95;
 }
 
 void distance_check(void)
