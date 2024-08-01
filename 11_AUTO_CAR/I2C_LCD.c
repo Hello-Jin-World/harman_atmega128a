@@ -9,6 +9,7 @@
 #include <util/delay.h>
 #include "I2C.h"
 #include "I2C_LCD.h"
+#include "def.h"
 
 extern volatile uint32_t msec_count;
 extern void I2C_LCD_clear(void);
@@ -19,13 +20,32 @@ extern void I2C_write_byte(uint8_t address, uint8_t data);
 extern volatile uint32_t lcd_refreshrate;
 
 
-void I2C_LCD_Test(int *speed)
+void I2C_LCD_Test(int *speed, int *current_mode)
 {
 	char sbuf[20];
 
 	sprintf(sbuf,"%3d",*speed);
 	
-	I2C_LCD_write_string_XY(1,0,sbuf);
+	if (*current_mode == FORWARD)
+	{
+		I2C_LCD_write_string_XY(0,4,"FORWARD   ");
+		
+	}
+	else if (*current_mode == BACKWARD)
+	{
+		I2C_LCD_write_string_XY(0,4,"BACKWARD  ");
+	}
+	else if (*current_mode == TURN_LEFT)
+	{
+		I2C_LCD_write_string_XY(0,4,"TURN LEFT ");
+	}
+	else if (*current_mode == TURN_RIGHT)
+	{
+		I2C_LCD_write_string_XY(0,4,"TURN RIGHT");
+	}
+	I2C_LCD_write_string_XY(1,0,"Current Speed");
+	I2C_LCD_write_string_XY(1,13,sbuf);
+	
 
 }
 // 1byte를 write

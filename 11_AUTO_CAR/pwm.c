@@ -40,6 +40,7 @@ void turn_right();
 void stop(void);
 
 int current_speed = 0; // 속도
+int current_mode = 0;
 
 void (*current_location[])() =
 {
@@ -182,6 +183,7 @@ void auto_start(void)
 		 if (ultrasonic_right_distance <= 3 && ultrasonic_center_distance <= 3)
 		{
 			run_state = BACKWARD;
+			current_mode = BACKWARD;
 			//backward(600);
 			current_speed = 600;
 			//sbuf[20] = "BACKWARD";
@@ -189,6 +191,7 @@ void auto_start(void)
 		else if (ultrasonic_left_distance <= 3 && ultrasonic_center_distance <= 3)
 		{
 			run_state = BACKWARD;
+			current_mode = BACKWARD;
 			//backward(600);
 			current_speed = 600;
 			//sbuf[20] = "BACKWARD";
@@ -196,6 +199,7 @@ void auto_start(void)
 		else if (ultrasonic_left_distance <= 3 && ultrasonic_right_distance <= 3)
 		{
 			run_state = BACKWARD;
+			current_mode = BACKWARD;
 			//backward(600);
 			current_speed = 600;
 			//sbuf[20] = "BACKWARD";
@@ -203,6 +207,7 @@ void auto_start(void)
 		else if(ultrasonic_center_distance <= 4)
 		{
 			run_state = BACKWARD;
+			current_mode = BACKWARD;
 			//backward(600);
 			current_speed = 600;
 			//sbuf[20] = "BACKWARD";
@@ -210,6 +215,7 @@ void auto_start(void)
 		else if (ultrasonic_right_distance <= 4)
 		{
 			run_state = TURN_LEFT;
+			current_mode = TURN_LEFT;
 			//turn_left(500);
 			current_speed = 500;
 			//sbuf[20] = "BACKWARD";
@@ -217,6 +223,7 @@ void auto_start(void)
 		else if (ultrasonic_left_distance <= 4)
 		{
 			run_state = TURN_RIGHT;
+			current_mode = TURN_RIGHT;
 			//turn_right(500);
 			current_speed = 500;
 			//sbuf[20] = "BACKWARD";
@@ -224,6 +231,7 @@ void auto_start(void)
 		else if (ultrasonic_left_distance <= 3 && ultrasonic_center_distance <= 3 && ultrasonic_right_distance <= 3)
 		{
 			run_state = BACKWARD;
+			current_mode = BACKWARD;
 			//backward(600);
 			current_speed = 600;
 			//sbuf[20] = "BACKWARD";
@@ -231,6 +239,7 @@ void auto_start(void)
 		else if(ultrasonic_right_distance - ultrasonic_left_distance < 4 && ultrasonic_left_distance - ultrasonic_right_distance < 4 && ultrasonic_center_distance >= 10)
 		{
 			run_state = FORWARD;
+			current_mode = FORWARD;
 			//forward(300);
 			current_speed = 300;
 			//sbuf[20] = "FORWARD";
@@ -238,6 +247,7 @@ void auto_start(void)
 		else if (ultrasonic_center_distance >= 800 || ultrasonic_left_distance >= 800 || ultrasonic_right_distance >= 800)
 		{
 			run_state = BACKWARD;
+			current_mode = BACKWARD;
 			//backward(400);
 			current_speed = 400;
 			//sbuf[20] = "BACKWARD";
@@ -247,6 +257,7 @@ void auto_start(void)
 		else if (ultrasonic_right_distance <= 7 && ultrasonic_center_distance <= 15 && ultrasonic_right_distance > 3 && ultrasonic_center_distance > 3)
 		{
 			run_state = TURN_LEFT;
+			current_mode = TURN_LEFT;
 			//turn_left(400);
 			current_speed = 400;
 			//sbuf[20] = "TRUN LEFT";
@@ -254,6 +265,7 @@ void auto_start(void)
 		else if (ultrasonic_left_distance <= 7 && ultrasonic_center_distance <= 15 && ultrasonic_left_distance > 3 && ultrasonic_center_distance > 3)
 		{
 			run_state = TURN_RIGHT;
+			current_mode = TURN_RIGHT;
 			//turn_right(400);
 			current_speed = 400;
 			//sbuf[20] = "TRUN RIGHT";
@@ -265,6 +277,7 @@ void auto_start(void)
 		 else if (ultrasonic_right_distance <= 20 && ultrasonic_center_distance <= 30 && ultrasonic_right_distance > 3 && ultrasonic_center_distance > 3)
 		 {
 			 run_state = TURN_LEFT;
+			 current_mode = TURN_LEFT;
 			 //turn_left(500);
 			 current_speed = 500;
 			 //sbuf[20] = "TRUN LEFT";
@@ -272,6 +285,7 @@ void auto_start(void)
 		 else if (ultrasonic_left_distance <= 20 && ultrasonic_center_distance <= 30 && ultrasonic_left_distance > 3 && ultrasonic_center_distance > 3)
 		 {
 			 run_state = TURN_RIGHT;
+			 current_mode = TURN_RIGHT;
 			 //turn_right(500);
 			 current_speed = 500;
 			 //sbuf[20] = "TRUN RIGHT";
@@ -280,6 +294,7 @@ void auto_start(void)
 		 else if (ultrasonic_right_distance <= 20)
 		 {
 			 run_state = TURN_LEFT;
+			 current_mode = TURN_LEFT;
 			 //turn_left(500);
 			 current_speed = 500;
 			 //sbuf[20] = "TRUN LEFT";
@@ -287,6 +302,7 @@ void auto_start(void)
 		 else if (ultrasonic_left_distance <= 20)
 		 {
 			 run_state = TURN_RIGHT;
+			 current_mode = TURN_RIGHT;
 			 //turn_right(500);
 			 current_speed = 500;
 			 //sbuf[20] = "TRUN RIGHT";
@@ -296,6 +312,7 @@ void auto_start(void)
 		else if ((ultrasonic_left_distance - ultrasonic_right_distance <= 2 && ultrasonic_right_distance - ultrasonic_left_distance <= 2) || ultrasonic_center_distance >= 20 && ultrasonic_center_distance <= 200)
 		{
 			run_state = FORWARD;
+			current_mode = FORWARD;
 			//forward(350);
 			current_speed = 350;
 			//sbuf[20] = "FORWARD";
@@ -303,6 +320,7 @@ void auto_start(void)
 		else if(ultrasonic_right_distance - ultrasonic_left_distance <= 4 && ultrasonic_center_distance <= 7 && ultrasonic_right_distance > 5)
 		{
 			run_state = TURN_LEFT;
+			current_mode = TURN_LEFT;
 			//turn_left(500);
 			current_speed = 500;
 			//sbuf[20] = "TRUN LEFT";
@@ -310,12 +328,13 @@ void auto_start(void)
 		else if(ultrasonic_left_distance - ultrasonic_right_distance <= 4 && ultrasonic_center_distance <= 7 && ultrasonic_left_distance > 5)
 		{
 			run_state = TURN_RIGHT;
+			current_mode = TURN_RIGHT;
 			//turn_right(500);
 			current_speed = 500;
 			//sbuf[20] = "TRUN RIGHT";
 		}
 		
 		current_location[run_state](&current_speed);
-		I2C_LCD_Test(&current_speed);
+		I2C_LCD_Test(&current_speed, &current_mode);
 	}
 }

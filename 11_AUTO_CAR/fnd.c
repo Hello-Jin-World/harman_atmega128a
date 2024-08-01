@@ -42,9 +42,8 @@ void fnd_display(int *run_state)
 	switch(digit_select)
 	{
 		case 0 :
-
-			FND_DIGIT_PORT = ~0x80;
-			FND_DATA_PORT = fnd_font[sec_count % 10];   // 0~9초
+		FND_DIGIT_PORT = ~0x80;
+		FND_DATA_PORT = fnd_font[sec_count % 10];   // 0~9초
 		break;
 
 		case 1 :
