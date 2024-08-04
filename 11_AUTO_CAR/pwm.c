@@ -180,7 +180,7 @@ void auto_start(void)
 
 		//sprintf(sbuf,"%3d", run_state);
 		
-		 if (ultrasonic_right_distance <= 3 && ultrasonic_center_distance <= 3)
+		 if (ultrasonic_right_distance <= 3 && ultrasonic_center_distance <= 3) // 오른쪽이 3cm 이하이고 중간 3cm 이하일 때 후진
 		{
 			run_state = BACKWARD;
 			current_mode = BACKWARD;
@@ -188,7 +188,7 @@ void auto_start(void)
 			current_speed = 600;
 			//sbuf[20] = "BACKWARD";
 		}
-		else if (ultrasonic_left_distance <= 3 && ultrasonic_center_distance <= 3)
+		else if (ultrasonic_left_distance <= 3 && ultrasonic_center_distance <= 3) // 왼쪽이 3cm 이하이고 중간 3cm 이하일 때 후진
 		{
 			run_state = BACKWARD;
 			current_mode = BACKWARD;
@@ -196,7 +196,7 @@ void auto_start(void)
 			current_speed = 600;
 			//sbuf[20] = "BACKWARD";
 		}
-		else if (ultrasonic_left_distance <= 3 && ultrasonic_right_distance <= 3)
+		else if (ultrasonic_left_distance <= 3 && ultrasonic_right_distance <= 3) // 완쪽이 3cm 이하이고 오른쪽 3cm 이하일 때 후진
 		{
 			run_state = BACKWARD;
 			current_mode = BACKWARD;
@@ -204,7 +204,7 @@ void auto_start(void)
 			current_speed = 600;
 			//sbuf[20] = "BACKWARD";
 		}
-		else if(ultrasonic_center_distance <= 4)
+		else if(ultrasonic_center_distance <= 4) // 중간이 4cm 이하일 때 후진
 		{
 			run_state = BACKWARD;
 			current_mode = BACKWARD;
@@ -212,7 +212,7 @@ void auto_start(void)
 			current_speed = 600;
 			//sbuf[20] = "BACKWARD";
 		}
-		else if (ultrasonic_right_distance <= 4)
+		else if (ultrasonic_right_distance <= 4) // 오른쪽이 4cm 이하일 때 후진
 		{
 			run_state = TURN_LEFT;
 			current_mode = TURN_LEFT;
@@ -220,7 +220,7 @@ void auto_start(void)
 			current_speed = 500;
 			//sbuf[20] = "BACKWARD";
 		}
-		else if (ultrasonic_left_distance <= 4)
+		else if (ultrasonic_left_distance <= 4) // 왼쪽이 4cm 이하일 때 후진
 		{
 			run_state = TURN_RIGHT;
 			current_mode = TURN_RIGHT;
@@ -228,7 +228,7 @@ void auto_start(void)
 			current_speed = 500;
 			//sbuf[20] = "BACKWARD";
 		}
-		else if (ultrasonic_left_distance <= 3 && ultrasonic_center_distance <= 3 && ultrasonic_right_distance <= 3)
+		else if (ultrasonic_left_distance <= 3 && ultrasonic_center_distance <= 3 && ultrasonic_right_distance <= 3) // 왼쪽, 중간, 오른쪽 모두 3cm이하일 때 후진
 		{
 			run_state = BACKWARD;
 			current_mode = BACKWARD;
@@ -237,7 +237,7 @@ void auto_start(void)
 			//sbuf[20] = "BACKWARD";
 		}
 		else if(ultrasonic_right_distance - ultrasonic_left_distance < 4 && ultrasonic_left_distance - ultrasonic_right_distance < 4 && ultrasonic_center_distance >= 10)
-		{
+		{ // 왼쪽과 오른쪽의 차이가 모두 4cm 미만이고 중간이 10cm 이상일 때 전진 
 			run_state = FORWARD;
 			current_mode = FORWARD;
 			//forward(300);
@@ -245,7 +245,7 @@ void auto_start(void)
 			//sbuf[20] = "FORWARD";
 		}
 		else if (ultrasonic_center_distance >= 800 || ultrasonic_left_distance >= 800 || ultrasonic_right_distance >= 800)
-		{
+		{ // 초음파 센서에 딱 붙으면 값이 튀어버려서 그때는 후진
 			run_state = BACKWARD;
 			current_mode = BACKWARD;
 			//backward(400);
@@ -255,7 +255,7 @@ void auto_start(void)
  		
 		 ///좁은 길
 		else if (ultrasonic_right_distance <= 7 && ultrasonic_center_distance <= 15 && ultrasonic_right_distance > 3 && ultrasonic_center_distance > 3)
-		{
+		{ // 오른쪽이 3 초과 7 이하이고 중간이 3 초과 15 이하일 때 좌회전
 			run_state = TURN_LEFT;
 			current_mode = TURN_LEFT;
 			//turn_left(400);
@@ -263,7 +263,7 @@ void auto_start(void)
 			//sbuf[20] = "TRUN LEFT";
 		}
 		else if (ultrasonic_left_distance <= 7 && ultrasonic_center_distance <= 15 && ultrasonic_left_distance > 3 && ultrasonic_center_distance > 3)
-		{
+		{ // 왼쪽이 3 초과 7 이하이고 중간이 3 초과 15 이하일 때 우회전
 			run_state = TURN_RIGHT;
 			current_mode = TURN_RIGHT;
 			//turn_right(400);
@@ -275,7 +275,7 @@ void auto_start(void)
 		 
 		 /// 넓은 길
 		 else if (ultrasonic_right_distance <= 20 && ultrasonic_center_distance <= 30 && ultrasonic_right_distance > 3 && ultrasonic_center_distance > 3)
-		 {
+		 { // 오른쪽이 3 초과 20 이하이고 중간이 3 초과 30 이하일 때 좌회전
 			 run_state = TURN_LEFT;
 			 current_mode = TURN_LEFT;
 			 //turn_left(500);
@@ -283,7 +283,7 @@ void auto_start(void)
 			 //sbuf[20] = "TRUN LEFT";
 		 }
 		 else if (ultrasonic_left_distance <= 20 && ultrasonic_center_distance <= 30 && ultrasonic_left_distance > 3 && ultrasonic_center_distance > 3)
-		 {
+		 { // 왼쪽이 3 초과 20 이하이고 중간이 3 초과 30 이하일 때 좌회전
 			 run_state = TURN_RIGHT;
 			 current_mode = TURN_RIGHT;
 			 //turn_right(500);
@@ -292,7 +292,7 @@ void auto_start(void)
 		 }
 		 ///
 		 else if (ultrasonic_right_distance <= 20)
-		 {
+		 { // 오른쪽이 20 이하일 때 좌회전
 			 run_state = TURN_LEFT;
 			 current_mode = TURN_LEFT;
 			 //turn_left(500);
@@ -300,7 +300,7 @@ void auto_start(void)
 			 //sbuf[20] = "TRUN LEFT";
 		 }
 		 else if (ultrasonic_left_distance <= 20)
-		 {
+		 { // 왼쪽이 20 이하일 때 우회전
 			 run_state = TURN_RIGHT;
 			 current_mode = TURN_RIGHT;
 			 //turn_right(500);
@@ -310,7 +310,7 @@ void auto_start(void)
 		 
 		
 		else if ((ultrasonic_left_distance - ultrasonic_right_distance <= 2 && ultrasonic_right_distance - ultrasonic_left_distance <= 2) || ultrasonic_center_distance >= 20 && ultrasonic_center_distance <= 200)
-		{
+		{ // 좌 우 차이가 2cm 이하이거나 중간이 20cm 이상 200cm 이하일 때 전진
 			run_state = FORWARD;
 			current_mode = FORWARD;
 			//forward(350);
@@ -318,7 +318,7 @@ void auto_start(void)
 			//sbuf[20] = "FORWARD";
 		}
 		else if(ultrasonic_right_distance - ultrasonic_left_distance <= 4 && ultrasonic_center_distance <= 7 && ultrasonic_right_distance > 5)
-		{
+		{ // 좌 우 차이가 4cm 이하이고 중간이 7cm 이하이고 오른쪽이 5cm 초과일 때 좌회전
 			run_state = TURN_LEFT;
 			current_mode = TURN_LEFT;
 			//turn_left(500);
@@ -326,7 +326,7 @@ void auto_start(void)
 			//sbuf[20] = "TRUN LEFT";
 		}
 		else if(ultrasonic_left_distance - ultrasonic_right_distance <= 4 && ultrasonic_center_distance <= 7 && ultrasonic_left_distance > 5)
-		{
+		{ // 좌 우 차이가 4cm 이하이고 중간이 7cm 이하이고 왼쪽이 5cm 초과일 때 우회전
 			run_state = TURN_RIGHT;
 			current_mode = TURN_RIGHT;
 			//turn_right(500);
